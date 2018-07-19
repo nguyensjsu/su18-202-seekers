@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,9 @@ import java.util.Optional;
 @EntityScan("edu.sjsu.seekers.starbucks.model")
 public class StarbucksApplication implements CommandLineRunner {
 
+    @Autowired
+    DataSource dataSource;
+    
 	@Autowired
 	OrderDAOImpl orderDAOImpl;
 
@@ -42,6 +46,7 @@ public class StarbucksApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+        System.out.println("test datasource is: " + dataSource.getConnection());
 
 		Optional<Orders> order = orderDAOImpl.get(1);
 		System.out.println("order: " + order.toString());
