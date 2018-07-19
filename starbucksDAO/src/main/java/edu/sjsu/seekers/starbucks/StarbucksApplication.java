@@ -1,8 +1,13 @@
 package edu.sjsu.seekers.starbucks;
 
-import edu.sjsu.seekers.starbucks.dao.impl.UserDAOImpl;
-import edu.sjsu.seekers.starbucks.dao.repository.UserRepository;
-import edu.sjsu.seekers.starbucks.model.User;
+import edu.sjsu.seekers.starbucks.dao.impl.OrderDAOImpl;
+import edu.sjsu.seekers.starbucks.dao.impl.ProductCatalogDAOImpl;
+import edu.sjsu.seekers.starbucks.dao.impl.ProductDAOImpl;
+import edu.sjsu.seekers.starbucks.dao.impl.SizeDAOImpl;
+import edu.sjsu.seekers.starbucks.model.Orders;
+import edu.sjsu.seekers.starbucks.model.ProductCatalog;
+import edu.sjsu.seekers.starbucks.model.Products;
+import edu.sjsu.seekers.starbucks.model.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import javax.sql.DataSource;
 import java.util.Optional;
 
 
@@ -20,7 +24,16 @@ import java.util.Optional;
 public class StarbucksApplication implements CommandLineRunner {
 
 	@Autowired
-	UserDAOImpl userDAOImpl;
+	OrderDAOImpl orderDAOImpl;
+
+    @Autowired
+    ProductDAOImpl productDAOImpl;
+
+    @Autowired
+    SizeDAOImpl sizeDAOImpl;
+
+    @Autowired
+    ProductCatalogDAOImpl productCatalogDAOImpl;
 
 	public static void main(String[] args) {
 		SpringApplication.run(StarbucksApplication.class, args);
@@ -28,8 +41,19 @@ public class StarbucksApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-        Optional<User> user = userDAOImpl.get(1);
-        System.out.println("user: " + user.toString());
+
+		Optional<Orders> order = orderDAOImpl.get(1);
+		System.out.println("order: " + order.toString());
+
+
+        Optional<Products> product = productDAOImpl.get(1);
+        System.out.println("product: " + product.toString());
+
+        Optional<Size> size = sizeDAOImpl.get(1);
+        System.out.println("size: " + size.toString());
+
+        Optional<ProductCatalog> productCatalog = productCatalogDAOImpl.get(1);
+        System.out.println("productCatalog: " + productCatalog.toString());
 
 	}
 }

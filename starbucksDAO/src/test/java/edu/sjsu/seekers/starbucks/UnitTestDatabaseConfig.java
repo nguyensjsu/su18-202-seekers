@@ -15,8 +15,8 @@ public class UnitTestDatabaseConfig {
     public DataSource starbucksDataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScript("/db/sql/dbCreate.sql")
-                .addScript("/db/sql/insert.sql")
+                .addScript("db/sql/dbCreate.sql")
+                .addScript("db/sql/insert.sql")
                 .build();
     }
 }
