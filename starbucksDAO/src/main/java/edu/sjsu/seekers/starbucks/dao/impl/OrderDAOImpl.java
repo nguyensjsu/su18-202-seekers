@@ -6,6 +6,7 @@ import edu.sjsu.seekers.starbucks.model.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Optional;
 
 @Configuration
@@ -25,6 +26,11 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public void save(Orders orders) {
         orderRepository.save(orders);
+    }
+
+    @Override
+    public List<Orders> findOrdersByUserKey(Integer userKey) {
+        return orderRepository.findByUserKey(userKey);
     }
 
 

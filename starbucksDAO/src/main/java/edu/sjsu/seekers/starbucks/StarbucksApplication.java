@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -54,6 +55,11 @@ public class StarbucksApplication implements CommandLineRunner {
 
         Optional<ProductCatalog> productCatalog = productCatalogDAOImpl.get(1);
         System.out.println("productCatalog: " + productCatalog.toString());
+
+        List<Orders> ordersList = orderDAOImpl.findOrdersByUserKey(1);
+        for (Orders ord: ordersList) {
+            System.out.println("orderList: " + ord.toString());
+        }
 
 	}
 }

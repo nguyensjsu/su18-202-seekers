@@ -11,13 +11,13 @@ public class Orders {
     private Integer orderKey;
 
     @Column(name="Card_Key")
-    private String cardKey;
+    private Integer cardKey;
 
     @Column(name="User_Key")
-    private String userKey;
+    private Integer userKey;
 
     @Column(name="Store_Key")
-    private String storeKey;
+    private Integer storeKey;
 
     @Column(name="Order_Status")
     private String orderStatus;
@@ -36,27 +36,27 @@ public class Orders {
         this.orderKey = orderKey;
     }
 
-    public String getCardKey() {
+    public Integer getCardKey() {
         return cardKey;
     }
 
-    public void setCardKey(String cardKey) {
+    public void setCardKey(Integer cardKey) {
         this.cardKey = cardKey;
     }
 
-    public String getUserKey() {
+    public Integer getUserKey() {
         return userKey;
     }
 
-    public void setUserKey(String userKey) {
+    public void setUserKey(Integer userKey) {
         this.userKey = userKey;
     }
 
-    public String getStoreKey() {
+    public Integer getStoreKey() {
         return storeKey;
     }
 
-    public void setStoreKey(String storeKey) {
+    public void setStoreKey(Integer storeKey) {
         this.storeKey = storeKey;
     }
 
