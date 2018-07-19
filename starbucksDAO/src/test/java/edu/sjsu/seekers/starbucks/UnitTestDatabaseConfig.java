@@ -11,8 +11,6 @@ import javax.sql.DataSource;
 @Configuration
 @Profile("unit-test")
 public class UnitTestDatabaseConfig {
-
-
     @Bean
     public DataSource starbucksDataSource() {
         return new EmbeddedDatabaseBuilder()
