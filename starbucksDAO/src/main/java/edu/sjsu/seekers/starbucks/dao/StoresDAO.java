@@ -1,4 +1,4 @@
-package edu.sjsu.seekers.starbucks.dao.repository;
+package edu.sjsu.seekers.starbucks.dao;
 
 import edu.sjsu.seekers.starbucks.model.ProductCatalog;
 import edu.sjsu.seekers.starbucks.model.Stores;

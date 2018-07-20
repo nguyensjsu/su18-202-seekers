@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-public class payment_details {
+public class PaymentDetails {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="Payment_Id")
@@ -42,7 +42,7 @@ public class payment_details {
 
     @Override
     public String toString() {
-        return "payment_details{" +
+        return "PaymentDetails{" +
                 "paymentId=" + paymentId +
                 ", orderKey=" + orderKey +
                 ", paymentStatus='" + paymentStatus + '\'' +
