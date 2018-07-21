@@ -18,5 +18,10 @@ public class PaymentDetailsDAOImpl implements PaymentDetailsDAO {
         paymentDetails =paymentDetailsRepository.findById(1);
         return paymentDetails;
     }
+
+    @Override
+    public void save(PaymentDetails paymentDetails) {
+        paymentDetailsRepository.save(paymentDetails);
+    }
 }
 

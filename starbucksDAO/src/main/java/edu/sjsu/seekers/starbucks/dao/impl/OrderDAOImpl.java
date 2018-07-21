@@ -19,7 +19,7 @@ public class OrderDAOImpl implements OrderDAO {
     public Optional<Orders> get(Integer id) {
 
         Optional<Orders> order;
-        order = orderRepository.findById(1);
+        order = orderRepository.findById(id);
         return order;
     }
 

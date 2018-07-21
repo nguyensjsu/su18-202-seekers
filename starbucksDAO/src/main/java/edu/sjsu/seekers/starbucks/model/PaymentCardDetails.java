@@ -8,7 +8,7 @@ import java.util.Date;
 @Entity
 public class PaymentCardDetails {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="Card_Key")
     private Integer cardKey;
 
