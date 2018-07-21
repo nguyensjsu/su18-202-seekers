@@ -1,10 +1,10 @@
 package edu.sjsu.seekers.starbucks.dao;
 
-import edu.sjsu.seekers.starbucks.model.payment_details;
+import edu.sjsu.seekers.starbucks.model.PaymentDetails;
 
 import java.util.Optional;
 
 public interface PaymentDetailsDAO {
-    public Optional<payment_details> get(Integer id);
+    public Optional<PaymentDetails> get(Integer id);
 }
 

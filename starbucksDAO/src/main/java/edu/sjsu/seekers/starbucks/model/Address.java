@@ -10,6 +10,9 @@ public class Address {
     @Column(name="Address_Key")
     private Integer addressKey;
 
+    @Column(name="User_Key")
+    private Integer userKey;
+
     @Column(name="Address_Description")
     private String addressDescription;
 
@@ -21,7 +24,6 @@ public class Address {
 
     @Column(name="Address_Line_2")
     private String addressLine2;
-
 
     @Column(name="City")
     private String city;
@@ -107,10 +109,21 @@ public class Address {
         this.zipCode = zipCode;
     }
 
+
+
+    public Integer getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(Integer userKey) {
+        this.userKey = userKey;
+    }
+
     @Override
     public String toString() {
         return "Address{" +
                 "addressKey=" + addressKey +
+                "userKey=" + userKey +
                 ", addressDescription='" + addressDescription + '\'' +
                 ", addressType='" + addressType + '\'' +
                 ", city='" + city + '\'' +

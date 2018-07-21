@@ -1,9 +1,10 @@
 package edu.sjsu.seekers.starbucks.dao;
 
-import edu.sjsu.seekers.starbucks.model.order_details;
+import edu.sjsu.seekers.starbucks.model.OrderDetails;
+
 import java.util.Optional;
 
 public interface OrderDetailsDAO {
-    Optional<order_details> get(Integer id);
-    void save(order_details orderLineItems);
+    Optional<OrderDetails> get(Integer id);
+    void save(OrderDetails orderLineItems);
 }

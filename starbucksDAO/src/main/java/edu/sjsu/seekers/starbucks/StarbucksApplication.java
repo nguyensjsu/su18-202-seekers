@@ -1,13 +1,14 @@
 package edu.sjsu.seekers.starbucks;
 
-import edu.sjsu.seekers.starbucks.dao.impl.OrderDAOImpl;
-import edu.sjsu.seekers.starbucks.dao.impl.ProductCatalogDAOImpl;
-import edu.sjsu.seekers.starbucks.dao.impl.ProductDAOImpl;
-import edu.sjsu.seekers.starbucks.dao.impl.SizeDAOImpl;
-import edu.sjsu.seekers.starbucks.model.Orders;
-import edu.sjsu.seekers.starbucks.model.ProductCatalog;
-import edu.sjsu.seekers.starbucks.model.Products;
-import edu.sjsu.seekers.starbucks.model.Size;
+import edu.sjsu.seekers.starbucks.dao.OrderDetailsDAO;
+import edu.sjsu.seekers.starbucks.dao.PaymentCardDetailsDAO;
+import edu.sjsu.seekers.starbucks.dao.PaymentDetailsDAO;
+
+import edu.sjsu.seekers.starbucks.dao.UserDAO;
+import edu.sjsu.seekers.starbucks.dao.impl.*;
+import edu.sjsu.seekers.starbucks.dao.repository.UserRepository;
+import edu.sjsu.seekers.starbucks.model.*;
+import edu.sjsu.seekers.starbucks.model.OrderDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,7 @@ public class StarbucksApplication implements CommandLineRunner {
 
     @Autowired
     DataSource dataSource;
-    
+
 	@Autowired
 	OrderDAOImpl orderDAOImpl;
 
@@ -40,6 +42,21 @@ public class StarbucksApplication implements CommandLineRunner {
     @Autowired
     ProductCatalogDAOImpl productCatalogDAOImpl;
 
+    @Autowired
+	OrderDetailsDAO orderDetailsDAO;
+
+    @Autowired
+	PaymentDetailsDAO paymentDetailsDao;
+
+    @Autowired
+    PaymentCardDetailsDAOImpl paymentCardDetailsDAOImpl;
+
+    @Autowired
+    UserDAOImpl userDAOImpl;
+
+    @Autowired
+    StoresDAOImpl storDAOImpl;
+
 	public static void main(String[] args) {
 		SpringApplication.run(StarbucksApplication.class, args);
 	}
@@ -47,13 +64,39 @@ public class StarbucksApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
         System.out.println("test datasource is: " + dataSource.getConnection());
+//        Optional<OrderDetails> orders = orderDetailsDAO.get(1);
+//        System.out.println("Order: " + orders.toString());
 
-		Optional<Orders> order = orderDAOImpl.get(1);
-		System.out.println("order: " + order.toString());
+//		Optional<PaymentDetails> payments = paymentDetailsDao.get(1);
+//		System.out.println("Payments: " + payments.toString());
+
+//        Optional<Orders> order = orderDAOImpl.get(1);
+//        System.out.println("order: " + order.toString());
 
 
-        Optional<Products> product = productDAOImpl.get(1);
+        Optional<Products> product = productDAOImpl.get(3);
         System.out.println("product: " + product.toString());
+
+
+
+        Orders orderSave = new Orders();
+        orderSave.setOrderStatus("Temp");
+        orderSave.setOrderDate(new Date());
+        orderSave.setOrderAmount(111.11);
+        orderSave.setCardKey(paymentCardDetailsDAOImpl.get(1).get());
+        orderSave.setUserKey(userDAOImpl.get(1).get());
+        orderSave.setStoreKey(storDAOImpl.get(1).get());
+        orderSave = orderDAOImpl.save(orderSave);
+
+        OrderDetails orderLineItems = new OrderDetails();
+        orderLineItems.setOrderKey(orderSave);
+        orderLineItems.setProductKey(product.get());
+        orderLineItems.setOrderQuantity(95);
+        orderLineItems.setNetPrice(123.9);
+        orderDetailsDAO.save(orderLineItems);
+
+        orderSave.setOrderStatus("Confirmed");
+        orderDAOImpl.update(orderSave);
 
         Optional<Size> size = sizeDAOImpl.get(1);
         System.out.println("size: " + size.toString());
@@ -65,6 +108,5 @@ public class StarbucksApplication implements CommandLineRunner {
         for (Orders ord: ordersList) {
             System.out.println("orderList: " + ord.toString());
         }
-
 	}
 }

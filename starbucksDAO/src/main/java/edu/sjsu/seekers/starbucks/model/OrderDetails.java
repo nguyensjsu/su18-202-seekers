@@ -1,19 +1,27 @@
 package edu.sjsu.seekers.starbucks.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
-public class order_details {
+public class OrderDetails {
+
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="Order_Line_Key")
     private Integer orderLineKey;
 
-    @Column(name="Order_Key")
-    private Integer orderKey;
+    @ManyToOne
+    @JoinColumn(name = "Order_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Orders orderKey;
 
-    @Column(name="Product_Key")
-    private Integer productKey;
+    @ManyToOne
+    @JoinColumn(name = "Product_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Products productKey;
 
     @Column(name="Order_Quantity")
     private Integer orderQuantity;
@@ -29,19 +37,19 @@ public class order_details {
         this.orderLineKey = orderLineKey;
     }
 
-    public Integer getOrderKey() {
+    public Orders getOrderKey() {
         return orderKey;
     }
 
-    public void setOrderKey(Integer orderKey) {
+    public void setOrderKey(Orders orderKey) {
         this.orderKey = orderKey;
     }
 
-    public Integer getProductKey() {
+    public Products getProductKey() {
         return productKey;
     }
 
-    public void setProductKey(Integer productKey) {
+    public void setProductKey(Products productKey) {
         this.productKey = productKey;
     }
 
@@ -63,7 +71,7 @@ public class order_details {
 
     @Override
     public String toString() {
-        return "order_details{" +
+        return "OrderDetails{" +
                 "orderLineKey=" + orderLineKey +
                 ", orderKey=" + orderKey +
                 ", productKey=" + productKey +
