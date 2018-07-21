@@ -1,23 +1,32 @@
 package edu.sjsu.seekers.starbucks.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 public class Orders {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="Order_Key")
     private Integer orderKey;
 
-    @Column(name="Card_Key")
-    private Integer cardKey;
+    @ManyToOne
+    @JoinColumn(name = "Card_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private PaymentCardDetails cardKey;
 
-    @Column(name="User_Key")
-    private Integer userKey;
+    @ManyToOne
+    @JoinColumn(name = "User_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private User userKey;
 
-    @Column(name="Store_Key")
-    private Integer storeKey;
+    @ManyToOne
+    @JoinColumn(name = "Store_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Stores storeKey;
 
     @Column(name="Order_Status")
     private String orderStatus;
@@ -36,27 +45,27 @@ public class Orders {
         this.orderKey = orderKey;
     }
 
-    public Integer getCardKey() {
+    public PaymentCardDetails getCardKey() {
         return cardKey;
     }
 
-    public void setCardKey(Integer cardKey) {
+    public void setCardKey(PaymentCardDetails cardKey) {
         this.cardKey = cardKey;
     }
 
-    public Integer getUserKey() {
+    public User getUserKey() {
         return userKey;
     }
 
-    public void setUserKey(Integer userKey) {
+    public void setUserKey(User userKey) {
         this.userKey = userKey;
     }
 
-    public Integer getStoreKey() {
+    public Stores getStoreKey() {
         return storeKey;
     }
 
-    public void setStoreKey(Integer storeKey) {
+    public void setStoreKey(Stores storeKey) {
         this.storeKey = storeKey;
     }
 

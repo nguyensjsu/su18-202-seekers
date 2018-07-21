@@ -10,21 +10,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {StarbucksApplication.class})
+@SpringBootTest
 @ActiveProfiles("unit-test")
 public class OrderDAOImplTest {
 
     @Autowired
     OrderDAOImpl orderDAOImpl;
+
+    @Autowired
+    PaymentCardDetailsDAOImpl paymentCardDetailsDAOImpl;
+
+    @Autowired
+    UserDAOImpl userDAOImpl;
+
+    @Autowired
+    StoresDAOImpl storDAOImpl;
 
     Orders order;
 
@@ -32,9 +39,9 @@ public class OrderDAOImplTest {
     public void setup()
     {
         order = new Orders();
-        order.setCardKey(1);
-        order.setUserKey(1);
-        order.setStoreKey(1);
+        order.setCardKey(paymentCardDetailsDAOImpl.get(1).get());
+        order.setUserKey(userDAOImpl.get(1).get());
+        order.setStoreKey(storDAOImpl.get(1).get());
         order.setOrderAmount(12.12);
         order.setOrderDate(new Date());
         order.setOrderStatus("Approved");
@@ -47,9 +54,9 @@ public class OrderDAOImplTest {
     public void save() throws SQLException {
         Exception ex = null;
         order = new Orders();
-        order.setCardKey(2);
-        order.setUserKey(1);
-        order.setStoreKey(2);
+        order.setCardKey(paymentCardDetailsDAOImpl.get(2).get());
+        order.setUserKey(userDAOImpl.get(2).get());
+        order.setStoreKey(storDAOImpl.get(1).get());
         order.setOrderAmount(22.44);
         order.setOrderDate(new Date());
         order.setOrderStatus("Approved");
