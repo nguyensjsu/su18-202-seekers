@@ -15,6 +15,9 @@ public class User {
     @Column(name="User_Key")
     private Integer userKey;
 
+    @Column(name="Address_Key")
+    private Integer addressKey;
+
     @Column(name="User_Name")
     private String userName;
 
@@ -33,11 +36,15 @@ public class User {
     @Column(name="Phone_Number")
     private String phoneNumber;
 
-    @Column(name="Is_Verified_Phone_Number")
-    private String isVerifiedphoneNumber;
+    @Column(name="Is_Logged_In")
+    private String isLoggedIn;
 
     @Column(name="Is_Active_Customer")
     private String idActiveCustomer;
+
+
+    @Column(name="Is_Account_Verified")
+    private String idAccountVerified;
 
     @Column(name="Default_Store_Key")
     private String defaultStoreKey;
@@ -65,10 +72,6 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setIsVerifiedphoneNumber(String isVerifiedphoneNumber) {
-        this.isVerifiedphoneNumber = isVerifiedphoneNumber;
-    }
-
     public void setIdActiveCustomer(String idActiveCustomer) {
         this.idActiveCustomer = idActiveCustomer;
     }
@@ -84,6 +87,15 @@ public class User {
     public Integer getUserKey() {
         return userKey;
 
+    }
+
+    public String getIdAccountVerified() {
+        return idAccountVerified;
+    }
+
+
+    public void setIdAccountVerified(String idAccountVerified) {
+        this.idAccountVerified = idAccountVerified;
     }
 
     public String getPassword() {
@@ -102,10 +114,6 @@ public class User {
         return phoneNumber;
     }
 
-    public String getIsVerifiedphoneNumber() {
-        return isVerifiedphoneNumber;
-    }
-
     public String getIdActiveCustomer() {
         return idActiveCustomer;
     }
@@ -116,6 +124,14 @@ public class User {
 
     public String getRewardPoints() {
         return rewardPoints;
+    }
+
+    public String getIsLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setIsLoggedIn(String isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
 
     public void setUserName(String userName) {
@@ -134,11 +150,19 @@ public class User {
         return fullName;
     }
 
+    public Integer getAddressKey() {
+        return addressKey;
+    }
+
+    public void setAddressKey(Integer addressKey) {
+        this.addressKey = addressKey;
+    }
 
     @Override
     public String toString() {
         return "User{" +
                 "userKey=" + userKey +
+                ", addressKey=" + addressKey +
                 ", userName='" + userName + '\'' +
                 ", fullName='" + fullName + '\'' +
                 '}';

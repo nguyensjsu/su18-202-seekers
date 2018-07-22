@@ -28,9 +28,14 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int resetUserPassword(String password, String userName )
+    public String getUserPassword(String userName) {
+        return userRepository.getPassword(userName);
+    }
+
+    @Override
+    public int resetUserPassword(Integer userKey, String password )
     {
-       int result= userRepository.resetPassword(userName,password);
+       int result= userRepository.resetPassword(userKey,password);
        return result;
     }
 
@@ -47,6 +52,11 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Optional<User> findUserByEmailId(String emailId) {
         return userRepository.findByEmailId(emailId);
+    }
+
+    @Override
+    public Integer getUserKey(String userName) {
+        return userRepository.getUserKey(userName);
     }
 
 }

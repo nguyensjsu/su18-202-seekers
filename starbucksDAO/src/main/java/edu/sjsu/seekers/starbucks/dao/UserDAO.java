@@ -2,7 +2,6 @@ package edu.sjsu.seekers.starbucks.dao;
 
 import edu.sjsu.seekers.starbucks.model.User;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserDAO {
@@ -11,7 +10,8 @@ public interface UserDAO {
     public void save(User user);
     public Optional<User> findUserByUsername(String userName);
     public Optional<User> findUserByEmailId(String emailId);
+    public Integer getUserKey(String userName);
     public void delete(User user);
-    public int resetUserPassword(String password, String userName);
-
+    public String getUserPassword(String userName);
+    public int resetUserPassword(Integer userKey, String password);
 }
