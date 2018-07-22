@@ -1,22 +1,33 @@
 package edu.sjsu.seekers.starbucks.model;
 
-import javax.persistence.*;
-import java.util.Date;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.*;
 
 
 @Entity
 public class PaymentCardDetails {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="Card_Key")
     private Integer cardKey;
 
-    @Column(name="Address_Key")
-    private Integer addressKey;
+ /*   @Column(name="Address_Key")
+    private Integer addressKey;*/
 
-    @Column(name="User_Key")
-    private Integer userKey;
+    @ManyToOne
+    @JoinColumn(name = "Address_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Address addressKey;
+
+    @ManyToOne
+    @JoinColumn(name = "User_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private User userKey;
+
+    /*@Column(name="User_Key")
+    private Integer userKey;*/
 
     @Column(name="Is_Default_payment_Card")
     private String isDefaultpaymentcardKey;
@@ -33,6 +44,18 @@ public class PaymentCardDetails {
     @Column(name="CCV_Code")
     private String ccvCode;
 
+    public String getIssActivecard() {
+        return issActivecard;
+    }
+
+    public void setIssActivecard(String issActivecard) {
+        this.issActivecard = issActivecard;
+    }
+
+    @Column(name="Is_Active_Card")
+
+    private String issActivecard;
+
     public Integer getCardKey() {
         return cardKey;
     }
@@ -41,19 +64,19 @@ public class PaymentCardDetails {
         this.cardKey = cardKey;
     }
 
-    public Integer getAddressKey() {
+    public Address getAddressKey() {
         return addressKey;
     }
 
-    public void setAddressKey(Integer addressKey) {
+    public void setAddressKey(Address addressKey) {
         this.addressKey = addressKey;
     }
 
-    public Integer getUserKey() {
+    public User getUserKey() {
         return userKey;
     }
 
-    public void setUserKey(Integer userKey) {
+    public void setUserKey(User userKey) {
         this.userKey = userKey;
     }
 
