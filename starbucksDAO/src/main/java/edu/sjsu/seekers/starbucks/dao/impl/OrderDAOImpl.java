@@ -20,7 +20,7 @@ public class OrderDAOImpl implements OrderDAO {
     public Optional<Orders> get(Integer id) {
 
         Optional<Orders> order;
-        order = orderRepository.findById(1);
+        order = orderRepository.findById(id);
         return order;
     }
 
@@ -32,6 +32,11 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public List<Orders> findOrdersByUserKey(Integer userKey) {
         return orderRepository.findByUserKey(userKey);
+    }
+
+    @Override
+    public List<Orders> findIncompleteOrdersByUserKey(Integer userKey) {
+        return orderRepository.findByUserKeyAndOrderStatus(userKey);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package edu.sjsu.seekers.starbucks.dao.repository;
 
 import edu.sjsu.seekers.starbucks.model.Orders;
-import edu.sjsu.seekers.starbucks.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +13,9 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
     @Query("SELECT o FROM Orders o WHERE o.userKey.userKey = :userkey")
     List<Orders> findByUserKey(@Param("userkey") Integer userKey);
+
+
+    @Query("SELECT o FROM Orders o WHERE o.userKey.userKey = :userkey and o.orderStatus = 'InProgress'")
+    List<Orders> findByUserKeyAndOrderStatus(@Param("userkey") Integer userKey);
 
 }
