@@ -1,17 +1,22 @@
 package edu.sjsu.seekers.starbucks.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 public class PaymentDetails {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="Payment_Id")
     private Integer paymentId;
 
-    @Column(name="Order_Key")
-    private Integer orderKey;
+    @ManyToOne
+    @JoinColumn(name = "Order_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Orders orderKey;
 
     @Column(name="Payment_Status")
     private String paymentStatus;
@@ -24,11 +29,11 @@ public class PaymentDetails {
         this.paymentId = paymentId;
     }
 
-    public Integer getOrderKey() {
+    public Orders getOrderKey() {
         return orderKey;
     }
 
-    public void setOrderKey(Integer orderKey) {
+    public void setOrderKey(Orders orderKey) {
         this.orderKey = orderKey;
     }
 
