@@ -1,9 +1,8 @@
 package edu.sjsu.seekers.starbucks.dao.impl;
 
-import edu.sjsu.seekers.starbucks.dao.repository.PaymentCardDetailsDAO;
+import edu.sjsu.seekers.starbucks.dao.PaymentCardDetailsDAO;
 import edu.sjsu.seekers.starbucks.dao.repository.PaymentCardDetailsRepository;
 import edu.sjsu.seekers.starbucks.model.PaymentCardDetails;
-import edu.sjsu.seekers.starbucks.model.ProductCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 

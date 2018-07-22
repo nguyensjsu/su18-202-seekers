@@ -1,10 +1,7 @@
 package edu.sjsu.seekers.starbucks.dao.impl;
 
-import edu.sjsu.seekers.starbucks.dao.ProductDAO;
 import edu.sjsu.seekers.starbucks.dao.SizeDAO;
-import edu.sjsu.seekers.starbucks.dao.repository.ProductRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.SizeRepository;
-import edu.sjsu.seekers.starbucks.model.Products;
 import edu.sjsu.seekers.starbucks.model.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

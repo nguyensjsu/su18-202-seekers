@@ -42,6 +42,7 @@ public class User {
     @Column(name="Is_Active_Customer")
     private String idActiveCustomer;
 
+
     @Column(name="Is_Account_Verified")
     private String idAccountVerified;
 
@@ -91,6 +92,7 @@ public class User {
     public String getIdAccountVerified() {
         return idAccountVerified;
     }
+
 
     public void setIdAccountVerified(String idAccountVerified) {
         this.idAccountVerified = idAccountVerified;
