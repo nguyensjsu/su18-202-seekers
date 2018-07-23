@@ -13,7 +13,7 @@ import java.util.List;
 public interface PaymentCardDetailsRepository extends JpaRepository<PaymentCardDetails, Integer>  {
 
 
-    @Query("SELECT o FROM PaymentCardDetails o WHERE o.userKey = :userKey")
+    @Query("SELECT o FROM PaymentCardDetails o WHERE o.userKey.userKey = :userKey")
     List<PaymentCardDetails> findByUserKey(@Param("userKey") Integer userKey);
 
 
