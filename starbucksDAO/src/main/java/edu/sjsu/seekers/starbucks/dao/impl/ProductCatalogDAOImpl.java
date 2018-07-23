@@ -6,6 +6,8 @@ import edu.sjsu.seekers.starbucks.model.ProductCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Configuration
@@ -21,5 +23,12 @@ public class ProductCatalogDAOImpl implements ProductCatalogDAO {
         productCataog = productCatalogRepository.findById(id);
         return productCataog;
     }
+
+    @Override
+    public List<ProductCatalog> getAllForProductByProductID(Integer id) {
+        return productCatalogRepository.findAllById(Collections.singleton(id));
+    }
+
+
 
 }
