@@ -5,10 +5,11 @@ import edu.sjsu.seekers.starbucks.dao.repository.OrderRepository;
 import edu.sjsu.seekers.starbucks.model.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 @Configuration
 public class OrderDAOImpl implements OrderDAO {
 
