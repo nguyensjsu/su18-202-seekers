@@ -1,20 +1,14 @@
 package edu.sjsu.seekers.PaymentAPI.service.impl;
 
-import edu.sjsu.seekers.PaymentAPI.Request.PaymentRequest;
 import edu.sjsu.seekers.PaymentAPI.Response.PaymentOptionsResponse;
-import edu.sjsu.seekers.PaymentAPI.Response.PaymentResponse;
 import edu.sjsu.seekers.PaymentAPI.service.PaymentOptionsService;
 import edu.sjsu.seekers.starbucks.dao.PaymentCardDetailsDAO;
-import edu.sjsu.seekers.starbucks.dao.PaymentDetailsDAO;
 import edu.sjsu.seekers.starbucks.dao.UserDAO;
-import edu.sjsu.seekers.starbucks.dao.impl.UserDAOImpl;
 import edu.sjsu.seekers.starbucks.model.PaymentCardDetails;
 import edu.sjsu.seekers.starbucks.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PaymentOptionsServiceImpl implements PaymentOptionsService {
@@ -24,19 +18,24 @@ public class PaymentOptionsServiceImpl implements PaymentOptionsService {
     UserDAO userDAO;
 
     @Override
-    public PaymentResponse confirmOrder(PaymentRequest request) {
-        PaymentResponse response  = new PaymentResponse();
-
-        response.setResponseMessage(request.getUserName().toString()+" "+request.getPassword().toString());
-        return response;
-    }
-
-    @Override
     public PaymentOptionsResponse getPaymentOptions(String userName) {
+        PaymentOptionsResponse paymentOptionsResponse = new PaymentOptionsResponse();
+        Map<Integer,String> cardList = new HashMap<>();
+        String cardNumber;
+
         Optional<User> user = userDAO.findUserByUsername(userName);
-        System.out.println(user.get().getUserKey());
         List<PaymentCardDetails> paymentCards = paymentCardDetailsDAO.findPaymentCardDetailsByUserKey(user.get().getUserKey());
-        System.out.println(paymentCards);
+        if(paymentCards != null) {
+            for (PaymentCardDetails entry : paymentCards) {
+                cardNumber = entry.getCardNumber();
+                cardNumber = "************" + cardNumber.substring(cardNumber.length() - 4);
+                cardList.put(entry.getCardKey(), cardNumber);
+            }
+            paymentOptionsResponse.setPaymentCards(cardList);
+            paymentOptionsResponse.setRewardPoints(user.get().getRewardPoints());
+            paymentOptionsResponse.setResponseMessage("Success!");
+            return paymentOptionsResponse;
+        }
         return null;
     }
 }
