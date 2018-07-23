@@ -5,10 +5,11 @@ import edu.sjsu.seekers.starbucks.dao.repository.UserRepository;
 import edu.sjsu.seekers.starbucks.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Configuration
+@Repository
 public class UserDAOImpl implements UserDAO {
 
     @Autowired

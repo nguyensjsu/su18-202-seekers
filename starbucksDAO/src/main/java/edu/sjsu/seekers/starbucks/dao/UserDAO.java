@@ -1,9 +1,12 @@
 package edu.sjsu.seekers.starbucks.dao;
 
 import edu.sjsu.seekers.starbucks.model.User;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Optional;
 
+
+@Configuration
 public interface UserDAO {
 
     public Optional<User> get(Integer Id);
