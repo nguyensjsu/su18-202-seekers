@@ -1,16 +1,15 @@
 package edu.sjsu.seekers.PaymentAPI.controllers;
 
 import edu.sjsu.seekers.PaymentAPI.Response.GenericResponse;
-import edu.sjsu.seekers.starbucks.dao.OrderDetailsDAO;
+import edu.sjsu.seekers.PaymentAPI.Response.PaymentOptionsResponse;
+import edu.sjsu.seekers.PaymentAPI.service.PaymentOptionsService;
 import edu.sjsu.seekers.starbucks.dao.PaymentDetailsDAO;
 import edu.sjsu.seekers.starbucks.model.OrderDetails;
 import edu.sjsu.seekers.starbucks.model.PaymentDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import edu.sjsu.seekers.starbucks.dao.OrderDetailsDAO;
 
 import java.util.Optional;
 
@@ -20,6 +19,9 @@ public class PaymentController {
     PaymentDetailsDAO paymentDetailsDAO;
     @Autowired
     OrderDetailsDAO orderDetailsDAO;
+
+    @Autowired
+    PaymentOptionsService paymentOptionsService;
 
     @RequestMapping(value = "/confirmOrder", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
@@ -35,5 +37,19 @@ public class PaymentController {
         } catch (Exception e) {
         }
         return responseEntity;
+    }
+
+    //Payment Options API
+    @RequestMapping(value = "/paymentOptions", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<PaymentOptionsResponse> getPaymentOptions(@RequestParam(value = "userName")String userName)
+    {
+        ResponseEntity<PaymentOptionsResponse> responseEntity = null;
+        PaymentOptionsResponse paymentOptionsResponse = new PaymentOptionsResponse();
+
+//        paymentOptionsResponse.setPaymentCards();
+        paymentOptionsService.getPaymentOptions(userName);
+
+        return null;
     }
 }
