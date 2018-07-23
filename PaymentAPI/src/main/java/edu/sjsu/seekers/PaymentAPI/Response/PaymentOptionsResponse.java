@@ -1,12 +1,12 @@
 package edu.sjsu.seekers.PaymentAPI.Response;
 
-import java.util.List;
+import java.util.Map;
 
 public class PaymentOptionsResponse extends GenericResponse {
-    private List<String> paymentCards;
-    private double rewardPoints;
+    private Map<Integer,String> paymentCards;
+    private Double rewardPoints;
 
-    public PaymentOptionsResponse(String responseMessage, String statusCode, List<String> paymentCards, double rewardPoints) {
+    public PaymentOptionsResponse(String responseMessage, String statusCode, Map<Integer,String> paymentCards, Double rewardPoints) {
         super(responseMessage, statusCode);
         this.paymentCards = paymentCards;
         this.rewardPoints = rewardPoints;
@@ -16,28 +16,28 @@ public class PaymentOptionsResponse extends GenericResponse {
 
     }
 
-    public List<String> getPaymentCards() {
+    public Map<Integer,String> getPaymentCards() {
         return paymentCards;
     }
 
-    public void setPaymentCards(List<String> paymentCards) {
+    public void setPaymentCards(Map<Integer,String> paymentCards) {
         this.paymentCards = paymentCards;
     }
 
-    public double getRewardPoints() {
+    public Double getRewardPoints() {
         return rewardPoints;
     }
 
-    public void setRewardPoints(double rewardPoints) {
+    public void setRewardPoints(Double rewardPoints) {
         this.rewardPoints = rewardPoints;
     }
 
     @Override
     public String toString() {
-        return "PaymentResponse{" +
+        return "PaymentOptionsResponse{" +
                 "paymentCards=" + paymentCards +
                 ", rewardPoints=" + rewardPoints +
                 '}';
     }
-
 }
+
