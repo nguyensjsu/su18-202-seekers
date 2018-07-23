@@ -11,9 +11,12 @@ public class User {
      */
 
     @Id
-    // @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="User_Key")
     private Integer userKey;
+
+    @Column(name="Address_Key")
+    private Integer addressKey;
 
     @Column(name="User_Name")
     private String userName;
@@ -24,9 +27,6 @@ public class User {
     @Column(name="Password")
     private String password;
 
-    @Column(name="Address_Key")
-    private Integer addresskey;
-
     @Column(name="Date_of_Birth")
     private String dateOfBirth;
 
@@ -36,20 +36,18 @@ public class User {
     @Column(name="Phone_Number")
     private String phoneNumber;
 
-    @Column(name="Is_Verified_Phone_Number")
-    private String isVerifiedphoneNumber;
-
-    @Column(name="Home_Address_id")
-    private String homeAddressId;
-
-    @Column(name="Office_Address_id")
-    private String officeAddressId;
+    @Column(name="Is_Logged_In")
+    private String isLoggedIn;
 
     @Column(name="Is_Active_Customer")
     private String idActiveCustomer;
 
-    @Column(name="Default_Store_Id")
-    private String defaultStoreId;
+
+    @Column(name="Is_Account_Verified")
+    private String idAccountVerified;
+
+    @Column(name="Default_Store_Key")
+    private String defaultStoreKey;
 
     @Column(name="Reward_Points")
     private String rewardPoints;
@@ -60,10 +58,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void setAddresskey(Integer addresskey) {
-        this.addresskey = addresskey;
     }
 
     public void setDateOfBirth(String dateOfBirth) {
@@ -78,24 +72,12 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setIsVerifiedphoneNumber(String isVerifiedphoneNumber) {
-        this.isVerifiedphoneNumber = isVerifiedphoneNumber;
-    }
-
-    public void setHomeAddressId(String homeAddressId) {
-        this.homeAddressId = homeAddressId;
-    }
-
-    public void setOfficeAddressId(String officeAddressId) {
-        this.officeAddressId = officeAddressId;
-    }
-
     public void setIdActiveCustomer(String idActiveCustomer) {
         this.idActiveCustomer = idActiveCustomer;
     }
 
-    public void setDefaultStoreId(String defaultStoreId) {
-        this.defaultStoreId = defaultStoreId;
+    public void setDefaultStoreKey(String defaultStoreKey) {
+        this.defaultStoreKey = defaultStoreKey;
     }
 
     public void setRewardPoints(String rewardPoints) {
@@ -107,12 +89,17 @@ public class User {
 
     }
 
-    public String getPassword() {
-        return password;
+    public String getIdAccountVerified() {
+        return idAccountVerified;
     }
 
-    public Integer getAddresskey() {
-        return addresskey;
+
+    public void setIdAccountVerified(String idAccountVerified) {
+        this.idAccountVerified = idAccountVerified;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getDateOfBirth() {
@@ -127,28 +114,24 @@ public class User {
         return phoneNumber;
     }
 
-    public String getIsVerifiedphoneNumber() {
-        return isVerifiedphoneNumber;
-    }
-
-    public String getHomeAddressId() {
-        return homeAddressId;
-    }
-
-    public String getOfficeAddressId() {
-        return officeAddressId;
-    }
-
     public String getIdActiveCustomer() {
         return idActiveCustomer;
     }
 
-    public String getDefaultStoreId() {
-        return defaultStoreId;
+    public String getDefaultStoreKey() {
+        return defaultStoreKey;
     }
 
     public String getRewardPoints() {
         return rewardPoints;
+    }
+
+    public String getIsLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setIsLoggedIn(String isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
 
     public void setUserName(String userName) {
@@ -167,11 +150,19 @@ public class User {
         return fullName;
     }
 
+    public Integer getAddressKey() {
+        return addressKey;
+    }
+
+    public void setAddressKey(Integer addressKey) {
+        this.addressKey = addressKey;
+    }
 
     @Override
     public String toString() {
         return "User{" +
                 "userKey=" + userKey +
+                ", addressKey=" + addressKey +
                 ", userName='" + userName + '\'' +
                 ", fullName='" + fullName + '\'' +
                 '}';

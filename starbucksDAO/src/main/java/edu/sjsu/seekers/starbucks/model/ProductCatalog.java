@@ -19,7 +19,7 @@ public class ProductCatalog {
     private Size size;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="Product_Catalog_Key")
     private Integer productCatalogKey;
 

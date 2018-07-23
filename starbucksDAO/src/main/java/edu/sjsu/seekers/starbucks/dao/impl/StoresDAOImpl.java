@@ -7,6 +7,7 @@ import edu.sjsu.seekers.starbucks.model.Stores;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Optional;
 
 @Configuration
@@ -21,4 +22,10 @@ public class StoresDAOImpl implements StoresDAO {
         stores = storesRepository.findById(id);
         return stores;
     }
+
+    @Override
+    public List<Stores> getAll(){
+        return storesRepository.findAll();
+    }
+
 }

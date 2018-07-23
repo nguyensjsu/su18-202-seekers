@@ -13,9 +13,15 @@ import java.util.List;
 public interface PaymentCardDetailsRepository extends JpaRepository<PaymentCardDetails, Integer>  {
 
 
-    @Query("SELECT o FROM PaymentCardDetails o WHERE o.userKey = :userkey")
+    @Query("SELECT o FROM PaymentCardDetails o WHERE o.userKey = :userKey")
+    List<PaymentCardDetails> findByUserKey(@Param("userKey") Integer userKey);
 
-    List<PaymentCardDetails> findByUserKey(@Param("userkey") Integer userKey);
+
+    /*@Query("DELETE o FROM PaymentCardDeatils o WHERE o.cardKey = :cardKey")
+    List<PaymentCardDetails> findByCardKey(@Param("cardKey") Integer cardKey);
+*/
+
+
 
 
 

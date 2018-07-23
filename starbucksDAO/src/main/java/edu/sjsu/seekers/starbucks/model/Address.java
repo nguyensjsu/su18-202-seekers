@@ -10,18 +10,11 @@ public class Address {
     @Column(name="Address_Key")
     private Integer addressKey;
 
-    @Column(name="Address_Description")
-    private String addressDescription;
-
-    @Column(name="Address_Type")
-    private String addressType;
-
     @Column(name="Address_Line_1")
     private String addressLine1;
 
     @Column(name="Address_Line_2")
     private String addressLine2;
-
 
     @Column(name="City")
     private String city;
@@ -37,14 +30,6 @@ public class Address {
 
     public Integer getAddressKey() {
         return addressKey;
-    }
-
-    public String getAddressDescription() {
-        return addressDescription;
-    }
-
-    public String getAddressType() {
-        return addressType;
     }
 
     public String getAddressLine1() {
@@ -75,14 +60,6 @@ public class Address {
         this.addressKey = addressKey;
     }
 
-    public void setAddressDescription(String addressDescription) {
-        this.addressDescription = addressDescription;
-    }
-
-    public void setAddressType(String addressType) {
-        this.addressType = addressType;
-    }
-
     public void setAddressLine1(String addressLine1) {
         this.addressLine1 = addressLine1;
     }
@@ -107,12 +84,12 @@ public class Address {
         this.zipCode = zipCode;
     }
 
+
+
     @Override
     public String toString() {
         return "Address{" +
                 "addressKey=" + addressKey +
-                ", addressDescription='" + addressDescription + '\'' +
-                ", addressType='" + addressType + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +

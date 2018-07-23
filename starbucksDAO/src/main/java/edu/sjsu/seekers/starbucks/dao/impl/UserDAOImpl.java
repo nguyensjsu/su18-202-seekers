@@ -5,10 +5,11 @@ import edu.sjsu.seekers.starbucks.dao.repository.UserRepository;
 import edu.sjsu.seekers.starbucks.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Configuration
+@Repository
 public class UserDAOImpl implements UserDAO {
 
     @Autowired
@@ -28,9 +29,14 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int resetUserPassword(String password, String userName )
+    public String getUserPassword(String userName) {
+        return userRepository.getPassword(userName);
+    }
+
+    @Override
+    public int resetUserPassword(Integer userKey, String password )
     {
-       int result= userRepository.resetPassword(userName,password);
+       int result= userRepository.resetPassword(userKey,password);
        return result;
     }
 
@@ -47,6 +53,11 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Optional<User> findUserByEmailId(String emailId) {
         return userRepository.findByEmailId(emailId);
+    }
+
+    @Override
+    public Integer getUserKey(String userName) {
+        return userRepository.getUserKey(userName);
     }
 
 }
