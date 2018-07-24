@@ -20,7 +20,7 @@ public class PaymentCardDetailsDAOImpl implements PaymentCardDetailsDAO {
     @Override
     public Optional<PaymentCardDetails> get(Integer id) {
         Optional<PaymentCardDetails> paymentCardDetails;
-        paymentCardDetails = paymentCardDetailsRepository.findById(1);
+        paymentCardDetails = paymentCardDetailsRepository.findById(id);
         return paymentCardDetails;
     }
 
