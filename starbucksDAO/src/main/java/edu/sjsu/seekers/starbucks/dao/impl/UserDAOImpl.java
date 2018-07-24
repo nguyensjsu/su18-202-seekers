@@ -19,7 +19,7 @@ public class UserDAOImpl implements UserDAO {
     public Optional<User> get(Integer id) {
 
         Optional<User> user;
-        user =userRepository.findById(1);
+        user =userRepository.findById(id);
         return user;
     }
 
