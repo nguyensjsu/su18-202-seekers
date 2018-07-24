@@ -1,6 +1,8 @@
 package edu.sjsu.seekers.OrderAPI.service.impl;
 
+import edu.sjsu.seekers.OrderAPI.response.GenericResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductResponse;
+import edu.sjsu.seekers.OrderAPI.response.ProductsResponse;
 import edu.sjsu.seekers.OrderAPI.service.OrderServiceAPI;
 import edu.sjsu.seekers.starbucks.dao.*;
 import edu.sjsu.seekers.starbucks.model.*;
@@ -54,27 +56,32 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
     }
 
     @Override
-    public ProductResponse getSpecificProduct(Integer id) {
+    public List<Products> getAllActiveProducts() {
+        return productDAO.getAllActiveProducts();
+    }
+
+    @Override
+    public ProductResponse getSpecificProduct(String name) {
 
         ProductResponse productResponse = new ProductResponse();
         try {
-            Optional<Products> productOptional = productDAO.get(id);
-            if (productOptional.isPresent()) {
-                Products prd = productOptional.get();
-                List<ProductCatalog> productCatalogs = productCatalogDAO.getAllForProductByProductID(id);
-                productResponse.setProduct(prd);
+            Products productOptional = productDAO.getProductByProductName(name);
+            if (productOptional != null) {
+                List<ProductCatalog> productCatalogs = productCatalogDAO.getAllForProductByProductID(productOptional.getProductKey());
+                productResponse.setProduct(productOptional);
                 productResponse.setProductCatalog(productCatalogs);
                 productResponse.setStatusCode(HttpStatus.OK.toString());
                 productResponse.setFinalMessage();
-            } else
+            } else {
+                productResponse.setMessage("Requested product not found");
                 productResponse.setStatusCode(HttpStatus.OK.toString());
+            }
 
         } catch (Exception ex) {
             productResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
         }
         return productResponse;
     }
-
 
     @Override
     public User getUser(int userId) {
@@ -88,6 +95,24 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
     @Override
     public Orders saveOrder(Orders orders) {
         return orderDAOImpl.save(orders);
+    }
+
+    @Override
+    public ProductsResponse getAllProductsResponse() {
+        ProductsResponse productsResponse = new ProductsResponse();
+        try {
+            List<Products> prdList = getAllActiveProducts();
+            if (prdList.size() > 0) {
+                productsResponse.setProduct(prdList);
+                productsResponse.setStatusCode(HttpStatus.OK.toString());
+                productsResponse.setFinalMessage();
+            } else
+                productsResponse.setStatusCode(HttpStatus.OK.toString());
+
+        } catch (Exception ex) {
+            productsResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        }
+        return productsResponse;
     }
 
     public String addProductToCart(Orders ord, OrderDetails orderDetails, int userKey) {

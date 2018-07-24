@@ -1,10 +1,15 @@
 package edu.sjsu.seekers.OrderAPI.response;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sjsu.seekers.starbucks.model.ProductCatalog;
 import edu.sjsu.seekers.starbucks.model.Products;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductResponse extends GenericResponse {
 
@@ -18,10 +23,12 @@ public class ProductResponse extends GenericResponse {
 
 
 
+    @JsonIgnore
     private Products product;
 
+    @JsonIgnore
     private List<ProductCatalog> productCatalogs;
-
+    @JsonIgnore
     public List<ProductCatalog> getProductCatalog() {
         return productCatalogs;
     }
@@ -38,21 +45,19 @@ public class ProductResponse extends GenericResponse {
         this.product = product;
     }
 
+    public void setFinalMessage() throws JsonProcessingException {
 
+        Map<String,Object> outputMap = new HashMap<>();
+        outputMap.put("Product Name",product.getProductName());
+        outputMap.put("Product Description",product.getProductDescription());
+        outputMap.put("Product ImageLink",product.getProductImageLink());
 
-    public void     setFinalMessage() {
-        String result = "Product Name:"
-                + product.getProductName() + System.lineSeparator() +
-                "Description:" + product.getProductDescription() + System.lineSeparator() +
-                "Image Link:" + product.getProductImageLink() + System.lineSeparator() +
-                "Sizes available:" + System.lineSeparator();
-
+        Map<String,String> childOutputMap = new HashMap<>();
         for(ProductCatalog pc : productCatalogs)
         {
-            result += "Size: " + pc.getSize().getSizeName() + " - " + pc.getPrice() + System.lineSeparator();
+            childOutputMap.put(pc.getSize().getSizeName(),pc.getPrice().toString());
         }
-
-        result +="status Code=" + getStatusCode();
-        setMessage(result);
+        outputMap.put("Sizes",childOutputMap);
+        setMessage(outputMap);
     }
 }

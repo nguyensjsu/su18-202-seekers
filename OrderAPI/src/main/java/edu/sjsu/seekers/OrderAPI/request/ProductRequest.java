@@ -6,19 +6,19 @@ public class ProductRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    int id;
+    String name;
     String userName;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUserName() {
@@ -32,8 +32,8 @@ public class ProductRequest implements Serializable {
     @Override
     public String toString() {
         return "ProductRequest{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
+                "name=" + name +
+                ", userName=" + userName +
                 '}';
     }
 }

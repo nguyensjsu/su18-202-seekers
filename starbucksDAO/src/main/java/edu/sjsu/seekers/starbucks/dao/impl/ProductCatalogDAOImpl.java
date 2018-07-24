@@ -26,9 +26,7 @@ public class ProductCatalogDAOImpl implements ProductCatalogDAO {
 
     @Override
     public List<ProductCatalog> getAllForProductByProductID(Integer id) {
-        return productCatalogRepository.findAllById(Collections.singleton(id));
+        return productCatalogRepository.getAllForProductByProductID(id);
     }
-
-
 
 }

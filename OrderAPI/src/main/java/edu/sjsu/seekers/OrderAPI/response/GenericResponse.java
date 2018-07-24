@@ -6,7 +6,7 @@ public class GenericResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String message;
+    private Object message;
     private String statusCode;
 
     public GenericResponse() {
@@ -18,11 +18,11 @@ public class GenericResponse implements Serializable {
         this.statusCode = statusCode;
     }
 
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Object message) {
         this.message = message;
     }
 
