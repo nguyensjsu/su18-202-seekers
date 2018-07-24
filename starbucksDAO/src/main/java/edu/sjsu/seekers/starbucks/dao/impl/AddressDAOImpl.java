@@ -19,7 +19,7 @@ public class AddressDAOImpl implements AddressDAO {
     public Optional<Address> get(Integer Id) {
 
         Optional<Address> address;
-        address =addressRepository.findById(1);
+        address =addressRepository.findById(Id);
         return address;
     }
 
@@ -32,6 +32,11 @@ public class AddressDAOImpl implements AddressDAO {
     @Override
     public void update(Address address) {
 
+    }
+
+    @Override
+    public Optional<Address> getLastInsertedRow() {
+        return addressRepository.getLastRow();
     }
 
 
