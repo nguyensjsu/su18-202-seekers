@@ -86,7 +86,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
             newAddress.setCountry(request.getCountry());
             newAddress.setZipCode(request.getZipCode());
             addressDAO.save(newAddress);
-            Integer lastInsertedAddressKey = addressDAO.getLastInsertedRow();
+           Optional<Address> lastInsertedAddress = addressDAO.getLastInsertedRow();
             newUser.setFullName(request.getFullName());
             newUser.setUserName(request.getUserName());
             newUser.setPassword(request.getPassword());
@@ -97,7 +97,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
             newUser.setIdActiveCustomer("N");
             newUser.setDefaultStoreKey(1);
             newUser.setRewardPoints(0.00);
-            newUser.setAddressKey(lastInsertedAddressKey);
+            newUser.setAddressKey(lastInsertedAddress.get());
             newUser.setIdAccountVerified(authenticationCode);
             userDAO.save(newUser);
             createUser.setMessage("User created successfully");
@@ -117,7 +117,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         GenericResponse updateUser = new GenericResponse();
         Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
         System.out.println(existingUser.get().getUserKey());
-        Optional<Address> existingUserAddress = addressDAO.get(existingUser.get().getAddressKey());
+        Optional<Address> existingUserAddress = addressDAO.get(existingUser.get().getAddressKey().getAddressKey());
         System.out.println(existingUserAddress.get().getAddressKey());
         if(existingUser!= null && existingUserAddress!=null ) {
             if (request.getFullName() != null)
