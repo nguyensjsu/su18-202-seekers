@@ -18,8 +18,10 @@ public class User {
     @Column(name="User_Key")
     private Integer userKey;
 
-    @Column(name="Address_Key")
-    private Integer addressKey;
+    @ManyToOne
+    @JoinColumn(name = "Address_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Address addressKey;
 
     @Column(name="User_Name")
     private String userName;
@@ -150,12 +152,12 @@ public class User {
         return fullName;
     }
 
-    public Integer getAddressKey() {
+    public Address getAddressKey() {
         return addressKey;
     }
 
-    public void setAddressKey(Integer addressKey) {
-        this.addressKey = addressKey;
+    public void setAddressKey(Address addressKey) {
+        this.addressKey= addressKey;
     }
 
     @Override

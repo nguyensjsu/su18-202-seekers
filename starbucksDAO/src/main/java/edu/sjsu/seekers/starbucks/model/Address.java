@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Address {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="Address_Key")
     private Integer addressKey;
 
@@ -83,8 +83,6 @@ public class Address {
     public void setZipCode(Integer zipCode) {
         this.zipCode = zipCode;
     }
-
-
 
     @Override
     public String toString() {
