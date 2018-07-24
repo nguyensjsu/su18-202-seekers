@@ -55,7 +55,7 @@ public class ProductResponse extends GenericResponse {
         Map<String,String> childOutputMap = new HashMap<>();
         for(ProductCatalog pc : productCatalogs)
         {
-            childOutputMap.put(pc.getSize().getSizeName(),pc.getPrice().toString());
+            childOutputMap.put(pc.getSize().getSizeName(),"Price: $" + pc.getPrice().toString() + ", Reward Points: $" + pc.getRewards().toString());
         }
         outputMap.put("Sizes",childOutputMap);
         setMessage(outputMap);

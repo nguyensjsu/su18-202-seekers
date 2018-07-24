@@ -9,6 +9,7 @@ import edu.sjsu.seekers.starbucks.model.Stores;
 import edu.sjsu.seekers.starbucks.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderServiceAPI {
 
@@ -22,4 +23,5 @@ public interface OrderServiceAPI {
     public ProductsResponse getAllProductsResponse();
     public List<Products> getAllActiveProducts();
     public StoresResponse getAllStoresResponse();
+    public Optional<User> findUserByUsername(String userName);
 }

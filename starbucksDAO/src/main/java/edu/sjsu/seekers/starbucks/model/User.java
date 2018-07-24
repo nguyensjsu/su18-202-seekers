@@ -158,6 +158,7 @@ public class User {
         this.addressKey = addressKey;
     }
 
+
     @Override
     public String toString() {
         return "User{" +
@@ -165,7 +166,15 @@ public class User {
                 ", addressKey=" + addressKey +
                 ", userName='" + userName + '\'' +
                 ", fullName='" + fullName + '\'' +
+                ", password='" + password + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", emailId='" + emailId + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", isLoggedIn='" + isLoggedIn + '\'' +
+                ", idActiveCustomer='" + idActiveCustomer + '\'' +
+                ", idAccountVerified='" + idAccountVerified + '\'' +
+                ", defaultStoreKey='" + defaultStoreKey + '\'' +
+                ", rewardPoints='" + rewardPoints + '\'' +
                 '}';
     }
-
 }

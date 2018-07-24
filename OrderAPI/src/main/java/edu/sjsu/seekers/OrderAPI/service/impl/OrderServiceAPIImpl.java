@@ -83,6 +83,11 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
     }
 
     @Override
+    public Optional<User> findUserByUsername(String userName) {
+        return userDAO.findUserByUsername(userName);
+    }
+
+    @Override
     public ProductResponse getSpecificProduct(String name) {
 
         ProductResponse productResponse = new ProductResponse();

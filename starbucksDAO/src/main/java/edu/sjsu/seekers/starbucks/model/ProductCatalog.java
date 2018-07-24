@@ -24,10 +24,20 @@ public class ProductCatalog {
     private Integer productCatalogKey;
 
 
-   @Column(name="Price")
+    @Column(name="Price")
     private Double price;
 
+    @Column(name="Rewards_Earned")
+    private Double rewards;
 
+
+    public Double getRewards() {
+        return rewards;
+    }
+
+    public void setRewards(Double rewards) {
+        this.rewards = rewards;
+    }
 
     public Products getProducts() {
         return products;
@@ -62,6 +72,7 @@ public class ProductCatalog {
         this.price = price;
     }
 
+
     @Override
     public String toString() {
         return "ProductCatalog{" +
@@ -69,9 +80,9 @@ public class ProductCatalog {
                 ", size=" + size +
                 ", productCatalogKey=" + productCatalogKey +
                 ", price=" + price +
+                ", rewards=" + rewards +
                 '}';
     }
-
 }
 
 
