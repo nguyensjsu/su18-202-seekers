@@ -9,5 +9,7 @@ public interface ProductDAO {
     public Optional<Products> get(Integer id);
     public void save(Products products);
     public List<Products> getAll();
+    public List<Products> getAllActiveProducts();
+    public Products getProductByProductName(String name);
 
 }

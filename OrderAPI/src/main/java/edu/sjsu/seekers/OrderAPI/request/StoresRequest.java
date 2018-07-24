@@ -1,24 +1,14 @@
 package edu.sjsu.seekers.OrderAPI.request;
 
-import java.io.Serializable;
-
-public class ProductRequest implements Serializable {
+public class StoresRequest {
 
     private static final long serialVersionUID = 1L;
 
-    String name;
+
     String userName;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUserName() {
@@ -31,9 +21,6 @@ public class ProductRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "ProductRequest{" +
-                "name=" + name +
-                ", userName=" + userName +
-                '}';
+        return "StoresRequest {userName='" + userName + '\'' + '}';
     }
 }
