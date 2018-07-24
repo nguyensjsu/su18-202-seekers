@@ -2,6 +2,7 @@ package edu.sjsu.seekers.OrderAPI.service;
 
 import edu.sjsu.seekers.OrderAPI.response.ProductResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductsResponse;
+import edu.sjsu.seekers.OrderAPI.response.StoresResponse;
 import edu.sjsu.seekers.starbucks.model.Orders;
 import edu.sjsu.seekers.starbucks.model.Products;
 import edu.sjsu.seekers.starbucks.model.Stores;
@@ -20,4 +21,5 @@ public interface OrderServiceAPI {
     public Orders saveOrder(Orders orders);
     public ProductsResponse getAllProductsResponse();
     public List<Products> getAllActiveProducts();
+    public StoresResponse getAllStoresResponse();
 }

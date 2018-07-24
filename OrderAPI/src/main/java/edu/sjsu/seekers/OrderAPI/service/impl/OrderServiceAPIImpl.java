@@ -3,6 +3,7 @@ package edu.sjsu.seekers.OrderAPI.service.impl;
 import edu.sjsu.seekers.OrderAPI.response.GenericResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductsResponse;
+import edu.sjsu.seekers.OrderAPI.response.StoresResponse;
 import edu.sjsu.seekers.OrderAPI.service.OrderServiceAPI;
 import edu.sjsu.seekers.starbucks.dao.*;
 import edu.sjsu.seekers.starbucks.model.*;
@@ -58,6 +59,27 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
     @Override
     public List<Products> getAllActiveProducts() {
         return productDAO.getAllActiveProducts();
+    }
+
+    @Override
+    public StoresResponse getAllStoresResponse() {
+        StoresResponse storeResponse = new StoresResponse();
+        try {
+            List<Stores> storeList = getAllStores();
+            if (storeList.size() > 0) {
+                storeResponse.setStoresList(storeList);
+                storeResponse.setStatusCode(HttpStatus.OK.toString());
+                storeResponse.setFinalMessage();
+            } else {
+                storeResponse.setMessage("No Stores found");
+                storeResponse.setStatusCode(HttpStatus.OK.toString());
+            }
+
+        } catch (Exception ex) {
+            storeResponse.setMessage("Sorry, this request Cannot be completed at this time. Apologies for the inconvenience");
+            storeResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        }
+        return storeResponse;
     }
 
     @Override
