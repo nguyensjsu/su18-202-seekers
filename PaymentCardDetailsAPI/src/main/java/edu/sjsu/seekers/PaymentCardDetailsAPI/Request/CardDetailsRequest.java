@@ -6,8 +6,13 @@ public class CardDetailsRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer addressLine1;
-    private Integer addressLine2;
+    private String addressLine1;
+    private String addressLine2;
+    private String state;
+    private String city;
+    private String country;
+    private Integer zipCode;
+    private String userName;
     private String cardNumber;
     private String expirationMonth;
     private String expirationYear;
@@ -18,12 +23,12 @@ public class CardDetailsRequest implements Serializable {
 
     }
 
-    public CardDetailsRequest(Integer addressLine1,Integer addressLine2,String cardNumber,String expirationMonth,String expirationYear,String ccvCode)
+    public CardDetailsRequest(String userName,String cardNumber,String expirationMonth,String expirationYear,String ccvCode)
     {
 
         super();
-        this.addressLine1=addressLine1;
-        this.addressLine2=addressLine2;
+
+        this.userName=userName;
         this.cardNumber=cardNumber;
         this.expirationMonth=expirationMonth;
         this.expirationYear=expirationYear;
@@ -34,20 +39,13 @@ public class CardDetailsRequest implements Serializable {
         return serialVersionUID;
     }
 
-    public Integer getAddressLine1() {
-        return addressLine1;
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setAddressLine1(Integer addressLine1) {
-        this.addressLine1 = addressLine1;
-    }
-
-    public Integer getAddressLine2() {
-        return addressLine2;
-    }
-
-    public void setAddressLine2(Integer addressLine2) {
-        this.addressLine2 = addressLine2;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getCardNumber() {
@@ -77,21 +75,71 @@ public class CardDetailsRequest implements Serializable {
     public String getCcvCode() {
         return ccvCode;
     }
-
     public void setCcvCode(String ccvCode) {
         this.ccvCode = ccvCode;
+    }
+
+    public String getAddressLine1() {
+        return addressLine1;
+    }
+
+    public void setAddressLine1(String addressLine1) {
+        this.addressLine1 = addressLine1;
+    }
+
+    public String getAddressLine2() {
+        return addressLine2;
+    }
+
+    public void setAddressLine2(String addressLine2) {
+        this.addressLine2 = addressLine2;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Integer getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(Integer zipCode) {
+        this.zipCode = zipCode;
     }
 
     @Override
     public String toString() {
         return "CardDetailsRequest{" +
-                "addressLine1=" + addressLine1 +
-                ", addressLine2=" + addressLine2 +
+                ", userName='" + userName + '\'' +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", expirationMonth='" + expirationMonth + '\'' +
                 ", expirationYear='" + expirationYear + '\'' +
                 ", ccvCode='" + ccvCode + '\'' +
                 '}';
     }
+
+
+
+
 }
 

@@ -4,6 +4,7 @@ package edu.sjsu.seekers.PaymentCardDetailsAPI.controllers;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.Request.CardDetailsRequest;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.Response.CardDetailsResponse;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.Response.GenericResponse;
+import edu.sjsu.seekers.PaymentCardDetailsAPI.Response.SaveCardsResponse;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.service.CardDetailServiceAPI;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.service.TestClass;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.service.impl.CardDetailsServiceAPIImpl;
@@ -47,6 +48,27 @@ public class CardDetailsController {
         }
         return responseEntity;
     }
+
+        @RequestMapping(value = "/saveCards" , method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<SaveCardsResponse> saveCardDetails(@RequestBody CardDetailsRequest request ) {
+        ResponseEntity<SaveCardsResponse> responseEntity = null;
+        try {
+            System.out.println("CardDetailsRequest: " + request);
+             SaveCardsResponse response=apiService.saveCardDetails(request);
+            responseEntity = new ResponseEntity<SaveCardsResponse>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            SaveCardsResponse response = new SaveCardsResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<SaveCardsResponse>(response, HttpStatus.EXPECTATION_FAILED);
+
+        }
+        return responseEntity;
+    }
+
+
 
         @RequestMapping("/greetings")
     public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
