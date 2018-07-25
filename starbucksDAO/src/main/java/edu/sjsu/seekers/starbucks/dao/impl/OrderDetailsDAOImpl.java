@@ -25,4 +25,9 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     {
         orderDetailsRepository.save(ordersLineItems);
     }
+
+    @Override
+    public void delete(OrderDetails orderDetails) {
+        orderDetailsRepository.delete(orderDetails);
+    }
 }
