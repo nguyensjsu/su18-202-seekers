@@ -71,13 +71,13 @@ public class PaymentServiceImpl implements PaymentService {
             if (orders.isPresent()) {
                 orderDetailsDAO.deleteOrderDetailsforOrder(orders.get().getOrderKey());
                 orderDAO.delete(orders.get());
-                genericResponse.setResponseMessage("Cart Cleared!!!");
+                genericResponse.setResponseMessage("Cart Cleared!");
                 genericResponse.setStatusCode(HttpStatus.OK.toString());
                 responseEntity = new  ResponseEntity<>(genericResponse,HttpStatus.OK);
 
                 return responseEntity;
             } else {
-                genericResponse.setResponseMessage("Cart could not be cleared as there are no products in the cart!!!");
+                genericResponse.setResponseMessage("Cart could not be cleared as there are no products in the cart!");
                 genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
                 responseEntity = new ResponseEntity<>(genericResponse,HttpStatus.EXPECTATION_FAILED);
 
@@ -85,7 +85,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         else {
-            genericResponse.setResponseMessage("Cart could not be cleared as the user was not authenticated!!!");
+            genericResponse.setResponseMessage("Cart could not be cleared as the user was not authenticated!");
             genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
             responseEntity = new ResponseEntity<>(genericResponse,HttpStatus.EXPECTATION_FAILED);
             return responseEntity;
@@ -114,14 +114,14 @@ public class PaymentServiceImpl implements PaymentService {
 
                         response.setOrderDetails(orderDetails);
                         response.setPaymentType(reviewOrderRequest.getPaymentType());
-                        response.setResponseMessage("Please review your order and confirm checkout!!!");
+                        response.setResponseMessage("Please review your order and confirm checkout!");
                         response.setStatusCode(HttpStatus.OK.toString());
                         responseEntity = new ResponseEntity<>(response,HttpStatus.OK);
 
                         return responseEntity;
                     }
                     else {
-                        response.setResponseMessage("Card CVV did not match!!!");
+                        response.setResponseMessage("Card CVV did not match!");
                         response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
                         responseEntity = new ResponseEntity<>(response,HttpStatus.EXPECTATION_FAILED);
 
@@ -136,7 +136,7 @@ public class PaymentServiceImpl implements PaymentService {
                         List<OrderDetails> orderDetails = orderDetailsDAO.findAllOrderDetailsforOrderKey(orders.get().getOrderKey());
                         response.setOrderDetails(orderDetails);
                         response.setPaymentType(reviewOrderRequest.getPaymentType());
-                        response.setResponseMessage("Please review your order and confirm checkout!!!");
+                        response.setResponseMessage("Please review your order and confirm checkout!");
                         response.setStatusCode(HttpStatus.OK.toString());
                         responseEntity = new ResponseEntity<>(response,HttpStatus.OK);
 
@@ -144,7 +144,7 @@ public class PaymentServiceImpl implements PaymentService {
 
                     }
                     else {
-                        response.setResponseMessage("Not Enough reward points to make a purchase!!!");
+                        response.setResponseMessage("Not Enough reward points to make a purchase!");
                         response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
                         responseEntity = new ResponseEntity<>(response,HttpStatus.EXPECTATION_FAILED);
 
@@ -160,7 +160,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         else {
-            response.setResponseMessage("Unable to find a user with this userName!!!");
+            response.setResponseMessage("Unable to find a user with this userName!");
             response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
             responseEntity = new ResponseEntity<>(response,HttpStatus.EXPECTATION_FAILED);
 

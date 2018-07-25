@@ -24,7 +24,8 @@ public class ReviewOrderDetailsResponse extends GenericResponse {
 
         if(this.orderDetails!=null) {
             for (OrderDetails o : this.orderDetails) {
-                toReturn = toReturn + " Product Name='" + o.getProductKey().getProductName() + '\'' + ",Product Description='" + o.getProductKey().getProductDescription() + '\'' + ",Product Quantity='" + o.getOrderQuantity() + '\'';
+                toReturn = toReturn + " Product Name='" + o.getProductKey().getProductName() + '\'' + ",Product Description='" + o.getProductKey().getProductDescription() + '\'' + ",Product Quantity='" + o.getOrderQuantity() + '\''+
+                ",Toppings='" + o.getToppings() + '\'';
             }
             return toReturn;
         }
@@ -44,7 +45,6 @@ public class ReviewOrderDetailsResponse extends GenericResponse {
 
         toReturn = toReturn + " paymentType='" + paymentType + '\'';
         for(OrderDetails o : this.orderDetails){
-            toReturn=toReturn+"Product Name='"+o.getProductKey().getProductName()+'\''+",Product Description='"+o.getProductKey().getProductDescription()+'\''+",Product Quantity='"+o.getOrderQuantity()+'\'';
         }
 
         return toReturn;
