@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PaymentCardDetailsRepository extends JpaRepository<PaymentCardDetails, Integer>  {
@@ -17,9 +18,9 @@ public interface PaymentCardDetailsRepository extends JpaRepository<PaymentCardD
     List<PaymentCardDetails> findByUserKey(@Param("userKey") Integer userKey);
 
 
-    /*@Query("DELETE o FROM PaymentCardDeatils o WHERE o.cardKey = :cardKey")
-    List<PaymentCardDetails> findByCardKey(@Param("cardKey") Integer cardKey);
-*/
+    @Query("SELECT o FROM PaymentCardDetails o WHERE o.cardNumber= :cardNumber ")
+    Optional<PaymentCardDetails> findByCardNumber(@Param("cardNumber") String cardNumber);
+
 
 
 
