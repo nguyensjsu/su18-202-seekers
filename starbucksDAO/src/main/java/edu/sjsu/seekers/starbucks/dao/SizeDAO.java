@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface SizeDAO {
     public Optional<Size> get(Integer id);
+    public Size getSizeByName(String name);
 }
