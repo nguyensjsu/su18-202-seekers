@@ -15,4 +15,6 @@ public interface ProductCatalogRepository extends JpaRepository<ProductCatalog, 
     @Query("SELECT p FROM ProductCatalog p WHERE p.products.productKey = :productKey")
     List<ProductCatalog> getAllForProductByProductID(@Param("productKey") Integer productKey);
 
+    @Query("SELECT p FROM ProductCatalog p WHERE p.products.productKey = :productKey and p.size.sizeKey = :sizeKey")
+    ProductCatalog getProductCatalogByIdAndSize(@Param("productKey") Integer productKey,@Param("sizeKey") Integer sizeKey);
 }

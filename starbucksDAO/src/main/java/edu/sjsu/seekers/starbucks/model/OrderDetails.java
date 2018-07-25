@@ -29,6 +29,17 @@ public class OrderDetails {
     @Column(name="Net_Price")
     private Double netPrice;
 
+    @Column(name="Toppings")
+    private String toppings;
+
+    public String getToppings() {
+        return toppings;
+    }
+
+    public void setToppings(String toppings) {
+        this.toppings = toppings;
+    }
+
     public Integer getOrderLineKey() {
         return orderLineKey;
     }
@@ -69,6 +80,7 @@ public class OrderDetails {
         this.netPrice = netPrice;
     }
 
+
     @Override
     public String toString() {
         return "OrderDetails{" +
@@ -77,6 +89,7 @@ public class OrderDetails {
                 ", productKey=" + productKey +
                 ", orderQuantity=" + orderQuantity +
                 ", netPrice=" + netPrice +
+                ", toppings='" + toppings + '\'' +
                 '}';
     }
 }

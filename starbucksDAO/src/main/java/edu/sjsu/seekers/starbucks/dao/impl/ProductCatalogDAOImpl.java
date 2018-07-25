@@ -29,4 +29,9 @@ public class ProductCatalogDAOImpl implements ProductCatalogDAO {
         return productCatalogRepository.getAllForProductByProductID(id);
     }
 
+    @Override
+    public ProductCatalog getProductCatalogByIdAndSize(Integer productId, Integer sizeId) {
+        return productCatalogRepository.getProductCatalogByIdAndSize(productId,sizeId);
+    }
+
 }

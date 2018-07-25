@@ -1,5 +1,7 @@
 package edu.sjsu.seekers.OrderAPI.service;
 
+import edu.sjsu.seekers.OrderAPI.request.CartProductRequest;
+import edu.sjsu.seekers.OrderAPI.response.GenericResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductsResponse;
 import edu.sjsu.seekers.OrderAPI.response.StoresResponse;
@@ -9,6 +11,7 @@ import edu.sjsu.seekers.starbucks.model.Stores;
 import edu.sjsu.seekers.starbucks.model.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface OrderServiceAPI {
@@ -24,4 +27,5 @@ public interface OrderServiceAPI {
     public List<Products> getAllActiveProducts();
     public StoresResponse getAllStoresResponse();
     public Optional<User> findUserByUsername(String userName);
+    public GenericResponse addToCart(Map<String,CartProductRequest> productNames, User userKey);
 }
