@@ -174,7 +174,7 @@ public class User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", isLoggedIn='" + isLoggedIn + '\'' +
                 ", idActiveCustomer='" + idActiveCustomer + '\'' +
-                ", idAccountVerified='" + idAccountVerified + '\'' +
+                ", verificationCode='" + verificationCode + '\'' +
                 ", defaultStoreKey='" + defaultStoreKey + '\'' +
                 ", rewardPoints='" + rewardPoints + '\'' +
                 '}';
