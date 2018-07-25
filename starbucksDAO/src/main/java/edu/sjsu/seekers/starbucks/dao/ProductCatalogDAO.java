@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ProductCatalogDAO {
     public Optional<ProductCatalog> get(Integer id);
     public List<ProductCatalog> getAllForProductByProductID(Integer id);
+    public ProductCatalog getProductCatalogByIdAndSize(Integer productId,Integer sizeId);
 }
