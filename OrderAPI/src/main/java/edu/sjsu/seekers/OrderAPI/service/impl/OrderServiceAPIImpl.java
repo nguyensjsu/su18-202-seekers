@@ -1,10 +1,8 @@
 package edu.sjsu.seekers.OrderAPI.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.sjsu.seekers.OrderAPI.request.CartProductRequest;
-import edu.sjsu.seekers.OrderAPI.response.GenericResponse;
-import edu.sjsu.seekers.OrderAPI.response.ProductResponse;
-import edu.sjsu.seekers.OrderAPI.response.ProductsResponse;
-import edu.sjsu.seekers.OrderAPI.response.StoresResponse;
+import edu.sjsu.seekers.OrderAPI.response.*;
 import edu.sjsu.seekers.OrderAPI.service.OrderServiceAPI;
 import edu.sjsu.seekers.starbucks.dao.*;
 import edu.sjsu.seekers.starbucks.model.*;
@@ -98,7 +96,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
 
         ProductResponse productResponse = new ProductResponse();
         try {
-            Products productOptional = productDAO.getProductByProductName(name);
+            Products productOptional = getProductByProductName(name);
             if (productOptional != null) {
                 List<ProductCatalog> productCatalogs = productCatalogDAO.getAllForProductByProductID(productOptional.getProductKey());
                 productResponse.setProduct(productOptional);
@@ -191,14 +189,14 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 productRewards = 0.0;
                 productName = mp.getKey();
                 tempCartProductRequest = mp.getValue();
-                tempProducts = productDAO.getProductByProductName(productName);
+                tempProducts = getProductByProductName(productName);
                 if(tempProducts == null)
                 {
                     genericResponse.setMessage("Invalid product: " + productName);
                     invalidTransaction = true;
                     break;
                 }
-                tempSize = sizeDAO.getSizeByName(tempCartProductRequest.getSize());
+                tempSize = getSizeByName(tempCartProductRequest);
                 if(tempSize == null)
                 {
                     genericResponse.setMessage("Invalid size: " + productName + " for product: " + productName);
@@ -207,7 +205,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 }
                 sizeId = tempSize.getSizeKey();
                 productId = tempProducts.getProductKey();
-                tempProductCatalog = productCatalogDAO.getProductCatalogByIdAndSize(productId,sizeId);
+                tempProductCatalog = getProductCatalogByIdAndSize(sizeId, productId);
                 if(tempProductCatalog == null)
                 {
                     genericResponse.setMessage("Invalid size: " + productName + " and product: " + productName + " combination.");
@@ -230,13 +228,13 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 for(String s: top)
                 {
                     if(!s.equals("")) {
-                        tempToppingProduct = productDAO.getProductByProductName(s);
+                        tempToppingProduct = getProductByProductName(s);
                         if (tempToppingProduct == null) {
                             genericResponse.setMessage("Invalid topping: " + s + " added on product: " + productName);
                             invalidTransaction = true;
                             break;
                         }
-                        temptToppingProductCatalog = productCatalogDAO.getProductCatalogByIdAndSize(tempToppingProduct.getProductKey(), sizeDAO.getSizeByName(TOPPINGS_SIZE_NAME).getSizeKey());
+                        temptToppingProductCatalog = getProductCatalogByIdAndSize(sizeDAO.getSizeByName(TOPPINGS_SIZE_NAME).getSizeKey(), tempToppingProduct.getProductKey());
                         toppingsAmount += temptToppingProductCatalog.getPrice();
                         toppingsRewards += temptToppingProductCatalog.getRewards();
                     }
@@ -253,36 +251,117 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 tempOrderDetails.setNetPrice(productAmount);
                 tempOrderDetails.setToppings(tempCartProductRequest.getToppings());
                 orderDetailsList.add(tempOrderDetails);
-                orderDetailsDAO.save(tempOrderDetails);
                 orderAmount += productAmount;
                 orderRewards += productRewards;
             }
             if(invalidTransaction) {
-                //delete created order
+                deleteOrder(currentOrder);
+                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
             }
             else {
                 for (OrderDetails orderDetails : orderDetailsList) {
                     try {
-                        orderDetailsDAO.save(orderDetails);
+                        saveOrderDetails(orderDetails);
                     } catch (Exception ex) {
                         genericResponse.setMessage("Sorry! issue in saving order details for product");
+                        genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
                         invalidTransaction = true;
                         break;
                     }
                 }
                 if(invalidTransaction)
                 {
-
+                    for (OrderDetails orderDetails : orderDetailsList) {
+                        deleteOrderDetails(orderDetails);
+                    }
+                    deleteOrder(currentOrder);
                 }
                 else {
                     currentOrder.setOrderAmount(currentOrder.getOrderAmount() + orderAmount);
                     currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() + orderRewards);
                     saveOrder(currentOrder);
                     genericResponse.setMessage("Products added to cart");
+                    genericResponse.setStatusCode(HttpStatus.OK.toString());
                 }
             }
-        genericResponse.setStatusCode(HttpStatus.OK.toString());
+
         return genericResponse;
+    }
+
+    @Override
+    public GenericResponse addStoreToCart(String storeName, User user) {
+        GenericResponse genericResponse = new GenericResponse();
+        Optional<Stores> store = getStoreByName(storeName);
+        if(store.isPresent()) {
+            Orders currentOrder = null;
+            Optional<Orders> orders = getInprogressOrder(user.getUserKey());
+            if (orders.isPresent()) {
+                System.out.println("user: " + user.getUserName() + " has 1 active carts");
+                currentOrder = orders.get();
+                currentOrder.setStoreKey(store.get());
+                saveOrder(currentOrder);
+                genericResponse.setMessage("Store added to cart successfully!");
+                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            } else {
+                genericResponse.setMessage("No active cart for user:" + user.getUserName());
+                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            }
+        }
+        else
+        {
+            genericResponse.setMessage("Invalid store name provided");
+            genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        }
+        return genericResponse;
+    }
+
+
+    @Override
+    public ReviewCartResponse reviewCartResponse(User user) {
+        ReviewCartResponse reviewCartResponse = new ReviewCartResponse();
+        Orders currentOrder = null;
+        Optional<Orders> orders = getInprogressOrder(user.getUserKey());
+        if (orders.isPresent()) {
+            System.out.println("user: " + user.getUserName() + " has 1 active carts");
+            currentOrder = orders.get();
+            List<OrderDetails> orderDetailsList = orderDetailsDAO.getAllOrderDetailsByOrderId(currentOrder.getOrderKey());
+            reviewCartResponse.setCartList(orderDetailsList);
+            reviewCartResponse.setFinalMessage();
+            reviewCartResponse.setStatusCode(HttpStatus.OK.toString());
+        } else {
+            System.out.println("user: " + user.getUserName() + " has no active carts");
+            reviewCartResponse.setMessage("No items in cart");
+            reviewCartResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        }
+        return reviewCartResponse;
+    }
+
+    private Optional<Stores> getStoreByName(String storeName) {
+        return storesDAO.getStoreByName(storeName);
+    }
+
+    private ProductCatalog getProductCatalogByIdAndSize(int sizeId, int productId) {
+        return productCatalogDAO.getProductCatalogByIdAndSize(productId,sizeId);
+    }
+
+    private Size getSizeByName(CartProductRequest tempCartProductRequest) {
+        return sizeDAO.getSizeByName(tempCartProductRequest.getSize());
+    }
+
+    private Products getProductByProductName(String s) {
+        return productDAO.getProductByProductName(s);
+    }
+
+    private void deleteOrderDetails(OrderDetails orderDetails) {
+        orderDetailsDAO.delete(orderDetails);
+    }
+
+    private void deleteOrder(Orders currentOrder) {
+        orderDAO.delete(currentOrder);
+    }
+
+    private void saveOrderDetails(OrderDetails orderDetails) {
+        orderDetailsDAO.save(orderDetails);
     }
 }
 

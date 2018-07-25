@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface StoresRepository extends JpaRepository<Stores, Integer> {
 
-    /*@Query("SELECT o FROM Stores o WHERE o.addresskey = :addresskey")
-    Optional<Stores> findByAddressKey(@Param("addresskey") Integer addressKey);*/
+    @Query("SELECT s FROM Stores s WHERE s.storeName = :storeName")
+    Optional<Stores> getStoreByName(@Param("storeName") String storeName);
 }

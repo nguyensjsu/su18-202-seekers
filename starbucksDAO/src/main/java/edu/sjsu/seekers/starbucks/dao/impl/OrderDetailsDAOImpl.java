@@ -29,19 +29,19 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     }
 
     @Override
-    public void delete(OrderDetails ordersLineItems) {
-        orderDetailsRepository.delete(ordersLineItems);
-    }
+
 
     @Override
     public void deleteOrderDetailsforOrder(Integer orderKey) {
         orderDetailsRepository.deleteOrderDetailsforOrder(orderKey);
     }
-
-    @Override
-    public List<OrderDetails> findAllOrderDetailsforOrderKey(Integer orderKey) {
-        return orderDetailsRepository.findAllOrderDetailsforOrderKey(orderKey);
+  
+    public void delete(OrderDetails orderDetails) {
+        orderDetailsRepository.delete(orderDetails);
     }
 
-
+    @Override
+    public List<OrderDetails> getAllOrderDetailsByOrderId(Integer orderId) {
+        return orderDetailsRepository.getAllOrderDetailsByOrderId(orderId);
+    }
 }

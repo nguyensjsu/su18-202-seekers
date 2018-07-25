@@ -13,19 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Integer> {
-
-//    void findOrderDetailsforOrder(Integer orderKey);
-
-//    @Query("SELECT o FROM OrderDetails o WHERE o.orderKey.orderKey = :orderKey")
     @Transactional
     @Modifying
     @Query("DELETE FROM OrderDetails o WHERE o.orderKey.orderKey = :orderKey")
     void deleteOrderDetailsforOrder(@Param("orderKey") Integer orderKey);
 
-    @Query("SELECT o FROM OrderDetails o WHERE o.orderKey.orderKey = :orderKey")
-    List<OrderDetails> findAllOrderDetailsforOrderKey(@Param("orderKey")Integer orderKey);
-
-//
+    @Query("SELECT od FROM OrderDetails od WHERE od.orderKey.orderKey = :orderKey")
+    List<OrderDetails> getAllOrderDetailsByOrderId(@Param("orderKey") Integer orderKey);
 }

@@ -34,7 +34,7 @@ public class ProductsResponse extends GenericResponse {
 
 
 
-    public void setFinalMessage() throws JsonProcessingException {
+    public void setFinalMessage(){
 
 
         Map<String,Object> outputMap = new HashMap<>();

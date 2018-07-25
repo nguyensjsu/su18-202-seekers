@@ -25,6 +25,13 @@ public class PaymentCardDetailsDAOImpl implements PaymentCardDetailsDAO {
     }
 
     @Override
+    public Optional<PaymentCardDetails> getByCardNumber(String CardNumber) {
+        Optional<PaymentCardDetails> paymentCardDetails;
+        paymentCardDetails=paymentCardDetailsRepository.findByCardNumber(CardNumber);
+        return paymentCardDetails;
+    }
+
+    @Override
     public void save(PaymentCardDetails cardDetails) {
 
         paymentCardDetailsRepository.save(cardDetails);
