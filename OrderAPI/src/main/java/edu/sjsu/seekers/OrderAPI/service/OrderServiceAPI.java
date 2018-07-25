@@ -27,5 +27,7 @@ public interface OrderServiceAPI {
     public List<Products> getAllActiveProducts();
     public StoresResponse getAllStoresResponse();
     public Optional<User> findUserByUsername(String userName);
-    public GenericResponse addToCart(Map<String,CartProductRequest> productNames, User userKey);
+    public GenericResponse addToCart(Map<String,CartProductRequest> productNames, User user);
+    public GenericResponse addStoreToCart(String storeName, User user);
+
 }

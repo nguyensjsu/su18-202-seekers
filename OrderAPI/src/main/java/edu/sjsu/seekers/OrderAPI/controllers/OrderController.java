@@ -2,10 +2,7 @@ package edu.sjsu.seekers.OrderAPI.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sjsu.seekers.OrderAPI.request.CartRequest;
-import edu.sjsu.seekers.OrderAPI.request.ProductRequest;
-import edu.sjsu.seekers.OrderAPI.request.ProductsRequest;
-import edu.sjsu.seekers.OrderAPI.request.StoresRequest;
+import edu.sjsu.seekers.OrderAPI.request.*;
 import edu.sjsu.seekers.OrderAPI.response.GenericResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductResponse;
 import edu.sjsu.seekers.OrderAPI.response.ProductsResponse;
@@ -130,6 +127,32 @@ public class OrderController {
             GenericResponse genericResponse = new GenericResponse();
             genericResponse.setMessage("Invalid user, please signup first!");
             responseEntity = new ResponseEntity<GenericResponse>(genericResponse, HttpStatus.OK);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/addStore",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> addStoreToCart(@RequestBody StoreRequest request) {
+        System.out.println("Add store request: "+ request);
+        ResponseEntity<GenericResponse> responseEntity = null;
+        Optional<User> inputUser = orderServiceAPI.findUserByUsername(request.getUserName());
+        if(inputUser.isPresent() && inputUser.get().getIdActiveCustomer() != null && inputUser.get().getIdActiveCustomer().equals("Y")) {
+            if(inputUser.get().getIsLoggedIn().equals("Y")) {
+                GenericResponse genericResponse = orderServiceAPI.addStoreToCart(request.getStoreName(),inputUser.get());
+                responseEntity = new ResponseEntity<>(genericResponse, HttpStatus.OK);
+            }
+            else {
+                GenericResponse genericResponse = new GenericResponse();
+                genericResponse.setMessage("Invalid session, please authenticate first!");
+                genericResponse.setStatusCode(HttpStatus.OK.toString());
+                responseEntity = new ResponseEntity<>(genericResponse, HttpStatus.OK);
+            }
+        }
+        else {
+            GenericResponse genericResponse = new GenericResponse();
+            genericResponse.setMessage("Invalid user, please signup first!");
+            responseEntity = new ResponseEntity<>(genericResponse, HttpStatus.OK);
         }
         return responseEntity;
     }

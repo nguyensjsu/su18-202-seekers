@@ -13,4 +13,5 @@ public interface StoresDAO {
     public Optional<Stores> get(Integer id);
     public List<Stores> getAll();
     /*public Optional<Stores> findStoresNearUser(Integer addressKey);*/
+    public Optional<Stores> getStoreByName(String storeName);
 }
