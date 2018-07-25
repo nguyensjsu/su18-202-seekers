@@ -16,7 +16,7 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     @Override
     public Optional<OrderDetails> get(Integer id) {
         Optional<OrderDetails> orderDetails;
-        orderDetails =orderDetailsRepository.findById(1);
+        orderDetails =orderDetailsRepository.findById(id);
         return orderDetails;
     }
 
@@ -24,5 +24,10 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     public void save(OrderDetails ordersLineItems)
     {
         orderDetailsRepository.save(ordersLineItems);
+    }
+
+    @Override
+    public void delete(OrderDetails orderDetails) {
+        orderDetailsRepository.delete(orderDetails);
     }
 }

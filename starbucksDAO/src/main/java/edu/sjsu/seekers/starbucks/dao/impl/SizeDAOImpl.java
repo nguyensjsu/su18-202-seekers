@@ -12,13 +12,18 @@ import java.util.Optional;
 public class SizeDAOImpl implements SizeDAO {
 
     @Autowired
-    SizeRepository sieRepository;
+    SizeRepository sizeRepository;
 
     @Override
     public Optional<Size> get(Integer id) {
 
         Optional<Size> size;
-        size = sieRepository.findById(id);
+        size = sizeRepository.findById(id);
         return size;
+    }
+
+    @Override
+    public Size getSizeByName(String name) {
+        return sizeRepository.getSizeByName(name);
     }
 }

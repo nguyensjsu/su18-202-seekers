@@ -37,6 +37,17 @@ public class Orders {
     @Column(name="Order_Date")
     private Date orderDate;
 
+    @Column(name="Rewards_Earned")
+    private Double rewardsEarned;
+
+    public Double getRewardsEarned() {
+        return rewardsEarned;
+    }
+
+    public void setRewardsEarned(Double rewardsEarned) {
+        this.rewardsEarned = rewardsEarned;
+    }
+
     public Integer getOrderKey() {
         return orderKey;
     }
@@ -97,12 +108,13 @@ public class Orders {
     public String toString() {
         return "Orders{" +
                 "orderKey=" + orderKey +
-                ", cardKey='" + cardKey + '\'' +
-                ", userKey='" + userKey + '\'' +
-                ", storeKey='" + storeKey + '\'' +
+                ", cardKey=" + cardKey +
+                ", userKey=" + userKey +
+                ", storeKey=" + storeKey +
                 ", orderStatus='" + orderStatus + '\'' +
                 ", orderAmount=" + orderAmount +
                 ", orderDate=" + orderDate +
+                ", rewardsEarned=" + rewardsEarned +
                 '}';
     }
 }

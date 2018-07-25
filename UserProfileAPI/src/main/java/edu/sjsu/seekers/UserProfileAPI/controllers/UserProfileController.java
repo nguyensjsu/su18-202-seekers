@@ -1,7 +1,6 @@
 package edu.sjsu.seekers.UserProfileAPI.controllers;
-import edu.sjsu.seekers.UserProfileAPI.Request.CreateNewUserRequest;
-import edu.sjsu.seekers.UserProfileAPI.Request.UserSignInRequest;
-import edu.sjsu.seekers.UserProfileAPI.Request.UserSignOutRequest;
+import edu.sjsu.seekers.UserProfileAPI.Request.*;
+import edu.sjsu.seekers.UserProfileAPI.Response.ForgotUsernameResponse;
 import edu.sjsu.seekers.UserProfileAPI.Response.GenericResponse;
 import edu.sjsu.seekers.UserProfileAPI.service.UserProfileServiceAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserProfileController {
 
-
-//ObjectMapper mapper = new ObjectMapper();
     @Autowired
     UserProfileServiceAPI userProfileServiceAPI;
 
@@ -68,7 +65,6 @@ public class UserProfileController {
         ResponseEntity<GenericResponse> responseEntity = null;
         try {
 
-
             System.out.println("CreateNewUserRequest: " + createNewUserRequest);
 
             GenericResponse response = userProfileServiceAPI.createNewUser(createNewUserRequest);
@@ -84,5 +80,125 @@ public class UserProfileController {
         }
         return responseEntity;
     }
+
+    @RequestMapping(value="/UpdateExistingUser",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> UpdateUser(@RequestBody UpdateExistingUserRequest updateExistingUserRequest)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("UpdateExistingUserRequest: " + updateExistingUserRequest);
+
+            GenericResponse response = userProfileServiceAPI.updateExistingUser(updateExistingUserRequest);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value="/ResetPassword",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> ResetUserPassword(@RequestBody ResetUserPasswordRequest resetUserPasswordRequest)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("ResetUserPasswordRequest: " + resetUserPasswordRequest);
+
+            GenericResponse response = userProfileServiceAPI.resetExisitngUserPassword(resetUserPasswordRequest);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value="/VerifyAccount",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> verifyAccount(@RequestBody VerifyAccountRequest verifyAccountRequest)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("VerifyAccountRequest: " + verifyAccountRequest);
+
+            GenericResponse response = userProfileServiceAPI.verifyAccount(verifyAccountRequest);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+
+    }
+
+    @RequestMapping(value="/ForgotUsername",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<ForgotUsernameResponse> forgotUsername(@RequestBody ForgotUsernameRequest forgotUsernameRequest)
+    {
+        ResponseEntity<ForgotUsernameResponse> responseEntity = null;
+        try {
+
+            System.out.println("ForgotUsernameRequest: " + forgotUsernameRequest);
+
+            ForgotUsernameResponse response = userProfileServiceAPI.forgotUsername(forgotUsernameRequest);
+            responseEntity = new ResponseEntity<ForgotUsernameResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            ForgotUsernameResponse response = new ForgotUsernameResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<ForgotUsernameResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+
+    }
+
+    @RequestMapping(value="/DeleteUser",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> deleteUser(@RequestBody DeleteUserRequest deleteUserRequest)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("DeleteUserRequest: " + deleteUserRequest);
+
+            GenericResponse response = userProfileServiceAPI.deleteUser(deleteUserRequest);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+
+    }
+
+
 
 }

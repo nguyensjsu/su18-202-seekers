@@ -1,6 +1,9 @@
 package edu.sjsu.seekers.starbucks.model;
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,8 +18,10 @@ public class User {
     @Column(name="User_Key")
     private Integer userKey;
 
-    @Column(name="Address_Key")
-    private Integer addressKey;
+    @ManyToOne
+    @JoinColumn(name = "Address_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Address addressKey;
 
     @Column(name="User_Name")
     private String userName;
@@ -42,15 +47,14 @@ public class User {
     @Column(name="Is_Active_Customer")
     private String idActiveCustomer;
 
-
     @Column(name="Is_Account_Verified")
     private String idAccountVerified;
 
     @Column(name="Default_Store_Key")
-    private String defaultStoreKey;
+    private Integer defaultStoreKey;
 
     @Column(name="Reward_Points")
-    private String rewardPoints;
+    private double rewardPoints;
 
     public void setUserKey(Integer userKey) {
         this.userKey = userKey;
@@ -76,23 +80,21 @@ public class User {
         this.idActiveCustomer = idActiveCustomer;
     }
 
-    public void setDefaultStoreKey(String defaultStoreKey) {
+    public void setDefaultStoreKey(Integer defaultStoreKey) {
         this.defaultStoreKey = defaultStoreKey;
     }
 
-    public void setRewardPoints(String rewardPoints) {
+    public void setRewardPoints(double rewardPoints) {
         this.rewardPoints = rewardPoints;
     }
 
     public Integer getUserKey() {
         return userKey;
-
     }
 
     public String getIdAccountVerified() {
         return idAccountVerified;
     }
-
 
     public void setIdAccountVerified(String idAccountVerified) {
         this.idAccountVerified = idAccountVerified;
@@ -118,11 +120,11 @@ public class User {
         return idActiveCustomer;
     }
 
-    public String getDefaultStoreKey() {
+    public Integer getDefaultStoreKey() {
         return defaultStoreKey;
     }
 
-    public String getRewardPoints() {
+    public double getRewardPoints() {
         return rewardPoints;
     }
 
@@ -150,13 +152,14 @@ public class User {
         return fullName;
     }
 
-    public Integer getAddressKey() {
+    public Address getAddressKey() {
         return addressKey;
     }
 
-    public void setAddressKey(Integer addressKey) {
-        this.addressKey = addressKey;
+    public void setAddressKey(Address addressKey) {
+        this.addressKey= addressKey;
     }
+
 
     @Override
     public String toString() {
@@ -165,7 +168,15 @@ public class User {
                 ", addressKey=" + addressKey +
                 ", userName='" + userName + '\'' +
                 ", fullName='" + fullName + '\'' +
+                ", password='" + password + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", emailId='" + emailId + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", isLoggedIn='" + isLoggedIn + '\'' +
+                ", idActiveCustomer='" + idActiveCustomer + '\'' +
+                ", idAccountVerified='" + idAccountVerified + '\'' +
+                ", defaultStoreKey='" + defaultStoreKey + '\'' +
+                ", rewardPoints='" + rewardPoints + '\'' +
                 '}';
     }
-
 }

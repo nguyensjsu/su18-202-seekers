@@ -6,10 +6,11 @@ import edu.sjsu.seekers.starbucks.model.Orders;
 import edu.sjsu.seekers.starbucks.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 @Configuration
 public class OrderDAOImpl implements OrderDAO {
 
@@ -35,8 +36,8 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public List<Orders> findIncompleteOrdersByUserKey(Integer userKey) {
-        return orderRepository.findByUserKeyAndOrderStatus(userKey);
+    public Optional<Orders> findIncompleteOrdersByUserKey(Integer userKey) {
+        return orderRepository.findByUserKeyAndOrderStatus(userKey,"InProgress");
     }
 
     @Override
@@ -44,5 +45,8 @@ public class OrderDAOImpl implements OrderDAO {
         orderRepository.save(orders);
     }
 
-
+    @Override
+    public void delete(Orders orders) {
+        orderRepository.delete(orders);
+    }
 }

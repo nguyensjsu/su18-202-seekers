@@ -15,13 +15,14 @@ public class PaymentDetailsDAOImpl implements PaymentDetailsDAO {
     @Override
     public Optional<PaymentDetails> get(Integer id) {
         Optional<PaymentDetails> paymentDetails;
-        paymentDetails =paymentDetailsRepository.findById(1);
+        paymentDetails =paymentDetailsRepository.findById(id);
         return paymentDetails;
     }
 
     @Override
-    public void save(PaymentDetails paymentDetails) {
+    public PaymentDetails save(PaymentDetails paymentDetails) {
         paymentDetailsRepository.save(paymentDetails);
+        return paymentDetails;
     }
 }
 

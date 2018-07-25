@@ -1,5 +1,8 @@
 package edu.sjsu.seekers.starbucks.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,8 +12,10 @@ public class Stores {
     @Column(name = "Store_Key")
     private Integer storeKey;
 
-    @Column(name = "Address_Key")
-    private Integer addressKey;
+    @ManyToOne
+    @JoinColumn(name = "Address_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Address addressKey;
 
     @Column(name = "Store_Name")
 
@@ -28,11 +33,11 @@ public class Stores {
         this.storeKey = storeKey;
     }
 
-    public Integer getAddressKey() {
+    public Address getAddressKey() {
         return addressKey;
     }
 
-    public void setAddressKey(Integer addressKey) {
+    public void setAddressKey(Address addressKey) {
         this.addressKey = addressKey;
     }
 
