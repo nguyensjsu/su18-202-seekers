@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface OrderServiceAPI {
 
-    public List<Orders> getInprogressOrder(int userKey);
+    public Optional<Orders> getInprogressOrder(int userKey);
     public Orders createInprogressOrder(Orders orders);
     public List<Stores> getAllStores();
     public List<Products> getAllProducts();

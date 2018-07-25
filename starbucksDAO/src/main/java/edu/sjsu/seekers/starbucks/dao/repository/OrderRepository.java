@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
@@ -16,6 +17,6 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
 
     @Query("SELECT o FROM Orders o WHERE o.userKey.userKey = :userkey and o.orderStatus = :status")
-    List<Orders> findByUserKeyAndOrderStatus(@Param("userkey") Integer userKey,@Param("status") String status);
+    Optional<Orders> findByUserKeyAndOrderStatus(@Param("userkey") Integer userKey, @Param("status") String status);
 
 }

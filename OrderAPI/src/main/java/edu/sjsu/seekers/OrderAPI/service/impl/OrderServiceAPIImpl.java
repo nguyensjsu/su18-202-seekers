@@ -42,7 +42,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
 
 
     @Override
-    public List<Orders> getInprogressOrder(int userKey) {
+    public Optional<Orders> getInprogressOrder(int userKey) {
         return orderDAO.findIncompleteOrdersByUserKey(userKey);
     }
 
@@ -154,11 +154,13 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
         GenericResponse genericResponse = new GenericResponse();
         boolean invalidTransaction = false;
         Orders currentOrder = null;
-        List<Orders> orders = getInprogressOrder(user.getUserKey());
-        System.out.println("this user has " + orders.size() + " active carts");
-        if (orders.size() > 0) {
-            currentOrder = orders.get(orders.size() - 1);
+        Optional<Orders> orders = getInprogressOrder(user.getUserKey());
+
+        if (orders.isPresent()) {
+            System.out.println("user: " + user.getUserName() + " has 1 active carts");
+            currentOrder = orders.get();
         } else {
+            System.out.println("user: " + user.getUserName() + " has no active carts");
             //new cart
             Orders newOrder = new Orders();
             newOrder.setUserKey(user);
@@ -268,10 +270,16 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                         break;
                     }
                 }
-                currentOrder.setOrderAmount(currentOrder.getOrderAmount() + orderAmount);
-                currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() + orderRewards);
-                orderDAO.save(currentOrder);
-                genericResponse.setMessage("Products added to cart");
+                if(invalidTransaction)
+                {
+
+                }
+                else {
+                    currentOrder.setOrderAmount(currentOrder.getOrderAmount() + orderAmount);
+                    currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() + orderRewards);
+                    saveOrder(currentOrder);
+                    genericResponse.setMessage("Products added to cart");
+                }
             }
         genericResponse.setStatusCode(HttpStatus.OK.toString());
         return genericResponse;
