@@ -1,8 +1,10 @@
 package edu.sjsu.seekers.starbucks.model;
 
-import javax.persistence.*;
-import java.util.Date;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.*;
+import java.util.Optional;
 
 
 @Entity
@@ -12,11 +14,15 @@ public class PaymentCardDetails {
     @Column(name="Card_Key")
     private Integer cardKey;
 
-    @Column(name="Address_Key")
-    private Integer addressKey;
+    @ManyToOne
+    @JoinColumn(name = "Address_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Address addressKey;
 
-    @Column(name="User_Key")
-    private Integer userKey;
+    @ManyToOne
+    @JoinColumn(name = "User_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private User userKey;
 
     @Column(name="Is_Default_payment_Card")
     private String isDefaultpaymentcardKey;
@@ -33,6 +39,9 @@ public class PaymentCardDetails {
     @Column(name="CCV_Code")
     private String ccvCode;
 
+    @Column(name="Is_Active_Card")
+    private String isActiverCard;
+
     public Integer getCardKey() {
         return cardKey;
     }
@@ -41,19 +50,19 @@ public class PaymentCardDetails {
         this.cardKey = cardKey;
     }
 
-    public Integer getAddressKey() {
+    public Address getAddressKey() {
         return addressKey;
     }
 
-    public void setAddressKey(Integer addressKey) {
+    public void setAddressKey(Address addressKey) {
         this.addressKey = addressKey;
     }
 
-    public Integer getUserKey() {
+    public User getUserKey() {
         return userKey;
     }
 
-    public void setUserKey(Integer userKey) {
+    public void setUserKey(User userKey) {
         this.userKey = userKey;
     }
 
@@ -97,18 +106,26 @@ public class PaymentCardDetails {
         this.ccvCode = ccvCode;
     }
 
+    public String getIsActiverCard() {
+        return isActiverCard;
+    }
+
+    public void setIsActiverCard(String isActiverCard) {
+        this.isActiverCard = isActiverCard;
+    }
+
     @Override
     public String toString() {
         return "PaymentCardDetails{" +
                 "cardKey=" + cardKey +
-                ", addressKey='" + addressKey + '\'' +
-                ", userKey='" + userKey + '\'' +
-                ", Is_Default_payment_Card='" + isDefaultpaymentcardKey + '\'' +
-                ", Card_Number='" + cardNumber + '\'' +
-                ", expirationMonth=" + expirationMonth +
-                ", expirationYear=" + expirationYear +
-                ", ccvcode=" + ccvCode +
+                ", addressKey=" + addressKey +
+                ", userKey=" + userKey +
+                ", isDefaultpaymentcardKey='" + isDefaultpaymentcardKey + '\'' +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", expirationMonth='" + expirationMonth + '\'' +
+                ", expirationYear='" + expirationYear + '\'' +
+                ", ccvCode='" + ccvCode + '\'' +
+                ", isActiveCard='" + isActiverCard + '\'' +
                 '}';
     }
-
 }
