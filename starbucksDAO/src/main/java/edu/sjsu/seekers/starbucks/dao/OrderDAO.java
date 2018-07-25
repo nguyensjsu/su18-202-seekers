@@ -12,4 +12,5 @@ public interface OrderDAO {
     public List<Orders> findOrdersByUserKey(Integer userKey);
     public Optional<Orders> findIncompleteOrdersByUserKey(Integer userKey);
     public void update(Orders orders);
+    public void delete(Orders orders);
 }

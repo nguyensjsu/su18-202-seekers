@@ -98,7 +98,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
 
         ProductResponse productResponse = new ProductResponse();
         try {
-            Products productOptional = productDAO.getProductByProductName(name);
+            Products productOptional = getProductByProductName(name);
             if (productOptional != null) {
                 List<ProductCatalog> productCatalogs = productCatalogDAO.getAllForProductByProductID(productOptional.getProductKey());
                 productResponse.setProduct(productOptional);
@@ -191,14 +191,14 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 productRewards = 0.0;
                 productName = mp.getKey();
                 tempCartProductRequest = mp.getValue();
-                tempProducts = productDAO.getProductByProductName(productName);
+                tempProducts = getProductByProductName(productName);
                 if(tempProducts == null)
                 {
                     genericResponse.setMessage("Invalid product: " + productName);
                     invalidTransaction = true;
                     break;
                 }
-                tempSize = sizeDAO.getSizeByName(tempCartProductRequest.getSize());
+                tempSize = getSizeByName(tempCartProductRequest);
                 if(tempSize == null)
                 {
                     genericResponse.setMessage("Invalid size: " + productName + " for product: " + productName);
@@ -207,7 +207,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 }
                 sizeId = tempSize.getSizeKey();
                 productId = tempProducts.getProductKey();
-                tempProductCatalog = productCatalogDAO.getProductCatalogByIdAndSize(productId,sizeId);
+                tempProductCatalog = getProductCatalogByIdAndSize(sizeId, productId);
                 if(tempProductCatalog == null)
                 {
                     genericResponse.setMessage("Invalid size: " + productName + " and product: " + productName + " combination.");
@@ -230,13 +230,13 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 for(String s: top)
                 {
                     if(!s.equals("")) {
-                        tempToppingProduct = productDAO.getProductByProductName(s);
+                        tempToppingProduct = getProductByProductName(s);
                         if (tempToppingProduct == null) {
                             genericResponse.setMessage("Invalid topping: " + s + " added on product: " + productName);
                             invalidTransaction = true;
                             break;
                         }
-                        temptToppingProductCatalog = productCatalogDAO.getProductCatalogByIdAndSize(tempToppingProduct.getProductKey(), sizeDAO.getSizeByName(TOPPINGS_SIZE_NAME).getSizeKey());
+                        temptToppingProductCatalog = getProductCatalogByIdAndSize(sizeDAO.getSizeByName(TOPPINGS_SIZE_NAME).getSizeKey(), tempToppingProduct.getProductKey());
                         toppingsAmount += temptToppingProductCatalog.getPrice();
                         toppingsRewards += temptToppingProductCatalog.getRewards();
                     }
@@ -253,36 +253,65 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 tempOrderDetails.setNetPrice(productAmount);
                 tempOrderDetails.setToppings(tempCartProductRequest.getToppings());
                 orderDetailsList.add(tempOrderDetails);
-                orderDetailsDAO.save(tempOrderDetails);
                 orderAmount += productAmount;
                 orderRewards += productRewards;
             }
             if(invalidTransaction) {
-                //delete created order
+                deleteOrder(currentOrder);
+                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
             }
             else {
                 for (OrderDetails orderDetails : orderDetailsList) {
                     try {
-                        orderDetailsDAO.save(orderDetails);
+                        saveOrderDetails(orderDetails);
                     } catch (Exception ex) {
                         genericResponse.setMessage("Sorry! issue in saving order details for product");
+                        genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
                         invalidTransaction = true;
                         break;
                     }
                 }
                 if(invalidTransaction)
                 {
-
+                    for (OrderDetails orderDetails : orderDetailsList) {
+                        deleteOrderDetails(orderDetails);
+                    }
+                    deleteOrder(currentOrder);
                 }
                 else {
                     currentOrder.setOrderAmount(currentOrder.getOrderAmount() + orderAmount);
                     currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() + orderRewards);
                     saveOrder(currentOrder);
                     genericResponse.setMessage("Products added to cart");
+                    genericResponse.setStatusCode(HttpStatus.OK.toString());
                 }
             }
-        genericResponse.setStatusCode(HttpStatus.OK.toString());
+
         return genericResponse;
+    }
+
+    private ProductCatalog getProductCatalogByIdAndSize(int sizeId, int productId) {
+        return productCatalogDAO.getProductCatalogByIdAndSize(productId,sizeId);
+    }
+
+    private Size getSizeByName(CartProductRequest tempCartProductRequest) {
+        return sizeDAO.getSizeByName(tempCartProductRequest.getSize());
+    }
+
+    private Products getProductByProductName(String s) {
+        return productDAO.getProductByProductName(s);
+    }
+
+    private void deleteOrderDetails(OrderDetails orderDetails) {
+        orderDetailsDAO.delete(orderDetails);
+    }
+
+    private void deleteOrder(Orders currentOrder) {
+        orderDAO.delete(currentOrder);
+    }
+
+    private void saveOrderDetails(OrderDetails orderDetails) {
+        orderDetailsDAO.save(orderDetails);
     }
 }
 
