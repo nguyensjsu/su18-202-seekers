@@ -2,6 +2,7 @@ package edu.sjsu.seekers.PaymentAPI.controllers;
 
 import edu.sjsu.seekers.PaymentAPI.Request.ReviewOrderRequest;
 import edu.sjsu.seekers.PaymentAPI.Response.ConfirmOrderResponse;
+import edu.sjsu.seekers.PaymentAPI.Response.GenericResponse;
 import edu.sjsu.seekers.PaymentAPI.Response.PaymentOptionsResponse;
 import edu.sjsu.seekers.PaymentAPI.Response.ReviewOrderDetailsResponse;
 import edu.sjsu.seekers.PaymentAPI.service.PaymentService;
@@ -29,6 +30,22 @@ public class PaymentController {
         return responseEntity;
     }
 
+
+    @RequestMapping(value = "/clearCart", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> clearCart(@RequestParam(value = "userName")String userName)
+    {
+        return paymentService.clearCart(userName);
+    }
+
+
+	@RequestMapping(value = "/reviewOrder", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<ReviewOrderDetailsResponse> reviewOrder(@RequestBody ReviewOrderRequest reviewOrderRequest)
+    {
+        return paymentService.reviewOrder(reviewOrderRequest);
+    }
+
     //Confirm Order API
     @RequestMapping(value = "/confirmOrder", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -42,13 +59,6 @@ public class PaymentController {
         confirmOrderResponse.setStatusCode(HttpStatus.OK.toString());
         responseEntity = new ResponseEntity<>(confirmOrderResponse,HttpStatus.OK);
         return responseEntity;
-    }
-	
-	@RequestMapping(value = "/reviewOrder", method = RequestMethod.POST, produces = "application/json")
-    @ResponseBody
-    public ResponseEntity<ReviewOrderDetailsResponse> reviewOrder(@RequestBody ReviewOrderRequest reviewOrderRequest)
-    {
-        return paymentService.reviewOrder(reviewOrderRequest);
     }
 
 }
