@@ -45,5 +45,8 @@ public class OrderDAOImpl implements OrderDAO {
         orderRepository.save(orders);
     }
 
-
+    @Override
+    public void delete(Orders orders) {
+        orderRepository.delete(orders);
+    }
 }
