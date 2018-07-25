@@ -1,7 +1,9 @@
 package edu.sjsu.seekers.PaymentAPI.controllers;
 
+import edu.sjsu.seekers.PaymentAPI.Request.ReviewOrderRequest;
 import edu.sjsu.seekers.PaymentAPI.Response.ConfirmOrderResponse;
 import edu.sjsu.seekers.PaymentAPI.Response.PaymentOptionsResponse;
+import edu.sjsu.seekers.PaymentAPI.Response.ReviewOrderDetailsResponse;
 import edu.sjsu.seekers.PaymentAPI.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PaymentController {
-
     @Autowired
     PaymentService paymentService;
 
@@ -41,6 +42,13 @@ public class PaymentController {
         confirmOrderResponse.setStatusCode(HttpStatus.OK.toString());
         responseEntity = new ResponseEntity<>(confirmOrderResponse,HttpStatus.OK);
         return responseEntity;
+    }
+	
+	@RequestMapping(value = "/reviewOrder", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<ReviewOrderDetailsResponse> reviewOrder(@RequestBody ReviewOrderRequest reviewOrderRequest)
+    {
+        return paymentService.reviewOrder(reviewOrderRequest);
     }
 
 }

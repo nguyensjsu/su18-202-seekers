@@ -1,17 +1,15 @@
 package edu.sjsu.seekers.PaymentAPI.service.impl;
 
+import edu.sjsu.seekers.PaymentAPI.Request.ReviewOrderRequest;
 import edu.sjsu.seekers.PaymentAPI.Response.ConfirmOrderResponse;
 import edu.sjsu.seekers.PaymentAPI.Response.PaymentOptionsResponse;
+import edu.sjsu.seekers.PaymentAPI.Response.ReviewOrderDetailsResponse;
 import edu.sjsu.seekers.PaymentAPI.service.PaymentService;
-import edu.sjsu.seekers.starbucks.dao.OrderDAO;
-import edu.sjsu.seekers.starbucks.dao.PaymentCardDetailsDAO;
-import edu.sjsu.seekers.starbucks.dao.PaymentDetailsDAO;
-import edu.sjsu.seekers.starbucks.dao.UserDAO;
-import edu.sjsu.seekers.starbucks.model.Orders;
-import edu.sjsu.seekers.starbucks.model.PaymentCardDetails;
-import edu.sjsu.seekers.starbucks.model.PaymentDetails;
-import edu.sjsu.seekers.starbucks.model.User;
+import edu.sjsu.seekers.starbucks.dao.*;
+import edu.sjsu.seekers.starbucks.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -22,9 +20,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     UserDAO userDAO;
     @Autowired
-    OrderDAO orderDao;
+    OrderDAO orderDAO;
     @Autowired
     PaymentDetailsDAO paymentDetailsDAO;
+    @Autowired
+    OrderDetailsDAO orderDetailsDAO;
 
     @Override
     public PaymentOptionsResponse getPaymentOptions(String userName) {
@@ -66,7 +66,7 @@ public class PaymentServiceImpl implements PaymentService {
             user = userDAO.findUserByUsername(userName);
 
             //Get Order that is InProgress and set status to Completed
-            orders = orderDao.findIncompleteOrdersByUserKey(user.get().getUserKey());
+            orders = orderDAO.findIncompleteOrdersByUserKey(user.get().getUserKey());
             if(orders.get().getCardKey()==null)
             {
               if(user.get().getRewardPoints() >= orders.get().getOrderAmount()) {
@@ -77,7 +77,7 @@ public class PaymentServiceImpl implements PaymentService {
 
                   orderSave = orders.get();
                   orderSave.setOrderStatus("Completed");
-                  orderDao.save(orderSave);
+                  orderDAO.save(orderSave);
                   completedFlag = true;
               }
               else{
@@ -88,7 +88,7 @@ public class PaymentServiceImpl implements PaymentService {
             else {
                 orderSave = orders.get();
                 orderSave.setOrderStatus("Completed");
-                orderDao.save(orderSave);
+                orderDAO.save(orderSave);
                 completedFlag = true;
             }
 
@@ -105,5 +105,81 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         return confirmOrderResponse;
+    }
+
+    @Override
+    public ResponseEntity<ReviewOrderDetailsResponse> reviewOrder(ReviewOrderRequest reviewOrderRequest) {
+        ResponseEntity<ReviewOrderDetailsResponse> responseEntity;
+        ReviewOrderDetailsResponse response= new ReviewOrderDetailsResponse();
+
+        Optional<User> user = userDAO.findUserByUsername(reviewOrderRequest.getUserName());
+        if(user.get()!=null) {
+            Optional<Orders> orders = orderDAO.findIncompleteOrdersByUserKey(user.get().getUserKey());
+            if(orders.isPresent())
+            {
+                if(reviewOrderRequest.getPaymentType().equals("Card")) {
+                    Optional<PaymentCardDetails> cardDetails = paymentCardDetailsDAO.get(Integer.parseInt(reviewOrderRequest.getCardID()));
+//                    TODO Assuming card are added already. Handle if there is no card usecase.
+                    if(cardDetails.get().getCcvCode().equals(reviewOrderRequest.getCvv())) {
+                        orders.get().setCardKey(cardDetails.get());
+                        orders.get().setOrderDate(new Date(System.currentTimeMillis()));
+                        orderDAO.save(orders.get());
+                        List<OrderDetails> orderDetails = orderDetailsDAO.findAllOrderDetailsforOrderKey(orders.get().getOrderKey());
+
+                        response.setOrderDetails(orderDetails);
+                        response.setPaymentType(reviewOrderRequest.getPaymentType());
+                        response.setResponseMessage("Please review your order and confirm checkout!!!");
+                        response.setStatusCode(HttpStatus.OK.toString());
+                        responseEntity = new ResponseEntity<>(response,HttpStatus.OK);
+
+                        return responseEntity;
+                    }
+                    else {
+                        response.setResponseMessage("Card CVV did not match!!!");
+                        response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                        responseEntity = new ResponseEntity<>(response,HttpStatus.EXPECTATION_FAILED);
+
+                        return responseEntity;
+                    }
+                }
+                else{
+                    Double rwardBalence = user.get().getRewardPoints();
+                    if(rwardBalence>orders.get().getOrderAmount()){
+                        orders.get().setOrderDate(new Date(System.currentTimeMillis()));
+                        orderDAO.save(orders.get());
+                        List<OrderDetails> orderDetails = orderDetailsDAO.findAllOrderDetailsforOrderKey(orders.get().getOrderKey());
+                        response.setOrderDetails(orderDetails);
+                        response.setPaymentType(reviewOrderRequest.getPaymentType());
+                        response.setResponseMessage("Please review your order and confirm checkout!!!");
+                        response.setStatusCode(HttpStatus.OK.toString());
+                        responseEntity = new ResponseEntity<>(response,HttpStatus.OK);
+
+                        return responseEntity;
+
+                    }
+                    else {
+                        response.setResponseMessage("Not Enough reward points to make a purchase!!!");
+                        response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                        responseEntity = new ResponseEntity<>(response,HttpStatus.EXPECTATION_FAILED);
+
+                        return responseEntity;
+                    }
+                }
+            }
+            else {
+                response.setResponseMessage("No Orders in th cart to clear!!!");
+                response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                responseEntity = new ResponseEntity<>(response,HttpStatus.EXPECTATION_FAILED);
+                return responseEntity;
+            }
+        }
+        else {
+            response.setResponseMessage("Unable to find a user with this userName!!!");
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<>(response,HttpStatus.EXPECTATION_FAILED);
+
+            return responseEntity;
+        }
+
     }
 }
