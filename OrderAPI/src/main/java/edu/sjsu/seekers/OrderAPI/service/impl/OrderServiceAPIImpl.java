@@ -1,10 +1,8 @@
 package edu.sjsu.seekers.OrderAPI.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.sjsu.seekers.OrderAPI.request.CartProductRequest;
-import edu.sjsu.seekers.OrderAPI.response.GenericResponse;
-import edu.sjsu.seekers.OrderAPI.response.ProductResponse;
-import edu.sjsu.seekers.OrderAPI.response.ProductsResponse;
-import edu.sjsu.seekers.OrderAPI.response.StoresResponse;
+import edu.sjsu.seekers.OrderAPI.response.*;
 import edu.sjsu.seekers.OrderAPI.service.OrderServiceAPI;
 import edu.sjsu.seekers.starbucks.dao.*;
 import edu.sjsu.seekers.starbucks.model.*;
@@ -288,6 +286,58 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
             }
 
         return genericResponse;
+    }
+
+    @Override
+    public GenericResponse addStoreToCart(String storeName, User user) {
+        GenericResponse genericResponse = new GenericResponse();
+        Optional<Stores> store = getStoreByName(storeName);
+        if(store.isPresent()) {
+            Orders currentOrder = null;
+            Optional<Orders> orders = getInprogressOrder(user.getUserKey());
+            if (orders.isPresent()) {
+                System.out.println("user: " + user.getUserName() + " has 1 active carts");
+                currentOrder = orders.get();
+                currentOrder.setStoreKey(store.get());
+                saveOrder(currentOrder);
+                genericResponse.setMessage("Store added to cart successfully!");
+                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            } else {
+                genericResponse.setMessage("No active cart for user:" + user.getUserName());
+                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            }
+        }
+        else
+        {
+            genericResponse.setMessage("Invalid store name provided");
+            genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        }
+        return genericResponse;
+    }
+
+
+    @Override
+    public ReviewCartResponse reviewCartResponse(User user) {
+        ReviewCartResponse reviewCartResponse = new ReviewCartResponse();
+        Orders currentOrder = null;
+        Optional<Orders> orders = getInprogressOrder(user.getUserKey());
+        if (orders.isPresent()) {
+            System.out.println("user: " + user.getUserName() + " has 1 active carts");
+            currentOrder = orders.get();
+            List<OrderDetails> orderDetailsList = orderDetailsDAO.getAllOrderDetailsByOrderId(currentOrder.getOrderKey());
+            reviewCartResponse.setCartList(orderDetailsList);
+            reviewCartResponse.setFinalMessage();
+            reviewCartResponse.setStatusCode(HttpStatus.OK.toString());
+        } else {
+            System.out.println("user: " + user.getUserName() + " has no active carts");
+            reviewCartResponse.setMessage("No items in cart");
+            reviewCartResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        }
+        return reviewCartResponse;
+    }
+
+    private Optional<Stores> getStoreByName(String storeName) {
+        return storesDAO.getStoreByName(storeName);
     }
 
     private ProductCatalog getProductCatalogByIdAndSize(int sizeId, int productId) {

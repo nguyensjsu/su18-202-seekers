@@ -28,4 +28,9 @@ public class StoresDAOImpl implements StoresDAO {
         return storesRepository.findAll();
     }
 
+    @Override
+    public Optional<Stores> getStoreByName(String storeName) {
+        return storesRepository.getStoreByName(storeName);
+    }
+
 }
