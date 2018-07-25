@@ -16,7 +16,7 @@ public interface AddressRepository extends JpaRepository<Address, Integer>{
     @Query("SELECT a FROM Address a WHERE a.addressKey = :addressKey")
     List<Address> findByAddressKey(@Param("addressKey") Integer addressKey);
 
-    @Query("SELECT a FROM Address a where a.addressKey.addressKey = (SELECT MAX(a.addressKey.addressKey) FROM Address a)")
+    @Query("SELECT a FROM Address a where addressKey = (SELECT MAX(addressKey) FROM Address)")
     Optional<Address> getLastRow();
 
 }
