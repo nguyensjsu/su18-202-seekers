@@ -47,8 +47,8 @@ public class User {
     @Column(name="Is_Active_Customer")
     private String idActiveCustomer;
 
-    @Column(name="Is_Account_Verified")
-    private String idAccountVerified;
+    @Column(name="Verification_Code")
+    private String verificationCode;
 
     @Column(name="Default_Store_Key")
     private Integer defaultStoreKey;
@@ -92,12 +92,12 @@ public class User {
         return userKey;
     }
 
-    public String getIdAccountVerified() {
-        return idAccountVerified;
+    public String getVerificationCode() {
+        return verificationCode;
     }
 
-    public void setIdAccountVerified(String idAccountVerified) {
-        this.idAccountVerified = idAccountVerified;
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 
     public String getPassword() {
