@@ -6,6 +6,7 @@ import edu.sjsu.seekers.starbucks.model.OrderDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Optional;
 
 @Configuration
@@ -29,5 +30,10 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     @Override
     public void delete(OrderDetails orderDetails) {
         orderDetailsRepository.delete(orderDetails);
+    }
+
+    @Override
+    public List<OrderDetails> getAllOrderDetailsByOrderId(Integer orderId) {
+        return orderDetailsRepository.getAllOrderDetailsByOrderId(orderId);
     }
 }
