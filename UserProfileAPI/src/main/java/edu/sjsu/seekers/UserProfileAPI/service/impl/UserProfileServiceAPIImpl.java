@@ -32,16 +32,23 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         System.out.println(userByUserName.get().getPassword());
         if (userByUserName.get().getPassword().equals(request.getpassword()) && userByUserName.get().getUserName().equals(request.getUserName()) ) {
             if(userByUserName.get().getIdActiveCustomer().equals("Y")) {
-                userByUserName.get().setIsLoggedIn("Y");
-                userDAO.save(userByUserName.get());
-                userDetails.setMessage("Login Successful");
+                if(userByUserName.get().getIsLoggedIn().equals("N")) {
+                    userByUserName.get().setIsLoggedIn("Y");
+                    userDAO.save(userByUserName.get());
+                    userDetails.setMessage("Login Successful");
+                }
+                else
+                {
+                    userDetails.setMessage(request.getUserName()+ " already logged in");
+                }
             }
             else
             {
-                userDetails.setMessage("Account deleted. Cannot login");
+                //userDetails.setMessage("Account deleted. Cannot login");
+                userDetails.setMessage("Account with " + request.getUserName() + " is not active");
             }
         } else {
-            userDetails.setMessage("Login Failed");
+            userDetails.setMessage("Login Failed. Enter correct Username and Password");
 
         }
         userDetails.setStatusCode(HttpStatus.OK.toString());
@@ -98,13 +105,13 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
             newUser.setDefaultStoreKey(1);
             newUser.setRewardPoints(0.00);
             newUser.setAddressKey(lastInsertedAddress.get());
-            newUser.setIdAccountVerified(authenticationCode);
+            newUser.setVerificationCode(authenticationCode);
             userDAO.save(newUser);
-            createUser.setMessage("User created successfully");
+            createUser.setMessage("A new user with "+ request.getUserName()+ "  is created. To complete the process, enter the verification code sent to "+ request.getEmailId() );
             }
         else
         {
-            createUser.setMessage("Could not create user");
+            createUser.setMessage("Could not create user. Try again");
         }
         createUser.setStatusCode(HttpStatus.OK.toString());
 
@@ -140,7 +147,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
                 existingUserAddress.get().setZipCode(request.getZipCode());
             addressDAO.save(existingUserAddress.get());
             userDAO.save(existingUser.get());
-            updateUser.setMessage("User Details updated successfully");
+            updateUser.setMessage("User Details updated successfully for "+ request.getUserName());
         }
         else
         {
@@ -163,7 +170,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
             {
                 existingUser.get().setPassword(request.getPassword());
                 userDAO.save(existingUser.get());
-                resetPassword.setMessage("Password updated successfully");
+                resetPassword.setMessage("Password updated successfully for "+ request.getUserName() );
             }
             else
             {
@@ -172,7 +179,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         }
         else
         {
-            resetPassword.setMessage("Username does not exist");
+            resetPassword.setMessage("Username: " +request.getUserName() + "does not exist");
         }
         resetPassword.setStatusCode(HttpStatus.OK.toString());
         return resetPassword;
@@ -186,11 +193,11 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
 
         if(request.getUserName().equals(existingUser.get().getUserName()))
         {
-            if(request.getAuthenticationCode().equals(existingUser.get().getIdAccountVerified()))
+            if(request.getAuthenticationCode().equals(existingUser.get().getVerificationCode()))
             {
                 existingUser.get().setIdActiveCustomer("Y");
                 userDAO.save(existingUser.get());
-                verifyAccount.setMessage("Account Verified");
+                verifyAccount.setMessage("Account Verified for " + request.getUserName());
             }
             else
             {
@@ -199,7 +206,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         }
         else
         {
-            verifyAccount.setMessage("Username does not exist");
+            verifyAccount.setMessage("Username: "+ request.getUserName() + "does not exist");
 
         }
         verifyAccount.setStatusCode(HttpStatus.OK.toString());
@@ -216,7 +223,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         {
             forgotUsername.setUserName(existingUser.get().getUserName());
             forgotUsername.toString();
-            forgotUsername.setMessage("Username sent to the email id ");
+            forgotUsername.setMessage("Username sent to email id: " + existingUser.get().getEmailId());
 
         }
         else
@@ -237,11 +244,11 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         {
             existingUser.get().setIdActiveCustomer("N");
             userDAO.save(existingUser.get());
-            deleteUserAccount.setMessage("Account deleted");
+            deleteUserAccount.setMessage("Account deleted for "+request.getUserName() );
         }
         else
         {
-            deleteUserAccount.setMessage("Username does not exist");
+            deleteUserAccount.setMessage("Username: "+ request.getUserName() + "does not exist");
         }
 
         deleteUserAccount.setStatusCode(HttpStatus.OK.toString());
