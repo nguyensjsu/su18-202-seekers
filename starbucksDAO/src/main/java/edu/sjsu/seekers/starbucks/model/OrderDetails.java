@@ -32,6 +32,7 @@ public class OrderDetails {
     @Column(name="Toppings")
     private String toppings;
 
+
     public String getToppings() {
         return toppings;
     }
@@ -79,6 +80,7 @@ public class OrderDetails {
     public void setNetPrice(Double netPrice) {
         this.netPrice = netPrice;
     }
+
 
 
     @Override

@@ -155,7 +155,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
         boolean invalidTransaction = false;
         Orders currentOrder = null;
         List<Orders> orders = getInprogressOrder(user.getUserKey());
-
+        System.out.println("this user has " + orders.size() + " active carts");
         if (orders.size() > 0) {
             currentOrder = orders.get(orders.size() - 1);
         } else {
@@ -163,13 +163,17 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
             Orders newOrder = new Orders();
             newOrder.setUserKey(user);
             newOrder.setOrderDate(new Date());
-            newOrder.setOrderStatus("In_Progress");
+            newOrder.setOrderStatus("InProgress");
             newOrder.setOrderAmount(0.00);
+            newOrder.setRewardsEarned(0.00);
             currentOrder = saveOrder(newOrder);
+        }
             List<OrderDetails> orderDetailsList = new ArrayList<>();
             OrderDetails tempOrderDetails = new OrderDetails();
             Double productAmount = 0.0;
             Double orderAmount = 0.0;
+            Double productRewards = 0.0;
+            Double orderRewards = 0.0;
             int sizeId = 0;
             int quantity = 0;
             int productId = 0;
@@ -182,6 +186,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
             for(Map.Entry<String,CartProductRequest> mp : productDetails.entrySet())
             {
                 productAmount = 0.0;
+                productRewards = 0.0;
                 productName = mp.getKey();
                 tempCartProductRequest = mp.getValue();
                 tempProducts = productDAO.getProductByProductName(productName);
@@ -218,6 +223,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 }
                 Products tempToppingProduct;
                 Double toppingsAmount = 0.0;
+                Double toppingsRewards = 0.0;
                 ProductCatalog temptToppingProductCatalog;
                 for(String s: top)
                 {
@@ -230,12 +236,14 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                         }
                         temptToppingProductCatalog = productCatalogDAO.getProductCatalogByIdAndSize(tempToppingProduct.getProductKey(), sizeDAO.getSizeByName(TOPPINGS_SIZE_NAME).getSizeKey());
                         toppingsAmount += temptToppingProductCatalog.getPrice();
+                        toppingsRewards += temptToppingProductCatalog.getRewards();
                     }
                 }
                 if(invalidTransaction)
                     break;
 
                 productAmount = (tempProductCatalog.getPrice() * tempCartProductRequest.getQuantity()) + toppingsAmount;
+                productRewards = (tempProductCatalog.getRewards() * tempCartProductRequest.getQuantity()) + toppingsRewards;
                 tempOrderDetails = new OrderDetails();
                 tempOrderDetails.setOrderKey(currentOrder);
                 tempOrderDetails.setProductKey(tempProducts);
@@ -245,6 +253,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 orderDetailsList.add(tempOrderDetails);
                 orderDetailsDAO.save(tempOrderDetails);
                 orderAmount += productAmount;
+                orderRewards += productRewards;
             }
             if(invalidTransaction) {
                 //delete created order
@@ -259,11 +268,11 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                         break;
                     }
                 }
-                currentOrder.setOrderAmount(orderAmount);
+                currentOrder.setOrderAmount(currentOrder.getOrderAmount() + orderAmount);
+                currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() + orderRewards);
                 orderDAO.save(currentOrder);
                 genericResponse.setMessage("Products added to cart");
             }
-        }
         genericResponse.setStatusCode(HttpStatus.OK.toString());
         return genericResponse;
     }

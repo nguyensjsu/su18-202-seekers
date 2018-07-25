@@ -37,7 +37,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public List<Orders> findIncompleteOrdersByUserKey(Integer userKey) {
-        return orderRepository.findByUserKeyAndOrderStatus(userKey);
+        return orderRepository.findByUserKeyAndOrderStatus(userKey,"InProgress");
     }
 
     @Override

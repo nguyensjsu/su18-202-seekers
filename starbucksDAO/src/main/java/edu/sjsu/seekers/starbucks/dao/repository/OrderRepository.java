@@ -15,7 +15,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     List<Orders> findByUserKey(@Param("userkey") Integer userKey);
 
 
-    @Query("SELECT o FROM Orders o WHERE o.userKey.userKey = :userkey and o.orderStatus = 'InProgress'")
-    List<Orders> findByUserKeyAndOrderStatus(@Param("userkey") Integer userKey);
+    @Query("SELECT o FROM Orders o WHERE o.userKey.userKey = :userkey and o.orderStatus = :status")
+    List<Orders> findByUserKeyAndOrderStatus(@Param("userkey") Integer userKey,@Param("status") String status);
 
 }
