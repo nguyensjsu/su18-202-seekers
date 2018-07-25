@@ -2,6 +2,8 @@ package edu.sjsu.seekers.PaymentCardDetailsAPI.controllers;
 
 
 import edu.sjsu.seekers.PaymentCardDetailsAPI.Request.CardDetailsRequest;
+import edu.sjsu.seekers.PaymentCardDetailsAPI.Request.DeleteCardRequest;
+import edu.sjsu.seekers.PaymentCardDetailsAPI.Request.UpdateExistingCardRequest;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.Response.CardDetailsResponse;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.Response.GenericResponse;
 import edu.sjsu.seekers.PaymentCardDetailsAPI.Response.SaveCardsResponse;
@@ -68,6 +70,52 @@ public class CardDetailsController {
         return responseEntity;
     }
 
+    @RequestMapping(value="/UpdateExistingCardDetails",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> UpdateCard(@RequestBody UpdateExistingCardRequest request)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("UpdateExistingCardRequest: " + request);
+
+            GenericResponse response = apiService.UpdateCard(request);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value="/DeleteCard",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> deleteCard(@RequestBody DeleteCardRequest request)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("DeletecardRequest: " + request);
+
+            GenericResponse response = apiService.deleteCard(request);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+
+    }
 
 
         @RequestMapping("/greetings")

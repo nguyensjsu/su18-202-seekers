@@ -2,9 +2,7 @@ package edu.sjsu.seekers.PaymentCardDetailsAPI.Request;
 
 import java.io.Serializable;
 
-public class CardDetailsRequest implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class UpdateExistingCardRequest implements Serializable {
 
     private String addressLine1;
     private String addressLine2;
@@ -17,68 +15,7 @@ public class CardDetailsRequest implements Serializable {
     private String expirationMonth;
     private String expirationYear;
     private String ccvCode;
-    private String isActiveCard;
 
-    public CardDetailsRequest()
-    {
-
-    }
-
-    public CardDetailsRequest(String userName,String cardNumber,String expirationMonth,String expirationYear,String ccvCode)
-    {
-
-        super();
-
-        this.userName=userName;
-        this.cardNumber=cardNumber;
-        this.expirationMonth=expirationMonth;
-        this.expirationYear=expirationYear;
-        this.ccvCode=ccvCode;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public String getExpirationMonth() {
-        return expirationMonth;
-    }
-
-    public void setExpirationMonth(String expirationMonth) {
-        this.expirationMonth = expirationMonth;
-    }
-
-    public String getExpirationYear() {
-        return expirationYear;
-    }
-
-    public void setExpirationYear(String expirationYear) {
-        this.expirationYear = expirationYear;
-    }
-
-    public String getCcvCode() {
-        return ccvCode;
-    }
-    public void setCcvCode(String ccvCode) {
-        this.ccvCode = ccvCode;
-    }
 
     public String getAddressLine1() {
         return addressLine1;
@@ -128,18 +65,50 @@ public class CardDetailsRequest implements Serializable {
         this.zipCode = zipCode;
     }
 
-    public String getIsActiveCard() {
-        return isActiveCard;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setIsActiveCard(String isActiveCard) {
-        this.isActiveCard = isActiveCard;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getExpirationMonth() {
+        return expirationMonth;
+    }
+
+    public void setExpirationMonth(String expirationMonth) {
+        this.expirationMonth = expirationMonth;
+    }
+
+    public String getExpirationYear() {
+        return expirationYear;
+    }
+
+    public void setExpirationYear(String expirationYear) {
+        this.expirationYear = expirationYear;
+    }
+
+    public String getCcvCode() {
+        return ccvCode;
+    }
+
+    public void setCcvCode(String ccvCode) {
+        this.ccvCode = ccvCode;
     }
 
 
     @Override
     public String toString() {
-        return "CardDetailsRequest{" +
+        return "UpdateExistingCardRequest{" +
                 "addressLine1='" + addressLine1 + '\'' +
                 ", addressLine2='" + addressLine2 + '\'' +
                 ", state='" + state + '\'' +
@@ -151,8 +120,9 @@ public class CardDetailsRequest implements Serializable {
                 ", expirationMonth='" + expirationMonth + '\'' +
                 ", expirationYear='" + expirationYear + '\'' +
                 ", ccvCode='" + ccvCode + '\'' +
-                ", isActiveCard='" + isActiveCard + '\'' +
                 '}';
     }
 }
+
+
 
