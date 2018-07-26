@@ -8,12 +8,17 @@ import edu.sjsu.seekers.starbucks.dao.AddressDAO;
 import edu.sjsu.seekers.starbucks.dao.UserDAO;
 import edu.sjsu.seekers.starbucks.model.Address;
 import edu.sjsu.seekers.starbucks.model.User;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Logger;
 
 @Service
 public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
@@ -24,6 +29,14 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
     @Autowired
     AddressDAO addressDAO;
 
+   private JavaMailSender javaMailSender;
+
+    @Autowired
+    public UserProfileServiceAPIImpl(JavaMailSender javaMailSender)
+    {
+        this.javaMailSender= javaMailSender;
+    }
+
     @Override
     public GenericResponse authenticateUser(UserSignInRequest request) {
 
@@ -31,8 +44,10 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         Optional<User> userByUserName = userDAO.findUserByUsername(request.getUserName());
         System.out.println(userByUserName.get().getPassword());
         if (userByUserName.get().getPassword().equals(request.getpassword()) && userByUserName.get().getUserName().equals(request.getUserName()) ) {
-            if(userByUserName.get().getIdActiveCustomer().equals("Y")) {
-                if(userByUserName.get().getIsLoggedIn().equals("N")) {
+            if(userByUserName.get().getIdActiveCustomer().equals("Y"))
+            {
+                if(userByUserName.get().getIsLoggedIn().equals("N"))
+                {
                     userByUserName.get().setIsLoggedIn("Y");
                     userDAO.save(userByUserName.get());
                     userDetails.setMessage("Login Successful");
@@ -44,10 +59,11 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
             }
             else
             {
-                //userDetails.setMessage("Account deleted. Cannot login");
-                userDetails.setMessage("Account with " + request.getUserName() + " is not active");
+                userDetails.setMessage("Account with username " + request.getUserName() + " is not active yet");
             }
-        } else {
+        }
+        else
+            {
             userDetails.setMessage("Login Failed. Enter correct Username and Password");
 
         }
@@ -85,34 +101,68 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         Address newAddress = new Address();
         Random rand = new Random();
         String authenticationCode = String.valueOf(rand.nextInt(10000) + 1);
-        if(request.getUserName()!=null && request.getPassword()!= null && request.getEmailId()!= null ) {
-            newAddress.setAddressLine1(request.getAddressLine1());
-            newAddress.setAddressLine2(request.getAddressLine2());
-            newAddress.setCity(request.getCity());
-            newAddress.setState(request.getState());
-            newAddress.setCountry(request.getCountry());
-            newAddress.setZipCode(request.getZipCode());
-            addressDAO.save(newAddress);
-           Optional<Address> lastInsertedAddress = addressDAO.getLastInsertedRow();
-            newUser.setFullName(request.getFullName());
-            newUser.setUserName(request.getUserName());
-            newUser.setPassword(request.getPassword());
-            newUser.setEmailId(request.getEmailId());
-            newUser.setPhoneNumber(request.getPhoneNumber());
-            newUser.setDateOfBirth(request.getDateOfBirth());
-            newUser.setIsLoggedIn("N");
-            newUser.setIdActiveCustomer("N");
-            newUser.setDefaultStoreKey(1);
-            newUser.setRewardPoints(0.00);
-            newUser.setAddressKey(lastInsertedAddress.get());
-            newUser.setVerificationCode(authenticationCode);
-            userDAO.save(newUser);
-            createUser.setMessage("A new user with "+ request.getUserName()+ "  is created. To complete the process, enter the verification code sent to "+ request.getEmailId() );
+        if(request.getUserName()!=null && request.getPassword()!= null && request.getEmailId()!= null )
+        {
+            System.out.println("Username password and email id not null");
+
+            Optional<User> existingUserByUserName = userDAO.findUserByUsername(request.getUserName());
+            Optional<User> existingUserByEmailId = userDAO.findUserByEmailId(request.getEmailId());
+
+            if (!existingUserByUserName.isPresent())
+            {
+                if (!existingUserByEmailId.isPresent())
+                {
+                    System.out.println("Username and Email id is accepted");
+
+                    newAddress.setAddressLine1(request.getAddressLine1());
+                    newAddress.setAddressLine2(request.getAddressLine2());
+                    newAddress.setCity(request.getCity());
+                    newAddress.setState(request.getState());
+                    newAddress.setCountry(request.getCountry());
+                    newAddress.setZipCode(request.getZipCode());
+                    addressDAO.save(newAddress);
+                    System.out.println("Address added");
+                    Optional<Address> lastInsertedAddress = addressDAO.getLastInsertedRow();
+                    newUser.setFullName(request.getFullName());
+                    newUser.setUserName(request.getUserName());
+                    newUser.setPassword(request.getPassword());
+                    newUser.setEmailId(request.getEmailId());
+                    newUser.setPhoneNumber(request.getPhoneNumber());
+                    newUser.setDateOfBirth(request.getDateOfBirth());
+                    newUser.setIsLoggedIn("N");
+                    newUser.setIdActiveCustomer("N");
+                    newUser.setDefaultStoreKey(1);
+                    newUser.setRewardPoints(0.00);
+                    newUser.setAddressKey(lastInsertedAddress.get());
+                    newUser.setVerificationCode(authenticationCode);
+                    userDAO.save(newUser);
+                    try {
+                        sendEmail(request.getEmailId(), authenticationCode);
+                    } catch (MailException e)
+                    {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+
+                    createUser.setMessage("A new user with " + request.getUserName() + "  is created. To complete the process, enter the verification code sent to " + request.getEmailId());
+                }
+                else
+                {
+                    createUser.setMessage("Email Id " + request.getEmailId() +" already exists.");
+
+                }
             }
+            else
+            {
+                createUser.setMessage("User by "+ request.getUserName()+ " already exists. Try again");
+
+            }
+
+        }
         else
         {
-            createUser.setMessage("Could not create user. Try again");
+            createUser.setMessage("Username and/or Password cannot be null. Try again");
         }
+
         createUser.setStatusCode(HttpStatus.OK.toString());
 
         return createUser;
@@ -151,7 +201,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         }
         else
         {
-            updateUser.setMessage("User Details Cannot be updated");
+            updateUser.setMessage("User Details Cannot be updated. Try again");
         }
         updateUser.setStatusCode(HttpStatus.OK.toString());
         return updateUser;
@@ -214,15 +264,22 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
     }
 
     @Override
-    public ForgotUsernameResponse forgotUsername(ForgotUsernameRequest request) {
+    public GenericResponse forgotUsername(ForgotUsernameRequest request) {
 
-        ForgotUsernameResponse forgotUsername = new ForgotUsernameResponse();
+        GenericResponse forgotUsername = new GenericResponse();
         Optional<User> existingUser = userDAO.findUserByEmailId(request.getEmailId());
 
         if(request.getEmailId().equals(existingUser.get().getEmailId()))
         {
-            forgotUsername.setUserName(existingUser.get().getUserName());
-            forgotUsername.toString();
+            //forgotUsername.setUserName(existingUser.get().getUserName());
+            //forgotUsername.toString();
+            try {
+                sendUsernameByEmail(existingUser.get().getEmailId(),existingUser.get().getUserName() );
+            } catch (MailException e)
+            {
+                System.out.println("Error: " + e.getMessage());
+            }
+
             forgotUsername.setMessage("Username sent to email id: " + existingUser.get().getEmailId());
 
         }
@@ -255,5 +312,32 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         return deleteUserAccount;
     }
 
-}
+
+    public void sendEmail(String emailId, String code) throws MailException
+    {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("sjsu.seekers@gmail.com");
+        mail.setTo(emailId);
+        mail.setSubject("Starbucks Verification ");
+        mail.setText("Verification Code: "+ code );
+
+        javaMailSender.send(mail);
+
+    }
+
+    public void sendUsernameByEmail(String emailId, String userName) throws MailException
+    {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("sjsu.seekers@gmail.com");
+        mail.setTo(emailId);
+        mail.setSubject("Starbucks Notification ");
+        mail.setText("Username: "+ userName );
+
+        javaMailSender.send(mail);
+
+    }
+
+    }
+
+
 

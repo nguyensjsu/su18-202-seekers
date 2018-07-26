@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.regex.Pattern;
+
 @RestController
 public class UserProfileController {
 
@@ -67,8 +69,59 @@ public class UserProfileController {
 
             System.out.println("CreateNewUserRequest: " + createNewUserRequest);
 
-            GenericResponse response = userProfileServiceAPI.createNewUser(createNewUserRequest);
-            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+            Pattern usernameExpression = Pattern.compile("^[A-Za-z0-9]+$");
+
+            if(usernameExpression.matcher(createNewUserRequest.getUserName()).matches())
+            {
+                //Pattern passwordExpression= Pattern.compile("[a-zA-Z0-9._^%$#!~@-]+");
+
+                if(createNewUserRequest.getPassword().length()>=6 && createNewUserRequest.getPassword().length()<=20)
+                {
+                    Pattern emailExpression = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+                    if(emailExpression.matcher(createNewUserRequest.getEmailId()).matches())
+                    {
+                        Pattern phoneNumberExpression = Pattern.compile("[0-9]+");
+
+                        if(phoneNumberExpression.matcher(createNewUserRequest.getPhoneNumber()).matches() && createNewUserRequest.getPhoneNumber().length()==10)
+                        {
+                            GenericResponse response = userProfileServiceAPI.createNewUser(createNewUserRequest);
+                            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+                        }
+                        else
+                        {
+                            GenericResponse response = new GenericResponse();
+                            response.setMessage("Not a valid Phone number");
+                            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+                        }
+
+                    }
+                    else
+                    {
+                        GenericResponse response = new GenericResponse();
+                        response.setMessage("Not a valid Email Id");
+                        response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                        responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+                    }
+                }
+                else
+                {
+                    GenericResponse response = new GenericResponse();
+                    response.setMessage("Invalid password.Password length should be between 6 and 20");
+                    response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                    responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+                }
+
+            }
+
+            else
+            {
+                GenericResponse response = new GenericResponse();
+                response.setMessage("Username must be alphanumeric. No special characters allowed");
+                response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+            }
 
         }
         catch (Exception e)
@@ -78,6 +131,7 @@ public class UserProfileController {
             response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
             responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
         }
+
         return responseEntity;
     }
 
@@ -90,8 +144,20 @@ public class UserProfileController {
 
             System.out.println("UpdateExistingUserRequest: " + updateExistingUserRequest);
 
-            GenericResponse response = userProfileServiceAPI.updateExistingUser(updateExistingUserRequest);
-            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+            Pattern phoneNumberExpression = Pattern.compile("[0-9]+");
+
+            if(phoneNumberExpression.matcher(updateExistingUserRequest.getPhoneNumber()).matches() && updateExistingUserRequest.getPhoneNumber().length()==10)
+            {
+                GenericResponse response = userProfileServiceAPI.updateExistingUser(updateExistingUserRequest);
+                responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+            }
+            else
+            {
+                GenericResponse response = new GenericResponse();
+                response.setMessage("Not a valid Phone number");
+                response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+            }
 
         }
         catch (Exception e)
@@ -153,15 +219,15 @@ public class UserProfileController {
 
     @RequestMapping(value="/ForgotUsername",  method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<ForgotUsernameResponse> forgotUsername(@RequestBody ForgotUsernameRequest forgotUsernameRequest)
+    public ResponseEntity<GenericResponse> forgotUsername(@RequestBody ForgotUsernameRequest forgotUsernameRequest)
     {
-        ResponseEntity<ForgotUsernameResponse> responseEntity = null;
+        ResponseEntity<GenericResponse> responseEntity = null;
         try {
 
             System.out.println("ForgotUsernameRequest: " + forgotUsernameRequest);
 
-            ForgotUsernameResponse response = userProfileServiceAPI.forgotUsername(forgotUsernameRequest);
-            responseEntity = new ResponseEntity<ForgotUsernameResponse>(response, HttpStatus.OK);
+            GenericResponse response = userProfileServiceAPI.forgotUsername(forgotUsernameRequest);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
 
         }
         catch (Exception e)
@@ -169,7 +235,7 @@ public class UserProfileController {
             ForgotUsernameResponse response = new ForgotUsernameResponse();
             response.setMessage(e.getMessage());
             response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
-            responseEntity = new ResponseEntity<ForgotUsernameResponse>(response, HttpStatus.EXPECTATION_FAILED);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
         }
         return responseEntity;
 
