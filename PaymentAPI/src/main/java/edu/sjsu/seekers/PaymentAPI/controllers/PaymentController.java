@@ -21,12 +21,12 @@ public class PaymentController {
     @ResponseBody
     public ResponseEntity<PaymentOptionsResponse> getPaymentOptions(@RequestParam(value = "userName")String userName)
     {
-        ResponseEntity<PaymentOptionsResponse> responseEntity;
-        PaymentOptionsResponse paymentOptionsResponse;
+//        ResponseEntity<PaymentOptionsResponse> responseEntity;
+//        PaymentOptionsResponse paymentOptionsResponse;
 
-        paymentOptionsResponse = paymentService.getPaymentOptions(userName);
-        paymentOptionsResponse.setStatusCode(HttpStatus.OK.toString());
-        responseEntity = new ResponseEntity<>(paymentOptionsResponse,HttpStatus.OK);
+        ResponseEntity<PaymentOptionsResponse> responseEntity = paymentService.getPaymentOptions(userName);
+//        paymentOptionsResponse.setStatusCode(HttpStatus.OK.toString());
+//        responseEntity = new ResponseEntity<>(paymentOptionsResponse,HttpStatus.OK);
         return responseEntity;
     }
 
@@ -52,12 +52,12 @@ public class PaymentController {
     public ResponseEntity<ConfirmOrderResponse> doConfirmOrder(@RequestParam(value ="confirm")String confirm,
                                                                @RequestParam(value ="userName")String userName)
     {
-        ResponseEntity<ConfirmOrderResponse> responseEntity;
-        ConfirmOrderResponse confirmOrderResponse;
+//        ResponseEntity<ConfirmOrderResponse> responseEntity;
+//        ConfirmOrderResponse confirmOrderResponse;
 
-        confirmOrderResponse = paymentService.doConfirmOrder(confirm,userName);
-        confirmOrderResponse.setStatusCode(HttpStatus.OK.toString());
-        responseEntity = new ResponseEntity<>(confirmOrderResponse,HttpStatus.OK);
+        ResponseEntity<ConfirmOrderResponse> responseEntity = paymentService.doConfirmOrder(confirm,userName);
+//        confirmOrderResponse.setStatusCode(HttpStatus.OK.toString());
+//        responseEntity = new ResponseEntity<>(confirmOrderResponse,HttpStatus.OK);
         return responseEntity;
     }
 
