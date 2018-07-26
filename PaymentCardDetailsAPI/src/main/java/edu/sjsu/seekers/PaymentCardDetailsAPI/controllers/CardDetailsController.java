@@ -53,18 +53,46 @@ public class CardDetailsController {
 
         @RequestMapping(value = "/saveCards" , method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<SaveCardsResponse> saveCardDetails(@RequestBody CardDetailsRequest request ) {
-        ResponseEntity<SaveCardsResponse> responseEntity = null;
+    public ResponseEntity<GenericResponse> saveCardDetails(@RequestBody CardDetailsRequest request ) {
+        ResponseEntity<GenericResponse> responseEntity = null;
         try {
             System.out.println("CardDetailsRequest: " + request);
-             SaveCardsResponse response=apiService.saveCardDetails(request);
-            responseEntity = new ResponseEntity<SaveCardsResponse>(response, HttpStatus.OK);
+            if(request.getCardNumber().length()==9 ) {
+                if (request.getCcvCode().length() == 3) {
+                    if(Integer.parseInt(request.getExpirationMonth())<=12 && Integer.parseInt(request.getExpirationMonth())>=1)
+                    {
+                        GenericResponse response = apiService.saveCardDetails(request);
+                        responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+                    }
+                    else
+                    {
+                        GenericResponse response = new GenericResponse();
+                        response.setMessage("Expiration month cannot exceed 12");
+                        response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                        responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+                    }
+                } else {
+                    GenericResponse response = new GenericResponse();
+                    response.setMessage("CVV Length should be three characters");
+                    response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                    responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+                }
+
+            }
+            else {
+
+                GenericResponse response = new GenericResponse();
+                response.setMessage("Card Length should be 9 digits ");
+                response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+            }
 
         } catch (Exception e) {
-            SaveCardsResponse response = new SaveCardsResponse();
+            GenericResponse response = new GenericResponse();
             response.setMessage(e.getMessage());
             response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
-            responseEntity = new ResponseEntity<SaveCardsResponse>(response, HttpStatus.EXPECTATION_FAILED);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
 
         }
         return responseEntity;

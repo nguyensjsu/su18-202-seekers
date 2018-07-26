@@ -13,6 +13,6 @@ public interface PaymentCardDetailsDAO {
     public Optional<PaymentCardDetails>getByCardNumber(String CardNumber);
     public void save(PaymentCardDetails cardDetails);
     public List<PaymentCardDetails> findPaymentCardDetailsByUserKey(Integer userKey);
-     public void delete(PaymentCardDetails cardDetails);
+    public void delete(PaymentCardDetails cardDetails);
 
 }
