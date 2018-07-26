@@ -110,7 +110,7 @@ public class PaymentServiceImpl implements PaymentService {
                         orders.get().setCardKey(cardDetails.get());
                         orders.get().setOrderDate(new Date(System.currentTimeMillis()));
                         orderDAO.save(orders.get());
-                        List<OrderDetails> orderDetails = orderDetailsDAO.findAllOrderDetailsforOrderKey(orders.get().getOrderKey());
+                        List<OrderDetails> orderDetails = orderDetailsDAO.getAllOrderDetailsByOrderId(orders.get().getOrderKey());
 
                         response.setOrderDetails(orderDetails);
                         response.setPaymentType(reviewOrderRequest.getPaymentType());
@@ -133,7 +133,7 @@ public class PaymentServiceImpl implements PaymentService {
                     if(rwardBalence>orders.get().getOrderAmount()){
                         orders.get().setOrderDate(new Date(System.currentTimeMillis()));
                         orderDAO.save(orders.get());
-                        List<OrderDetails> orderDetails = orderDetailsDAO.findAllOrderDetailsforOrderKey(orders.get().getOrderKey());
+                        List<OrderDetails> orderDetails = orderDetailsDAO.getAllOrderDetailsByOrderId(orders.get().getOrderKey());
                         response.setOrderDetails(orderDetails);
                         response.setPaymentType(reviewOrderRequest.getPaymentType());
                         response.setResponseMessage("Please review your order and confirm checkout!");
