@@ -12,6 +12,7 @@ public interface UserProfileServiceAPI {
     GenericResponse updateExistingUser(UpdateExistingUserRequest request);
     GenericResponse resetExisitngUserPassword(ResetUserPasswordRequest request);
     GenericResponse verifyAccount(VerifyAccountRequest request);
-    ForgotUsernameResponse forgotUsername(ForgotUsernameRequest request);
+    GenericResponse forgotUsername(ForgotUsernameRequest request);
     GenericResponse deleteUser(DeleteUserRequest request);
+
 }
