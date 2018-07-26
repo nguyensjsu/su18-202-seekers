@@ -40,7 +40,7 @@ public class PaymentCardDetailsDAOImpl implements PaymentCardDetailsDAO {
 
     @Override
     public List<PaymentCardDetails> findPaymentCardDetailsByUserKey(Integer userKey) {
-       return paymentCardDetailsRepository.findByUserKey(userKey);
+        return paymentCardDetailsRepository.findByUserKey(userKey);
     }
 
     @Override
