@@ -11,12 +11,12 @@ import javax.sql.DataSource;
 @Configuration
 @Profile("unit-test")
 public class UnitTestDatabaseConfig {
-    @Bean
-    public DataSource starbucksDataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScript("db/sql/dbCreate.sql")
-                .addScript("db/sql/insert.sql")
-                .build();
-    }
+//    @Bean
+//    public DataSource starbucksDataSource() {
+//        return new EmbeddedDatabaseBuilder()
+//                .setType(EmbeddedDatabaseType.H2)
+//                .addScript("db/sql/dbCreate.sql")
+//                .addScript("db/sql/insert.sql")
+//                .build();
+//    }
 }
