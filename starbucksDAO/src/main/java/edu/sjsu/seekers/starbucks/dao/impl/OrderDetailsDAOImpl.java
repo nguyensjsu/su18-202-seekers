@@ -3,6 +3,7 @@ package edu.sjsu.seekers.starbucks.dao.impl;
 import edu.sjsu.seekers.starbucks.dao.OrderDetailsDAO;
 import edu.sjsu.seekers.starbucks.dao.repository.OrderDetailsRepository;
 import edu.sjsu.seekers.starbucks.model.OrderDetails;
+import edu.sjsu.seekers.starbucks.model.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,6 +29,13 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     }
 
     @Override
+
+
+    @Override
+    public void deleteOrderDetailsforOrder(Integer orderKey) {
+        orderDetailsRepository.deleteOrderDetailsforOrder(orderKey);
+    }
+  
     public void delete(OrderDetails orderDetails) {
         orderDetailsRepository.delete(orderDetails);
     }

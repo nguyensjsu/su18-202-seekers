@@ -27,35 +27,35 @@ import java.util.Optional;
 @EntityScan("edu.sjsu.seekers.starbucks.model")
 public class StarbucksApplication implements CommandLineRunner {
 
-    @Autowired
-    DataSource dataSource;
-
-	@Autowired
-	OrderDAOImpl orderDAOImpl;
-
-    @Autowired
-    ProductDAOImpl productDAOImpl;
-
-    @Autowired
-    SizeDAOImpl sizeDAOImpl;
-
-    @Autowired
-    ProductCatalogDAOImpl productCatalogDAOImpl;
-
-    @Autowired
-	OrderDetailsDAO orderDetailsDAO;
-
-    @Autowired
-	PaymentDetailsDAO paymentDetailsDao;
-
-    @Autowired
-    PaymentCardDetailsDAOImpl paymentCardDetailsDAOImpl;
-
-    @Autowired
-    UserDAOImpl userDAOImpl;
-
-    @Autowired
-    StoresDAOImpl storDAOImpl;
+//    @Autowired
+//    DataSource dataSource;
+//
+//	@Autowired
+//	OrderDAOImpl orderDAOImpl;
+//
+//    @Autowired
+//    ProductDAOImpl productDAOImpl;
+//
+//    @Autowired
+//    SizeDAOImpl sizeDAOImpl;
+//
+//    @Autowired
+//    ProductCatalogDAOImpl productCatalogDAOImpl;
+//
+//    @Autowired
+//	OrderDetailsDAO orderDetailsDAO;
+//
+//    @Autowired
+//	PaymentDetailsDAO paymentDetailsDao;
+//
+//    @Autowired
+//    PaymentCardDetailsDAOImpl paymentCardDetailsDAOImpl;
+//
+//    @Autowired
+//    UserDAOImpl userDAOImpl;
+//
+//    @Autowired
+//    StoresDAOImpl storDAOImpl;
 
 	public static void main(String[] args) {
 		SpringApplication.run(StarbucksApplication.class, args);
@@ -63,50 +63,39 @@ public class StarbucksApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-        System.out.println("test datasource is: " + dataSource.getConnection());
-//        Optional<OrderDetails> orders = orderDetailsDAO.get(1);
-//        System.out.println("Order: " + orders.toString());
+//        System.out.println("test datasource is: " + dataSource.getConnection());
 
-//		Optional<PaymentDetails> payments = paymentDetailsDao.get(1);
-//		System.out.println("Payments: " + payments.toString());
+//        Optional<Products> product = productDAOImpl.get(3);
+//        System.out.println("product: " + product.toString());
 
-//        Optional<Orders> order = orderDAOImpl.get(1);
-//        System.out.println("order: " + order.toString());
+//        Orders orderSave = new Orders();
+//        orderSave.setOrderStatus("Temp");
+//        orderSave.setOrderDate(new Date());
+//        orderSave.setOrderAmount(111.11);
+//        orderSave.setCardKey(paymentCardDetailsDAOImpl.get(1).get());
+//        orderSave.setUserKey(userDAOImpl.get(1).get());
+//        orderSave.setStoreKey(storDAOImpl.get(1).get());
+//        orderSave = orderDAOImpl.save(orderSave);
 
+//        OrderDetails orderLineItems = new OrderDetails();
+//        orderLineItems.setOrderKey(orderSave);
+//        orderLineItems.setProductKey(product.get());
+//        orderLineItems.setOrderQuantity(95);
+//        orderLineItems.setNetPrice(123.9);
+//        orderDetailsDAO.save(orderLineItems);
 
-        Optional<Products> product = productDAOImpl.get(3);
-        System.out.println("product: " + product.toString());
+//        orderSave.setOrderStatus("Confirmed");
+//        orderDAOImpl.update(orderSave);
 
+//        Optional<Size> size = sizeDAOImpl.get(1);
+//        System.out.println("size: " + size.toString());
 
+//        Optional<ProductCatalog> productCatalog = productCatalogDAOImpl.get(1);
+//        System.out.println("productCatalog: " + productCatalog.toString());
 
-        Orders orderSave = new Orders();
-        orderSave.setOrderStatus("Temp");
-        orderSave.setOrderDate(new Date());
-        orderSave.setOrderAmount(111.11);
-        orderSave.setCardKey(paymentCardDetailsDAOImpl.get(1).get());
-        orderSave.setUserKey(userDAOImpl.get(1).get());
-        orderSave.setStoreKey(storDAOImpl.get(1).get());
-        orderSave = orderDAOImpl.save(orderSave);
-
-        OrderDetails orderLineItems = new OrderDetails();
-        orderLineItems.setOrderKey(orderSave);
-        orderLineItems.setProductKey(product.get());
-        orderLineItems.setOrderQuantity(95);
-        orderLineItems.setNetPrice(123.9);
-        orderDetailsDAO.save(orderLineItems);
-
-        orderSave.setOrderStatus("Confirmed");
-        orderDAOImpl.update(orderSave);
-
-        Optional<Size> size = sizeDAOImpl.get(1);
-        System.out.println("size: " + size.toString());
-
-        Optional<ProductCatalog> productCatalog = productCatalogDAOImpl.get(1);
-        System.out.println("productCatalog: " + productCatalog.toString());
-
-        List<Orders> ordersList = orderDAOImpl.findOrdersByUserKey(1);
-        for (Orders ord: ordersList) {
-            System.out.println("orderList: " + ord.toString());
-        }
+//        List<Orders> ordersList = orderDAOImpl.findOrdersByUserKey(1);
+//        for (Orders ord: ordersList) {
+//            System.out.println("orderList: " + ord.toString());
+//        }
 	}
 }

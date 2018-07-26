@@ -1,7 +1,10 @@
 package edu.sjsu.seekers.PaymentAPI.controllers;
 
+import edu.sjsu.seekers.PaymentAPI.Request.ReviewOrderRequest;
 import edu.sjsu.seekers.PaymentAPI.Response.ConfirmOrderResponse;
+import edu.sjsu.seekers.PaymentAPI.Response.GenericResponse;
 import edu.sjsu.seekers.PaymentAPI.Response.PaymentOptionsResponse;
+import edu.sjsu.seekers.PaymentAPI.Response.ReviewOrderDetailsResponse;
 import edu.sjsu.seekers.PaymentAPI.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PaymentController {
-
     @Autowired
     PaymentService paymentService;
 
@@ -26,6 +28,22 @@ public class PaymentController {
         paymentOptionsResponse.setStatusCode(HttpStatus.OK.toString());
         responseEntity = new ResponseEntity<>(paymentOptionsResponse,HttpStatus.OK);
         return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/clearCart", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> clearCart(@RequestParam(value = "userName")String userName)
+    {
+        return paymentService.clearCart(userName);
+    }
+
+
+	@RequestMapping(value = "/reviewOrder", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<ReviewOrderDetailsResponse> reviewOrder(@RequestBody ReviewOrderRequest reviewOrderRequest)
+    {
+        return paymentService.reviewOrder(reviewOrderRequest);
     }
 
     //Confirm Order API
