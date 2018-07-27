@@ -22,11 +22,15 @@ public class ReviewOrderDetailsResponse extends GenericResponse {
 
     public String getOrderDetails() {
         String toReturn ="";
-
         if(this.orderDetails!=null) {
             for (OrderDetails o : this.orderDetails) {
+                String size;
+                if(o.getSizeKey() == null)
+                  size = "";
+                else
+                    size =o.getSizeKey().getSizeName();
                 toReturn = toReturn + " Product Name='" + o.getProductKey().getProductName() + '\'' + ",Product Description='" + o.getProductKey().getProductDescription() + '\'' + ",Product Quantity='" + o.getOrderQuantity() + '\''+
-                ",Toppings='" + o.getToppings() + '\'' + ",Amount='" + o.getNetPrice() + '\''+ ",Size='" + o.getSizeKey().getSizeName() + '\'';
+                ",Toppings='" + o.getToppings() + '\'' + ",Amount='" + o.getNetPrice() + '\''+ ",Size='" + size + '\'';
             }
             return toReturn;
         }
