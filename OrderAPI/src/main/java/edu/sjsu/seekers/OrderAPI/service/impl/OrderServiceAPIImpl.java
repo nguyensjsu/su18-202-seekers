@@ -301,24 +301,39 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
             System.out.println("user: " + user.getUserName() + " has 1 active carts");
             currentOrder = orders.get();
             int orderDetailsId = 0;
-            Optional<OrderDetails> tempOptionalOrderDetails;
-            OrderDetails tempOrderDetails;
+            OrderDetails tempOrderDetails = null;
             CartProductEditRequest tempCartProducEditRequest;
             ProductCatalog tempProductCatalog;
             for(Map.Entry<Integer,CartProductEditRequest> mp : productNames.entrySet()) {
+                tempOrderDetails = null;
                 orderDetailsId = mp.getKey();
                 tempCartProducEditRequest = mp.getValue();
-                tempOptionalOrderDetails = orderDetailsDAO.get(orderDetailsId);
-                if(!tempOptionalOrderDetails.isPresent())
+                List<OrderDetails> orderDetailsList = orderDetailsDAO.getAllOrderDetailsByOrderId(currentOrder.getOrderKey());
+                for(OrderDetails od : orderDetailsList)
+                {
+                    if(od.getOrderLineKey() == orderDetailsId)
+                    {
+                        tempOrderDetails = od;
+                        break;
+                    }
+                }
+                if(tempOrderDetails == null)
                 {
                     genericResponse.setMessage("Invalid item id provided");
                     genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
                     invalidTransaction = true;
                     break;
                 }
-                tempOrderDetails = tempOptionalOrderDetails.get();
                 tempProductCatalog = getProductCatalogByIdAndSize(tempOrderDetails.getSizeKey().getSizeKey(), tempOrderDetails.getProductKey().getProductKey());
                 Double perItemPrice = tempProductCatalog.getPrice();
+                if(tempCartProducEditRequest.getQuantity() == 0)
+                {
+                    currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() - (tempProductCatalog.getRewards() * tempOrderDetails.getOrderQuantity()));
+                    currentOrder.setOrderAmount(currentOrder.getOrderAmount() - tempOrderDetails.getNetPrice());
+                    deleteOrderDetails(tempOrderDetails);
+                    currentOrder = saveOrder(currentOrder);
+                    break;
+                }
                 if(tempCartProducEditRequest.getQuantity() < 0)
                 {
                     genericResponse.setMessage("Invalid item quantity provided for item: " + orderDetailsId);
@@ -341,6 +356,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                     tempOrderDetails.setOrderQuantity(tempCartProducEditRequest.getQuantity());
                     finalAmount = tempOrderDetails.getNetPrice() - (perItemPrice * diffQuantity);
                     tempOrderDetails.setNetPrice(finalAmount);
+                    currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() - (tempProductCatalog.getRewards() * diffQuantity));
                 }
                 else
                 {
@@ -348,11 +364,13 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                     tempOrderDetails.setOrderQuantity(tempCartProducEditRequest.getQuantity());
                     finalAmount = tempOrderDetails.getNetPrice() + (perItemPrice * diffQuantity);
                     tempOrderDetails.setNetPrice(finalAmount);
+                    currentOrder.setRewardsEarned(currentOrder.getRewardsEarned() + (tempProductCatalog.getRewards() * diffQuantity));
                 }
+                tempOrderDetails.setOrderQuantity(tempCartProducEditRequest.getQuantity());
                 finalAmount = finalAmount - oldAmount;
                 currentOrder.setOrderAmount(currentOrder.getOrderAmount() + finalAmount);
-                currentOrder = saveOrder(currentOrder);
                 saveOrderDetails(tempOrderDetails);
+                currentOrder = saveOrder(currentOrder);
             }
             if(!invalidTransaction) {
                 genericResponse.setMessage("Cart updated successfully for user: " + user.getUserName());
@@ -380,7 +398,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 currentOrder.setStoreKey(store.get());
                 saveOrder(currentOrder);
                 genericResponse.setMessage("Store added to cart successfully!");
-                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                genericResponse.setStatusCode(HttpStatus.OK.toString());
             } else {
                 genericResponse.setMessage("No active cart for user:" + user.getUserName());
                 genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
