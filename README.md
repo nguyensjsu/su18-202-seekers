@@ -2,7 +2,12 @@
 
 # Database Design - ER diagram
 
+![data_model_er_diagram](https://user-images.githubusercontent.com/21271829/42901469-758f2dc4-8a80-11e8-97e4-c5c3552b6c6b.jpg)
+
+# Updated Database Design - ER diagram
+
 <img width="851" alt="data_model" src="https://user-images.githubusercontent.com/21271829/43332354-0c1163f4-917d-11e8-8ff1-5b690e9b26ec.png">
+
 
 # Architecture Diagram 
 
@@ -13,37 +18,37 @@
 ## User Profile API
 
 1.	Create User 
--	Accept user inputs and perform data quality test.
--	Provide relevant messages for invalid and not acceptable inputs.
--	Profile validation.
--	User Profile creation
+    -	Accept user inputs and perform data quality test.
+    -	Provide relevant messages for invalid and not acceptable inputs.
+    -	Profile validation.
+    -	User Profile creation
 
 2.	Sign in and Sign out
--	Accept username and password, validate the credentials. 
--	Display appropriate message when user logs in – “successfully logged in”,” username and/or password does not match”. 
--	If successfully logged in, a status is created and maintained until user logs off.
+    -	Accept username and password, validate the credentials. 
+    -	Display appropriate message when user logs in – “successfully logged in”,” username and/or password does not match”. 
+    -	If successfully logged in, a status is created and maintained until user logs off.
 
 3.	Update user details
--	Display user profile. User can update the editable fields like address, phone number, full name and password. 
--	Username and Email Id are unique and cannot be edited.
+    -	Display user profile. User can update the editable fields like address, phone number, full name and password. 
+    -	Username and Email Id are unique and cannot be edited.
 
 4.	Reset Password
--	User can change his password if already logged in.
--	The application prompts for new password and confirm password. If they match, new password will be updated.
+    -	User can change his password if already logged in.
+    -	The application prompts for new password and confirm password. If they match, new password will be updated.
 
 5.	Forgot Username
--	User can retrieve the username in case he/she forgets.
--	An email will be sent to the registered email id which contains username.
+    -	User can retrieve the username in case he/she forgets.
+    -	An email will be sent to the registered email id which contains username.
 
 6. 	Delete Account
--	If user decides to delete his account.
--	 The user details will be marked as not active in the database.
+    -	If user decides to delete his account.
+    -	 The user details will be marked as not active in the database.
 
 7. 	Forgot Password
--	User can reset the password, if forgotten
--	Username and registered email will be accepted.
--	Verification code is sent to the email id
--	User can set the new password by entering correct verification code and new valid password.
+    -	User can reset the password, if forgotten
+    -	Username and registered email will be accepted.
+    -	Verification code is sent to the email id
+    -	User can set the new password by entering correct verification code and new valid password.
 
 
 # Feature Set
