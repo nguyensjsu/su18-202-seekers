@@ -30,6 +30,12 @@ public class CardDetailsController {
 
     ObjectMapper mapper = new ObjectMapper();
 
+    /***
+     * get all card details using userid
+     * @param userId
+     * @return
+     */
+
     @RequestMapping(value = "/cardDetails")
 
     public ResponseEntity<CardDetailsResponse> getCardDetails(@RequestParam(value="userId") Integer userId) {
@@ -50,6 +56,12 @@ public class CardDetailsController {
         }
         return responseEntity;
     }
+
+    /****
+     * save all card details and also verigy string length of card length and cvv
+     * @param request
+     * @return
+     */
 
         @RequestMapping(value = "/saveCards" , method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -98,6 +110,12 @@ public class CardDetailsController {
         return responseEntity;
     }
 
+    /***
+     * update all card details
+     * @param request
+     * @return
+     */
+
     @RequestMapping(value="/UpdateExistingCardDetails",  method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<GenericResponse> UpdateCard(@RequestBody UpdateExistingCardRequest request)
@@ -121,6 +139,11 @@ public class CardDetailsController {
         return responseEntity;
     }
 
+    /***
+     * delete card if user wants to remove
+     * @param request
+     * @return
+     */
     @RequestMapping(value="/DeleteCard",  method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<GenericResponse> deleteCard(@RequestBody DeleteCardRequest request)

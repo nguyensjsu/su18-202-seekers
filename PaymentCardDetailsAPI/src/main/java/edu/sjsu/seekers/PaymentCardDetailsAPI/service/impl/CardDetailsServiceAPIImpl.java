@@ -98,6 +98,11 @@ public class CardDetailsServiceAPIImpl implements CardDetailServiceAPI {
 
     }
 
+    /****
+     * check if all detail already exists
+     * @param request
+     * @return
+     */
     @Override
     public GenericResponse UpdateCard(UpdateExistingCardRequest request) {
         GenericResponse updateCard = new GenericResponse();
@@ -141,6 +146,11 @@ public class CardDetailsServiceAPIImpl implements CardDetailServiceAPI {
         return updateCard;
     }
 
+    /***
+     * soft delete from database
+     * @param request
+     * @return
+     */
     @Override
     public GenericResponse deleteCard(DeleteCardRequest request) {
         GenericResponse deleteCard = new GenericResponse();
