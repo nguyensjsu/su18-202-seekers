@@ -42,31 +42,39 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
 
         GenericResponse userDetails = new GenericResponse();
         Optional<User> userByUserName = userDAO.findUserByUsername(request.getUserName());
-        System.out.println(userByUserName.get().getPassword());
-        if (userByUserName.get().getPassword().equals(request.getpassword()) && userByUserName.get().getUserName().equals(request.getUserName()) ) {
-            if(userByUserName.get().getIdActiveCustomer().equals("Y"))
+
+        if(userByUserName.isPresent())
+        {
+            if (userByUserName.get().getPassword().equals(request.getpassword()) && userByUserName.get().getUserName().equals(request.getUserName()))
             {
-                if(userByUserName.get().getIsLoggedIn().equals("N"))
+                if (userByUserName.get().getIdActiveCustomer().equals("Y"))
                 {
-                    userByUserName.get().setIsLoggedIn("Y");
-                    userDAO.save(userByUserName.get());
-                    userDetails.setMessage("Login Successful");
+                    if (userByUserName.get().getIsLoggedIn().equals("N"))
+                    {
+                        userByUserName.get().setIsLoggedIn("Y");
+                        userDAO.save(userByUserName.get());
+                        userDetails.setMessage("Login Successful");
+                    } else {
+                        userDetails.setMessage(request.getUserName() + " already logged in");
+                    }
                 }
                 else
-                {
-                    userDetails.setMessage(request.getUserName()+ " already logged in");
-                }
-            }
+                    {
+                    userDetails.setMessage("Account with username " + request.getUserName() + " is not active");
+
+                    }
+         }
             else
             {
-                userDetails.setMessage("Account with username " + request.getUserName() + " is not active");
-            }
+            userDetails.setMessage("Login Failed. Enter correct Username and Password");
+             }
+
         }
         else
             {
-            userDetails.setMessage("Login Failed. Enter correct Username and Password");
+            userDetails.setMessage("User " + request.getUserName() + "does not exist");
 
-        }
+            }
         userDetails.setStatusCode(HttpStatus.OK.toString());
         return userDetails;
     }
@@ -77,16 +85,20 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         GenericResponse userDetails = new GenericResponse();
         Optional<User> userByUserName = userDAO.findUserByUsername(request.getUserName());
 
-        if(userByUserName.get().getIsLoggedIn().equals("Y"))
-        {
-            userByUserName.get().setIsLoggedIn("N");
-            userDAO.save(userByUserName.get());
-            userDetails.setMessage("Successfully Logged out");
+        if(userByUserName.isPresent()) {
+            if (userByUserName.get().getIsLoggedIn().equals("Y")) {
+                userByUserName.get().setIsLoggedIn("N");
+                userDAO.save(userByUserName.get());
+                userDetails.setMessage("Successfully Logged out");
+            }
+            else {
+                userDetails.setMessage("Cannot Logout");
+
+            }
         }
         else
-         {
-            userDetails.setMessage("Cannot Logout");
-
+        {
+            userDetails.setMessage("User "+ request.getUserName()+ " doesnot exist");
         }
         userDetails.setStatusCode(HttpStatus.OK.toString());
         return userDetails;
@@ -168,12 +180,14 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
 
         GenericResponse updateUser = new GenericResponse();
         Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
-        System.out.println(existingUser.get().getUserKey());
+
         Optional<Address> existingUserAddress = addressDAO.get(existingUser.get().getAddressKey().getAddressKey());
-        System.out.println(existingUserAddress.get().getAddressKey());
-        if(existingUser!=null && existingUserAddress!=null )
+
+
+        if(existingUser.isPresent() && existingUserAddress.isPresent())
         {
             System.out.println(existingUser);
+
             if(existingUser.get().getUserName().equals(request.getUserName()))
             {
                 if (existingUser.get().getIdActiveCustomer().equals("Y"))
@@ -221,6 +235,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         {
             updateUser.setMessage("User Details Cannot be updated. Try again");
         }
+
         updateUser.setStatusCode(HttpStatus.OK.toString());
         return updateUser;
     }
@@ -232,28 +247,29 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
         System.out.println("username :" + request.getUserName());
         System.out.println("DB username :" + existingUser.get().getUserName());
-        if(request.getUserName().equals(existingUser.get().getUserName()) )
-        {
-            if(request.getPassword().equals(request.getConfirmPassword()))
-            {
-                if(existingUser.get().getIsLoggedIn().equals("Y")) {
-                    existingUser.get().setPassword(request.getPassword());
-                    userDAO.save(existingUser.get());
-                    resetPassword.setMessage("Password updated successfully for " + request.getUserName());
+
+        if(existingUser.isPresent())
+
+            if (request.getUserName().equals(existingUser.get().getUserName())) {
+                if (request.getPassword().equals(request.getConfirmPassword())) {
+                    if (existingUser.get().getIsLoggedIn().equals("Y")) {
+                        existingUser.get().setPassword(request.getPassword());
+                        userDAO.save(existingUser.get());
+                        resetPassword.setMessage("Password updated successfully for " + request.getUserName());
+                    } else {
+                        resetPassword.setMessage("User " + request.getUserName() + " not logged in");
+                    }
+                } else {
+                    resetPassword.setMessage("Password and Confirm Password do not match");
                 }
-                else
-                {
-                    resetPassword.setMessage("User " + request.getUserName() + " not logged in");
-                }
+            } else {
+
+                resetPassword.setMessage("Username: " + request.getUserName() + "does not exist");
             }
-            else
-            {
-                resetPassword.setMessage("Password and Confirm Password does not match");
-            }
-        }
+
         else
         {
-            resetPassword.setMessage("Username: " +request.getUserName() + "does not exist");
+            resetPassword.setMessage("Username: " + request.getUserName() + "does not exist");
         }
         resetPassword.setStatusCode(HttpStatus.OK.toString());
         return resetPassword;
