@@ -10,6 +10,34 @@
 
 # Feature Set
 
+## Order Management API
+    
+1.  Menu Catalogue
+    -	 Authenticate the user.
+    -	 Once the user logs in, menu of all items with their names, description and pictures will be shown to the user.
+    -  User can select an item and look into its details like item name, picture, description, size, price and reward points          allocated for the item.
+
+2.	Add to Cart
+     -	Authenticate the user.	
+     -	User can select the size, quantity and any extra toppings for multiple items.
+     -	And proceed to add it to their cart.
+
+3. Store Details 
+    -	 Authenticate the user.
+    -	 User will be displayed with a list of all stores showing store name and address.
+    
+4. Select Order Pickup Store
+    -	 Ability to select one store from the stores list after adding items to the cart to define order pickup store
+
+5.	Review Cart
+    -  Authenticate the user.
+    -	 A list of all user added items is shown in the cart with name, description, image, price, quantity, size and                  toppings details.
+
+6.	Edit cart
+    -  Authenticate the user.
+    -	 The users can edit the cart to add new items or remove exiting ones only if the user has an active cart i.e. if user          had added items in the cart earlier.
+    
+  
 ## Payment API
 
 1. Payment Methods 
