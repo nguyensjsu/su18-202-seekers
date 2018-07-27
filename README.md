@@ -4,6 +4,11 @@
 
 ![data_model_er_diagram](https://user-images.githubusercontent.com/21271829/42901469-758f2dc4-8a80-11e8-97e4-c5c3552b6c6b.jpg)
 
+# Updated Database Design - ER diagram
+
+<img width="851" alt="data_model" src="https://user-images.githubusercontent.com/21271829/43332354-0c1163f4-917d-11e8-8ff1-5b690e9b26ec.png">
+
+
 # Architecture Diagram 
 
 ![Architecture Diagram](https://user-images.githubusercontent.com/31361314/43311542-9c81e6f4-913f-11e8-9258-5918507f583c.png)
