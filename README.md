@@ -15,6 +15,37 @@
 
 # Feature Set
 
+## User Profile API
+
+1.	Create User 
+-	Accept user inputs and perform data quality test.
+-	Provide relevant messages for invalid and not acceptable inputs.
+-	Profile validation.
+-	User Profile creation
+
+2.	Sign in and Sign out
+-	Accept username and password, validate the credentials. 
+-	Display appropriate message when user logs in – “successfully logged in”,” username and/or password does not match”. 
+-	If successfully logged in, a status is created and maintained until user logs off.
+
+3.	Update user details
+-	Display user profile. User can update the editable fields like address, phone number, full name and password. 
+-	Username and Email Id are unique and cannot be edited.
+
+4.	Reset Password
+-	User can change his password if already logged in.
+-	The application prompts for new password and confirm password. If they match, new password will be updated.
+
+5.	Forgot Username
+-	User can retrieve the username in case he/she forgets.
+-	An email will be sent to the registered email id which contains username.
+
+6. 	Delete Account
+-	If user decides to delete his account.
+-	 The user details will be marked as not active in the database.
+
+# Feature Set
+
 ## Order Management API
     
 1.  Menu Catalogue
