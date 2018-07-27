@@ -1,7 +1,5 @@
 package edu.sjsu.seekers.starbucks.dao;
 
-import edu.sjsu.seekers.starbucks.model.ProductCatalog;
-import edu.sjsu.seekers.starbucks.model.Products;
 import edu.sjsu.seekers.starbucks.model.Stores;
 
 import java.util.List;

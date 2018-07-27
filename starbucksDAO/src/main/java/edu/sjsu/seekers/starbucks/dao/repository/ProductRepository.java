@@ -1,6 +1,5 @@
 package edu.sjsu.seekers.starbucks.dao.repository;
 
-import edu.sjsu.seekers.starbucks.model.Orders;
 import edu.sjsu.seekers.starbucks.model.Products;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

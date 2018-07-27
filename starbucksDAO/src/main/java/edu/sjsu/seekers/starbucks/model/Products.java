@@ -1,7 +1,6 @@
 package edu.sjsu.seekers.starbucks.model;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class Products {

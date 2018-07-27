@@ -1,6 +1,7 @@
 package edu.sjsu.seekers.starbucks.dao.impl;
 
 import edu.sjsu.seekers.starbucks.dao.*;
+import edu.sjsu.seekers.starbucks.dao.repository.ProductRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.SizeRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.StoresRepository;
 import edu.sjsu.seekers.starbucks.model.*;
@@ -16,17 +17,20 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles("unit-test")
-public class OrderDAOImplTest {
+public class OrderDetailsDAOImplTest {
+
 
     @Autowired
     OrderDAO orderDAO;
+
+    @Autowired
+    OrderDetailsDAO orderDetailsDAO;
 
     @Autowired
     StoresDAO storesDAO;
@@ -46,6 +50,9 @@ public class OrderDAOImplTest {
     @Autowired
     PaymentCardDetailsDAO paymentCardDetailsDAO;
 
+    @Autowired
+    ProductRepository productRepository;
+
     Orders order,order1;
     User user;
     Address address;
@@ -53,7 +60,7 @@ public class OrderDAOImplTest {
     OrderDetails orderDetails;
     Size sizeSmall,sizeMedium,sizeLarge;
     PaymentCardDetails paymentCardDetails;
-
+    Products products;
 
     @Before
     public void setup()
@@ -65,7 +72,19 @@ public class OrderDAOImplTest {
         createTestPaymentCard();
         createTestStore();
         createTestOrder();
+        createTestProduct();
         createTestOrderDetails();
+    }
+
+    private void createTestProduct()
+    {
+        products = new Products();
+        products.setActive(true);
+        products.setProductDescription("test description");
+        products.setProductImageLink("test link");
+        products.setProductName("test product");
+        products.setProductStatus(true);
+        productRepository.save(products);
     }
 
     private void createTestPaymentCard() {
@@ -140,13 +159,7 @@ public class OrderDAOImplTest {
         order.setOrderStatus("InProgress");
         orderDAO.save(order);
 
-        order1 = new Orders();
-        order1.setUserKey(user);
-        order1.setStoreKey(stores);
-        order1.setOrderAmount(12.12);
-        order1.setOrderDate(new Date());
-        order1.setOrderStatus("InProgress");
-        orderDAO.save(order1);
+
     }
 
     private void createTestOrderDetails() {
@@ -156,63 +169,54 @@ public class OrderDAOImplTest {
         orderDetails.setNetPrice(2.55);
         orderDetails.setToppings("");
         orderDetails.setOrderKey(order);
+        orderDetails.setProductKey(products);
+        orderDetailsDAO.save(orderDetails);
     }
 
     @Test
-    public void getOrder() throws SQLException {
-       System.out.println("************running getOrder test************");
-       Orders ordGet = orderDAO.findOrdersByUserKey(1).get(0);
-       assertNotNull(ordGet);
-       assertEquals("InProgress",ordGet.getOrderStatus());
-       assertEquals(java.util.Optional.of(12.12).get(),ordGet.getOrderAmount());
-       assertNotNull(ordGet.getUserKey());
-       assertNotNull(ordGet.getStoreKey());
+    public void listOrderDetails() throws SQLException {
+        System.out.println("************running listOrderDetails test************");
+        Orders ordGet = orderDAO.findOrdersByUserKey(1).get(0);
+        List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
+        assertNotNull(orderDetailsGetList);
+        assertEquals(1,orderDetailsGetList.size());
+        assertEquals(java.util.Optional.of(2.55).get(),orderDetailsGetList.get(0).getNetPrice());
+        assertEquals(java.util.Optional.of(1).get(),orderDetailsGetList.get(0).getOrderQuantity());
+
     }
 
     @Test
-    public void updateOrder() throws SQLException {
-        System.out.println("************running updateOrder test************");
+    public void deleteOrderDetails() throws SQLException {
+        System.out.println("************running deleteOrderDetails test************");
         Exception ex = null;
         try {
-            Orders ordUpdate = orderDAO.findOrdersByUserKey(1).get(0);
-            ordUpdate.setRewardsEarned(1.1);
-            orderDAO.save(ordUpdate);
+            orderDetailsDAO.delete(orderDetails);
         }catch(Exception e)
         {
-            System.out.println("************inside updateOrder catch************ " + e.getMessage());
+            System.out.println("************inside deleteOrderDetails catch************ " + e.getMessage());
             ex = e;
         }
         assertNull(ex);
     }
 
-
-
     @Test
-    public void findIncompleteOrdersByUserKey() {
-        System.out.println("************running findIncompleteOrdersByUserKey test************");
+    public void modifyOrderDetails() {
+        System.out.println("************running modifyOrderDetails test************");
         Exception ex = null;
         try {
-            Orders ord= orderDAO.findIncompleteOrdersByUserKey(1).get();
+            Orders ordGet = orderDAO.findOrdersByUserKey(1).get(0);
+            if(orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey()).size() == 0)
+                createTestOrderDetails();
+            List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
+            OrderDetails orderModify = orderDetailsGetList.get(0);
+            orderModify.setToppings("test toppings");
+            orderDetailsDAO.save(orderModify);
         }catch(Exception e)
         {
-            System.out.println("************inside findIncompleteOrdersByUserKey catch************");
+            System.out.println("************inside modifyOrderDetails catch************");
             ex = e;
         }
         assertNull(ex);
     }
 
-
-    @Test
-    public void findOrdersByUserKey() {
-        System.out.println("************running findOrdersByUserKey test************");
-        Exception ex = null;
-        try {
-            orderDAO.findOrdersByUserKey(1);
-        }catch(Exception e)
-        {
-            System.out.println("************inside findOrdersByUserKey catch************");
-            ex = e;
-        }
-        assertNull(ex);
-    }
 }
