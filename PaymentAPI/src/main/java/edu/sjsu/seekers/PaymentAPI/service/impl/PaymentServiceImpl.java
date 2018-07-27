@@ -230,7 +230,7 @@ public class PaymentServiceImpl implements PaymentService {
                 if (orders.get().getCardKey() == null) {
                     if (user.get().getRewardPoints() >= orders.get().getOrderAmount()) {
 
-                  //Check Rewards
+                  //Update Rewards
                   rewardPoints = user.get().getRewardPoints() - orders.get().getOrderAmount();
                   userSave = user.get();
                   userSave.setRewardPoints(rewardPoints);
