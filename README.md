@@ -80,6 +80,29 @@
     -  Authenticate the user.
     -	 The users can edit the cart to add new items or remove exiting ones only if the user has an active cart i.e. if user          had added items in the cart earlier.
     
+ ## PayemntCardDeatils API
+ 
+ 1.	Save Cards
+    -	Authenticate the user.
+    - Once user is authenticated, user can add cards by giving card number, CVV, Expiration Month and Expiration Year.
+    - User can also add billing address and shipping address.
+    
+2.	Card Details for a specific user
+    -	Authenticate the user.
+    - User will have all the cards attached to username and can check all the cards available for payment.
+    - All card details fields are mandatory. Field missing will throw an error and data won’t be saved in database.
+    - Card Number is set to 9 digits and CVV is set to 3 digits. Application prompts to input correct credentials if details are violated.
+    
+3.	Update card details
+    - Display card details. User can update the editable fields like card number, billing address, CVV and expiration month and year.
+    - Username is unique and cannot be edited.
+    
+4.	Delete card Details
+    - User can delete card details.
+    - Card details will be marked inactive in database.
+
+    
+    
   
 ## Payment API
 
