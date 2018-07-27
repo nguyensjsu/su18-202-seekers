@@ -59,7 +59,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
             }
             else
             {
-                userDetails.setMessage("Account with username " + request.getUserName() + " is not active yet");
+                userDetails.setMessage("Account with username " + request.getUserName() + " is not active");
             }
         }
         else
@@ -171,28 +171,51 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         System.out.println(existingUser.get().getUserKey());
         Optional<Address> existingUserAddress = addressDAO.get(existingUser.get().getAddressKey().getAddressKey());
         System.out.println(existingUserAddress.get().getAddressKey());
-        if(existingUser!= null && existingUserAddress!=null ) {
-            if (request.getFullName() != null)
-                existingUser.get().setFullName(request.getFullName());
-            if (request.getPhoneNumber() != null)
-                existingUser.get().setPhoneNumber(request.getPhoneNumber());
-            if (request.getDateOfBirth() != null)
-                existingUser.get().setDateOfBirth(request.getDateOfBirth());
-            if (request.getAddressLine1() != null)
-                existingUserAddress.get().setAddressLine1(request.getAddressLine1());
-            if (request.getAddressLine2() != null)
-                existingUserAddress.get().setAddressLine2(request.getAddressLine2());
-            if (request.getCity() != null)
-                existingUserAddress.get().setCity(request.getCity());
-            if (request.getState() != null)
-                existingUserAddress.get().setState(request.getState());
-            if (request.getCountry() != null)
-                existingUserAddress.get().setCountry(request.getCountry());
-            if (request.getZipCode() != null)
-                existingUserAddress.get().setZipCode(request.getZipCode());
-            addressDAO.save(existingUserAddress.get());
-            userDAO.save(existingUser.get());
-            updateUser.setMessage("User Details updated successfully for "+ request.getUserName());
+        if(existingUser!=null && existingUserAddress!=null )
+        {
+            System.out.println(existingUser);
+            if(existingUser.get().getUserName().equals(request.getUserName()))
+            {
+                if (existingUser.get().getIdActiveCustomer().equals("Y"))
+                {
+                    if(existingUser.get().getIsLoggedIn().equals("Y")) {
+
+                        if (request.getFullName() != null)
+                            existingUser.get().setFullName(request.getFullName());
+                        if (request.getPhoneNumber() != null)
+                            existingUser.get().setPhoneNumber(request.getPhoneNumber());
+                        if (request.getDateOfBirth() != null)
+                            existingUser.get().setDateOfBirth(request.getDateOfBirth());
+                        if (request.getAddressLine1() != null)
+                            existingUserAddress.get().setAddressLine1(request.getAddressLine1());
+                        if (request.getAddressLine2() != null)
+                            existingUserAddress.get().setAddressLine2(request.getAddressLine2());
+                        if (request.getCity() != null)
+                            existingUserAddress.get().setCity(request.getCity());
+                        if (request.getState() != null)
+                            existingUserAddress.get().setState(request.getState());
+                        if (request.getCountry() != null)
+                            existingUserAddress.get().setCountry(request.getCountry());
+                        if (request.getZipCode() != null)
+                            existingUserAddress.get().setZipCode(request.getZipCode());
+                        addressDAO.save(existingUserAddress.get());
+                        userDAO.save(existingUser.get());
+                        updateUser.setMessage("User Details updated successfully for " + request.getUserName());
+                    }
+                    else
+                    {
+                        updateUser.setMessage("User " + request.getUserName() + " not logged in");
+                    }
+                }
+                else
+                {
+                    updateUser.setMessage("User " + request.getUserName() + " not active");
+                }
+            }
+            else
+            {
+                updateUser.setMessage("User with " + request.getUserName()+ " Details doesnot exist.");
+            }
         }
         else
         {
