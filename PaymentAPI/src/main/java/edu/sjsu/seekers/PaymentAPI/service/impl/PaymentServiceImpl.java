@@ -36,7 +36,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public ResponseEntity<PaymentOptionsResponse> getPaymentOptions(String userName) {
-        Optional<User> user = userDAO.findUserByUsername(userName);
+        try {
+            Optional<User> user = userDAO.findUserByUsername(userName);
+
         PaymentOptionsResponse paymentOptionsResponse = new PaymentOptionsResponse();
         if(user.isPresent() && user.get().getIsLoggedIn().equals("Y")) {
             Optional<Orders> orders = orderDAO.findIncompleteOrdersByUserKey(user.get().getUserKey());
@@ -77,12 +79,19 @@ public class PaymentServiceImpl implements PaymentService {
             ResponseEntity<PaymentOptionsResponse> response = new ResponseEntity<PaymentOptionsResponse>(paymentOptionsResponse,HttpStatus.EXPECTATION_FAILED);
             return response;
         }
+        }catch (Exception e){
+            PaymentOptionsResponse paymentOptionsResponse = new PaymentOptionsResponse();
+            paymentOptionsResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            paymentOptionsResponse.setResponseMessage("Exception Occurred with message : "+e);
+            return  new ResponseEntity<PaymentOptionsResponse>(paymentOptionsResponse,HttpStatus.EXPECTATION_FAILED);
+        }
 
     }
 
 
     @Override
     public ResponseEntity<GenericResponse> clearCart(String userName) {
+        try{
         ResponseEntity<GenericResponse> responseEntity;
         GenericResponse genericResponse= new GenericResponse();
 
@@ -111,11 +120,18 @@ public class PaymentServiceImpl implements PaymentService {
             responseEntity = new ResponseEntity<>(genericResponse,HttpStatus.EXPECTATION_FAILED);
             return responseEntity;
         }
+    }catch (Exception e){
+            GenericResponse paymentOptionsResponse = new GenericResponse();
+            paymentOptionsResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        paymentOptionsResponse.setResponseMessage("Exception Occurred with message : "+e);
+        return  new ResponseEntity<GenericResponse>(paymentOptionsResponse,HttpStatus.EXPECTATION_FAILED);
+    }
     }
 
 
     @Override
     public ResponseEntity<ReviewOrderDetailsResponse> reviewOrder(ReviewOrderRequest reviewOrderRequest) {
+        try{
         ResponseEntity<ReviewOrderDetailsResponse> responseEntity;
         ReviewOrderDetailsResponse response= new ReviewOrderDetailsResponse();
 
@@ -187,14 +203,20 @@ public class PaymentServiceImpl implements PaymentService {
 
             return responseEntity;
         }
-
+        }catch (Exception e){
+            ReviewOrderDetailsResponse paymentOptionsResponse = new ReviewOrderDetailsResponse();
+            paymentOptionsResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            paymentOptionsResponse.setResponseMessage("Exception Occurred with message : "+e);
+            return  new ResponseEntity<ReviewOrderDetailsResponse>(paymentOptionsResponse,HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     @Override
     public ResponseEntity<ConfirmOrderResponse> doConfirmOrder(String confirm,String userName) {
-        Optional<User> user = userDAO.findUserByUsername(userName);
-        ConfirmOrderResponse confirmOrderResponse = new ConfirmOrderResponse();
-        if(user.isPresent() && user.get().getIsLoggedIn().equals("Y")) {
+        try {
+            Optional<User> user = userDAO.findUserByUsername(userName);
+            ConfirmOrderResponse confirmOrderResponse = new ConfirmOrderResponse();
+            if (user.isPresent() && user.get().getIsLoggedIn().equals("Y")) {
 
             Double rewardPoints;
             User userSave;
@@ -261,6 +283,14 @@ public class PaymentServiceImpl implements PaymentService {
             confirmOrderResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
             ResponseEntity<ConfirmOrderResponse> responseEntity = new ResponseEntity<ConfirmOrderResponse>(confirmOrderResponse,HttpStatus.EXPECTATION_FAILED);
             return responseEntity;
+			}
+		}
+		    catch (Exception e) {
+            ConfirmOrderResponse paymentOptionsResponse = new ConfirmOrderResponse();
+            paymentOptionsResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            paymentOptionsResponse.setResponseMessage("Exception Occurred with message : " + e);
+            return new ResponseEntity<ConfirmOrderResponse>(paymentOptionsResponse, HttpStatus.EXPECTATION_FAILED);
+        
         }
     }
 
