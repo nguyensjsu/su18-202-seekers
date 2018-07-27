@@ -14,5 +14,7 @@ public interface UserProfileServiceAPI {
     GenericResponse verifyAccount(VerifyAccountRequest request);
     GenericResponse forgotUsername(ForgotUsernameRequest request);
     GenericResponse deleteUser(DeleteUserRequest request);
+    GenericResponse forgotPassword(ForgotPasswordRequest request);
+    GenericResponse setPassword(SetPasswordRequest request);
 
 }

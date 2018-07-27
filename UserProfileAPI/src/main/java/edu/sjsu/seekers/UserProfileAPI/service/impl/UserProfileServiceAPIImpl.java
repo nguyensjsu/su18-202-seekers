@@ -148,23 +148,18 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
                 else
                 {
                     createUser.setMessage("Email Id " + request.getEmailId() +" already exists.");
-
                 }
             }
             else
             {
                 createUser.setMessage("User by "+ request.getUserName()+ " already exists. Try again");
-
             }
-
         }
         else
         {
             createUser.setMessage("Username and/or Password cannot be null. Try again");
         }
-
         createUser.setStatusCode(HttpStatus.OK.toString());
-
         return createUser;
     }
 
@@ -218,9 +213,15 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         {
             if(request.getPassword().equals(request.getConfirmPassword()))
             {
-                existingUser.get().setPassword(request.getPassword());
-                userDAO.save(existingUser.get());
-                resetPassword.setMessage("Password updated successfully for "+ request.getUserName() );
+                if(existingUser.get().getIsLoggedIn().equals("Y")) {
+                    existingUser.get().setPassword(request.getPassword());
+                    userDAO.save(existingUser.get());
+                    resetPassword.setMessage("Password updated successfully for " + request.getUserName());
+                }
+                else
+                {
+                    resetPassword.setMessage("User " + request.getUserName() + " not logged in");
+                }
             }
             else
             {
@@ -310,6 +311,78 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
 
         deleteUserAccount.setStatusCode(HttpStatus.OK.toString());
         return deleteUserAccount;
+    }
+
+    @Override
+    public GenericResponse forgotPassword(ForgotPasswordRequest request)
+    {
+        GenericResponse forgotUPassword = new GenericResponse();
+        Optional<User> existingUser = userDAO.findUserByEmailId(request.getEmailId());
+
+        if(request.getEmailId().equals(existingUser.get().getEmailId()) && request.getUserName().equals(existingUser.get().getUserName()))
+        {
+
+            try {
+                Random rand = new Random();
+                String authenticationCode = String.valueOf(rand.nextInt(10000) + 1);
+                existingUser.get().setVerificationCode(authenticationCode);
+                userDAO.save(existingUser.get());
+
+                sendEmail(request.getEmailId(), authenticationCode);
+
+            } catch (MailException e)
+            {
+                System.out.println("Error: " + e.getMessage());
+            }
+
+            forgotUPassword.setMessage("Verification code sent to email id: " + existingUser.get().getEmailId());
+
+        }
+        else
+        {
+            forgotUPassword.setMessage("Enter correct email id");
+        }
+        forgotUPassword.setStatusCode(HttpStatus.OK.toString());
+        return forgotUPassword;
+    }
+
+    @Override
+    public GenericResponse setPassword(SetPasswordRequest request) {
+
+        GenericResponse setPassword = new GenericResponse();
+        Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
+        System.out.println("username :" + request.getUserName());
+        System.out.println("DB username :" + existingUser.get().getUserName());
+
+        if(request.getUserName().equals(existingUser.get().getUserName()) )
+        {
+            if (request.getAuthenticationCode().equals(existingUser.get().getVerificationCode())) {
+
+                if (request.getPassword().equals(request.getConfirmPassword()))
+                {
+                    existingUser.get().setPassword(request.getPassword());
+                    userDAO.save(existingUser.get());
+
+                    setPassword.setMessage("Password updated successfully for " + request.getUserName());
+                }
+                else
+                    {
+                    setPassword.setMessage("Password and Confirm Password does not match");
+                }
+            }
+            else
+            {
+                setPassword.setMessage("Enter correct Verification code sent to the email id "+ existingUser.get().getEmailId());
+
+            }
+        }
+        else
+        {
+            setPassword.setMessage("Username: " +request.getUserName() + "does not exist");
+        }
+
+        setPassword.setStatusCode(HttpStatus.OK.toString());
+        return setPassword;
     }
 
 
