@@ -1,8 +1,6 @@
 package edu.sjsu.seekers.starbucks.dao;
 
-import edu.sjsu.seekers.starbucks.model.Orders;
 import edu.sjsu.seekers.starbucks.model.PaymentCardDetails;
-import edu.sjsu.seekers.starbucks.model.User;
 
 import java.util.List;
 import java.util.Optional;

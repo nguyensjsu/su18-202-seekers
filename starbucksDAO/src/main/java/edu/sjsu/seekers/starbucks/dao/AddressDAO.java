@@ -2,7 +2,6 @@ package edu.sjsu.seekers.starbucks.dao;
 
 import edu.sjsu.seekers.starbucks.model.Address;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface AddressDAO {
