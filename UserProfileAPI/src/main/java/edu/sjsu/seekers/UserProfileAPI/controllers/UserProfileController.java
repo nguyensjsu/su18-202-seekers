@@ -266,5 +266,55 @@ public class UserProfileController {
     }
 
 
+    @RequestMapping(value="/ForgotPassword",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("ForgotPasswordRequest: " + forgotPasswordRequest);
+
+            GenericResponse response = userProfileServiceAPI.forgotPassword(forgotPasswordRequest);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+
+    }
+
+
+    @RequestMapping(value="/SetPassword",  method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> setPassword(@RequestBody SetPasswordRequest setPasswordRequest)
+    {
+        ResponseEntity<GenericResponse> responseEntity = null;
+        try {
+
+            System.out.println("ForgotPasswordRequest: " + setPasswordRequest);
+
+            GenericResponse response = userProfileServiceAPI.setPassword(setPasswordRequest);
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.OK);
+
+        }
+        catch (Exception e)
+        {
+            GenericResponse response = new GenericResponse();
+            response.setMessage(e.getMessage());
+            response.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<GenericResponse>(response, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+
+    }
+
+
 
 }
