@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,6 +24,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles("unit-test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class OrderDetailsDAOImplTest {
 
 
@@ -176,37 +178,34 @@ public class OrderDetailsDAOImplTest {
     @Test
     public void listOrderDetails() throws SQLException {
         System.out.println("************running listOrderDetails test************");
-        int user_idx = userDAO.getUserKey("testuser1");
-
-        Orders ordGet = orderDAO.findOrdersByUserKey(user_idx).get(0);
-        List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
-        assertNotNull(orderDetailsGetList);
-        assertEquals(1,orderDetailsGetList.size());
-        assertEquals(java.util.Optional.of(2.55).get(),orderDetailsGetList.get(0).getNetPrice());
-        assertEquals(java.util.Optional.of(1).get(),orderDetailsGetList.get(0).getOrderQuantity());
-
-    }
-
-    @Test
-    public void deleteOrderDetails() throws SQLException {
-        System.out.println("************running deleteOrderDetails test************");
         Exception ex = null;
         try {
-            orderDetailsDAO.delete(orderDetails);
-        }catch(Exception e)
-        {
+            int user_idx = userDAO.getUserKey("testuser1");
+
+
+            Orders ordGet = orderDAO.findOrdersByUserKey(user_idx).get(0);
+            List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
+            assertNotNull(orderDetailsGetList);
+            assertEquals(1,orderDetailsGetList.size());
+            assertEquals(java.util.Optional.of(2.55).get(),orderDetailsGetList.get(0).getNetPrice());
+            assertEquals(java.util.Optional.of(1).get(),orderDetailsGetList.get(0).getOrderQuantity());
+        } catch (Exception e) {
             System.out.println("************inside deleteOrderDetails catch************ " + e.getMessage());
             ex = e;
         }
         assertNull(ex);
+
     }
+
+
 
     @Test
     public void modifyOrderDetails() {
         System.out.println("************running modifyOrderDetails test************");
         Exception ex = null;
         try {
-            Orders ordGet = orderDAO.findOrdersByUserKey(1).get(0);
+            int user_idx = userDAO.getUserKey("testuser1");
+            Orders ordGet = orderDAO.findOrdersByUserKey(user_idx).get(0);
             if(orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey()).size() == 0)
                 createTestOrderDetails();
             List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
@@ -216,6 +215,19 @@ public class OrderDetailsDAOImplTest {
         }catch(Exception e)
         {
             System.out.println("************inside modifyOrderDetails catch************");
+            ex = e;
+        }
+        assertNull(ex);
+    }
+
+    @Test
+    public void deleteOrderDetails() throws SQLException {
+        System.out.println("************running deleteOrderDetails test************");
+        Exception ex = null;
+        try {
+            orderDetailsDAO.delete(orderDetails);
+        } catch (Exception e) {
+            System.out.println("************inside deleteOrderDetails catch************ " + e.getMessage());
             ex = e;
         }
         assertNull(ex);
