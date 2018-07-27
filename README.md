@@ -79,7 +79,9 @@
 6.	Edit cart
     -  Authenticate the user.
     -	 The users can edit the cart to add new items or remove exiting ones only if the user has an active cart i.e. if user          had added items in the cart earlier.
-    
+   
+   # Feature Set
+   
  ## PayemntCardDeatils API
  
  1.	Save Cards
