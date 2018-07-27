@@ -1,6 +1,7 @@
 package edu.sjsu.seekers.OrderAPI.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import edu.sjsu.seekers.OrderAPI.request.CartProductEditRequest;
 import edu.sjsu.seekers.OrderAPI.request.CartProductRequest;
 import edu.sjsu.seekers.OrderAPI.response.*;
 import edu.sjsu.seekers.OrderAPI.service.OrderServiceAPI;
@@ -250,6 +251,7 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 tempOrderDetails.setOrderQuantity(tempCartProductRequest.getQuantity());
                 tempOrderDetails.setNetPrice(productAmount);
                 tempOrderDetails.setToppings(tempCartProductRequest.getToppings());
+                tempOrderDetails.setSizeKey(tempSize);
                 orderDetailsList.add(tempOrderDetails);
                 orderAmount += productAmount;
                 orderRewards += productRewards;
@@ -285,6 +287,83 @@ public class OrderServiceAPIImpl implements OrderServiceAPI {
                 }
             }
 
+        return genericResponse;
+    }
+
+    @Override
+    public GenericResponse editCart(Map<Integer, CartProductEditRequest> productNames, User user) {
+        GenericResponse genericResponse = new GenericResponse();
+        boolean invalidTransaction = false;
+        Orders currentOrder = null;
+        Optional<Orders> orders = getInprogressOrder(user.getUserKey());
+
+        if (orders.isPresent()) {
+            System.out.println("user: " + user.getUserName() + " has 1 active carts");
+            currentOrder = orders.get();
+            int orderDetailsId = 0;
+            Optional<OrderDetails> tempOptionalOrderDetails;
+            OrderDetails tempOrderDetails;
+            CartProductEditRequest tempCartProducEditRequest;
+            ProductCatalog tempProductCatalog;
+            for(Map.Entry<Integer,CartProductEditRequest> mp : productNames.entrySet()) {
+                orderDetailsId = mp.getKey();
+                tempCartProducEditRequest = mp.getValue();
+                tempOptionalOrderDetails = orderDetailsDAO.get(orderDetailsId);
+                if(!tempOptionalOrderDetails.isPresent())
+                {
+                    genericResponse.setMessage("Invalid item id provided");
+                    genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                    invalidTransaction = true;
+                    break;
+                }
+                tempOrderDetails = tempOptionalOrderDetails.get();
+                tempProductCatalog = getProductCatalogByIdAndSize(tempOrderDetails.getSizeKey().getSizeKey(), tempOrderDetails.getProductKey().getProductKey());
+                Double perItemPrice = tempProductCatalog.getPrice();
+                if(tempCartProducEditRequest.getQuantity() < 0)
+                {
+                    genericResponse.setMessage("Invalid item quantity provided for item: " + orderDetailsId);
+                    genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                    invalidTransaction = true;
+                    break;
+                }
+                if(tempOrderDetails.getOrderQuantity() == tempCartProducEditRequest.getQuantity())
+                {
+                    genericResponse.setMessage("Same quantity provided for item: " + orderDetailsId);
+                    genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                    invalidTransaction = true;
+                    break;
+                }
+                Double finalAmount;
+                Double oldAmount = tempOrderDetails.getNetPrice();
+                if(tempOrderDetails.getOrderQuantity() > tempCartProducEditRequest.getQuantity())
+                {
+                    int diffQuantity = tempOrderDetails.getOrderQuantity() - tempCartProducEditRequest.getQuantity();
+                    tempOrderDetails.setOrderQuantity(tempCartProducEditRequest.getQuantity());
+                    finalAmount = tempOrderDetails.getNetPrice() - (perItemPrice * diffQuantity);
+                    tempOrderDetails.setNetPrice(finalAmount);
+                }
+                else
+                {
+                    int diffQuantity = tempCartProducEditRequest.getQuantity() - tempOrderDetails.getOrderQuantity();
+                    tempOrderDetails.setOrderQuantity(tempCartProducEditRequest.getQuantity());
+                    finalAmount = tempOrderDetails.getNetPrice() + (perItemPrice * diffQuantity);
+                    tempOrderDetails.setNetPrice(finalAmount);
+                }
+                finalAmount = finalAmount - oldAmount;
+                currentOrder.setOrderAmount(currentOrder.getOrderAmount() + finalAmount);
+                currentOrder = saveOrder(currentOrder);
+                saveOrderDetails(tempOrderDetails);
+            }
+            if(!invalidTransaction) {
+                genericResponse.setMessage("Cart updated successfully for user: " + user.getUserName());
+                genericResponse.setStatusCode(HttpStatus.OK.toString());
+            }
+        }
+        else
+        {
+            genericResponse.setMessage("No active carts for user: " + user.getUserName());
+            genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+        }
         return genericResponse;
     }
 

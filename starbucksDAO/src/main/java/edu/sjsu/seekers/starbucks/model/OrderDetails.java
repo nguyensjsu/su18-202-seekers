@@ -32,6 +32,10 @@ public class OrderDetails {
     @Column(name="Toppings")
     private String toppings;
 
+    @ManyToOne
+    @JoinColumn(name = "Size_Key", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Size sizeKey;
 
     public String getToppings() {
         return toppings;
@@ -80,7 +84,13 @@ public class OrderDetails {
     public void setNetPrice(Double netPrice) {
         this.netPrice = netPrice;
     }
+    public Size getSizeKey() {
+        return sizeKey;
+    }
 
+    public void setSizeKey(Size sizeKey) {
+        this.sizeKey = sizeKey;
+    }
 
 
     @Override
@@ -92,6 +102,7 @@ public class OrderDetails {
                 ", orderQuantity=" + orderQuantity +
                 ", netPrice=" + netPrice +
                 ", toppings='" + toppings + '\'' +
+                ", sizeKey=" + sizeKey +
                 '}';
     }
 }
