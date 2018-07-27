@@ -44,6 +44,13 @@
 -	If user decides to delete his account.
 -	 The user details will be marked as not active in the database.
 
+7. 	Forgot Password
+-	User can reset the password, if forgotten
+-	Username and registered email will be accepted.
+-	Verification code is sent to the email id
+-	User can set the new password by entering correct verification code and new valid password.
+
+
 # Feature Set
 
 ## Order Management API
