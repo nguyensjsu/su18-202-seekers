@@ -176,7 +176,9 @@ public class OrderDetailsDAOImplTest {
     @Test
     public void listOrderDetails() throws SQLException {
         System.out.println("************running listOrderDetails test************");
-        Orders ordGet = orderDAO.findOrdersByUserKey(1).get(0);
+        int user_idx = userDAO.getUserKey("testuser1");
+
+        Orders ordGet = orderDAO.findOrdersByUserKey(user_idx).get(0);
         List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
         assertNotNull(orderDetailsGetList);
         assertEquals(1,orderDetailsGetList.size());

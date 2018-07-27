@@ -43,8 +43,8 @@ public class PaymentDetailsDAO {
     @Autowired
     OrderDetailsDAO orderDetailsDAO;
 
-//    @Autowired
-//    PaymentDetailsDAO paymentDetailsDAO;
+    @Autowired
+    PaymentDetailsDAO paymentDetailsDAO;
 
     Orders order, order1;
     User user;
@@ -164,6 +164,7 @@ public class PaymentDetailsDAO {
         PaymentDetails paymentDetails = new PaymentDetails();
         paymentDetails.setOrderKey(order);
         paymentDetails.setPaymentStatus("SUCCESS");
+
 //        paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
 
         assert true;
