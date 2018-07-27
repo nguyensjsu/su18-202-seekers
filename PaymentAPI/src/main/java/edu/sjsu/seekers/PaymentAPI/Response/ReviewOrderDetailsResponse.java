@@ -2,6 +2,7 @@ package edu.sjsu.seekers.PaymentAPI.Response;
 
 import edu.sjsu.seekers.starbucks.model.OrderDetails;
 
+
 import java.util.List;
 
 public class ReviewOrderDetailsResponse extends GenericResponse {
@@ -25,7 +26,7 @@ public class ReviewOrderDetailsResponse extends GenericResponse {
         if(this.orderDetails!=null) {
             for (OrderDetails o : this.orderDetails) {
                 toReturn = toReturn + " Product Name='" + o.getProductKey().getProductName() + '\'' + ",Product Description='" + o.getProductKey().getProductDescription() + '\'' + ",Product Quantity='" + o.getOrderQuantity() + '\''+
-                ",Toppings='" + o.getToppings() + '\'' + ",Amount='" + o.getNetPrice() + '\'';
+                ",Toppings='" + o.getToppings() + '\'' + ",Amount='" + o.getNetPrice() + '\''+ ",Size='" + o.getSizeKey().getSizeName() + '\'';
             }
             return toReturn;
         }
