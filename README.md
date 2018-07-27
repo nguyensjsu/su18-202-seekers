@@ -47,8 +47,6 @@
     -	User can set the new password by entering correct verification code and new valid password.
 
 
-# Feature Set
-
 ## Order Management API
     
 1.  Menu Catalogue
@@ -76,7 +74,6 @@
     -  Authenticate the user.
     -	 The users can edit the cart to add new items or remove exiting ones only if the user has an active cart i.e. if user          had added items in the cart earlier.
    
-   # Feature Set
    
  ## PayemntCardDeatils API
  
@@ -99,9 +96,7 @@
     - User can delete card details.
     - Card details will be marked inactive in database.
 
-    
-    
-  
+     
 ## Payment API
 
 1. Payment Methods 
