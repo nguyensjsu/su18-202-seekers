@@ -1,6 +1,7 @@
 package edu.sjsu.seekers.UserProfileAPI;
 
 import edu.sjsu.seekers.UserProfileAPI.Request.*;
+import edu.sjsu.seekers.UserProfileAPI.Response.ForgotUsernameResponse;
 import edu.sjsu.seekers.UserProfileAPI.Response.GenericResponse;
 import edu.sjsu.seekers.UserProfileAPI.service.UserProfileServiceAPI;
 import edu.sjsu.seekers.UserProfileAPI.service.impl.UserProfileServiceAPIImpl;
@@ -267,6 +268,8 @@ public class UserProfileApiApplicationTests {
 		}
 	}
 
+
+	//Forgot password - Here the input is not correct. Therefore prompts user to enter input
 	@Test
 	public void ForgotpasswordTest2()
 	{
@@ -298,6 +301,123 @@ public class UserProfileApiApplicationTests {
 	}
 
 
+	// ForgotPasswordTest1 test case would send verification code to the entered email id.
+	// The code  is 1901. This will reset the password for the user Sindhupatil
+
+	@Test
+	public void setPasswordTest1()
+	{
+		GenericResponse setPassword = new GenericResponse();
+		SetPasswordRequest request = new SetPasswordRequest();
+		request.setUserName("SindhuPatil");
+		request.setAuthenticationCode("1901");
+		request.setPassword("Alphabet333");
+		request.setConfirmPassword("Alphabet333");
+
+		Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
+		setPassword = userProfileServiceAPI.setPassword(request);
+
+		if(request.getUserName().equals(existingUser.get().getUserName()) )
+		{
+			if (request.getAuthenticationCode().equals(existingUser.get().getVerificationCode())) {
+
+				if (request.getPassword().equals(request.getConfirmPassword()))
+				{
+					existingUser.get().setPassword(request.getPassword());
+					userDAO.save(existingUser.get());
+
+					assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+					assert(setPassword.getMessage().contains("Password updated successfully for " + request.getUserName()));
+				}
+				else
+				{
+					assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+					assert(setPassword.getMessage().contains("Password and Confirm Password does not match"));
+				}
+			}
+			else
+			{
+				assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+				assert(setPassword.getMessage().contains("Enter correct Verification code sent to the email id "+ existingUser.get().getEmailId()));
+
+			}
+		}
+		else
+		{
+			assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+			assert(setPassword.getMessage().contains("Username: " +request.getUserName() + "does not exist"));
+		}
 	}
+
+
+	@Test
+	public void setPasswordTest2()
+	{
+		GenericResponse setPassword = new GenericResponse();
+		SetPasswordRequest request = new SetPasswordRequest();
+		request.setUserName("SindhuPatil");
+		request.setAuthenticationCode("1900");
+		request.setPassword("Alphabet333");
+		request.setConfirmPassword("Alphabet333");
+
+		Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
+		setPassword = userProfileServiceAPI.setPassword(request);
+
+		if(request.getUserName().equals(existingUser.get().getUserName()) )
+		{
+			if (request.getAuthenticationCode().equals(existingUser.get().getVerificationCode())) {
+
+				if (request.getPassword().equals(request.getConfirmPassword()))
+				{
+					existingUser.get().setPassword(request.getPassword());
+					userDAO.save(existingUser.get());
+
+					assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+					assert(setPassword.getMessage().contains("Password updated successfully for " + request.getUserName()));
+				}
+				else
+				{
+					assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+					assert(setPassword.getMessage().contains("Password and Confirm Password does not match"));
+				}
+			}
+			else
+			{
+				assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+				assert(setPassword.getMessage().contains("Enter correct Verification code sent to the email id "+ existingUser.get().getEmailId()));
+
+			}
+		}
+		else
+		{
+			assert HttpStatus.OK.toString().equals(setPassword.getStatusCode());
+			assert(setPassword.getMessage().contains("Username: " +request.getUserName() + "does not exist"));
+		}
+	}
+
+	@Test
+	public void ForgotUsermameTest1()
+	{
+		GenericResponse forgotUsername = new GenericResponse();
+		ForgotUsernameRequest request = new ForgotUsernameRequest();
+		request.setEmailId("sssindhupatil@gmail.com");
+
+		Optional<User> existingUser = userDAO.findUserByEmailId(request.getEmailId());
+		forgotUsername = userProfileServiceAPI.forgotUsername(request);
+
+		if(request.getEmailId().equals(existingUser.get().getEmailId()))
+		{
+			assert HttpStatus.OK.toString().equals(forgotUsername.getStatusCode());
+			assert(forgotUsername.getMessage().contains("Username sent to email id: " + existingUser.get().getEmailId()));
+
+		}
+		else
+		{
+			assert HttpStatus.OK.toString().equals(forgotUsername.getStatusCode());
+			assert(forgotUsername.getMessage().contains("Enter correct email id"));
+		}
+	}
+
+}
 
 
