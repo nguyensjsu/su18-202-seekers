@@ -1,6 +1,7 @@
 package edu.sjsu.seekers.OrderAPI.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import edu.sjsu.seekers.OrderAPI.request.CartProductEditRequest;
 import edu.sjsu.seekers.OrderAPI.request.CartProductRequest;
 import edu.sjsu.seekers.OrderAPI.response.*;
 import edu.sjsu.seekers.starbucks.model.Orders;
@@ -26,6 +27,7 @@ public interface OrderServiceAPI {
     public StoresResponse getAllStoresResponse();
     public Optional<User> findUserByUsername(String userName);
     public GenericResponse addToCart(Map<String,CartProductRequest> productNames, User user);
+    public GenericResponse editCart(Map<Integer,CartProductEditRequest> productNames, User user);
     public GenericResponse addStoreToCart(String storeName, User user);
     public ReviewCartResponse reviewCartResponse(User user);
 

@@ -52,6 +52,8 @@ public class ReviewCartResponse extends GenericResponse {
             cartDescMap.put("Product ImageLink",orderDetails.getProductKey().getProductImageLink());
             cartDescMap.put("Quantity",orderDetails.getOrderQuantity());
             cartDescMap.put("Price",orderDetails.getNetPrice());
+            cartDescMap.put("Size",orderDetails.getSizeKey().getSizeName());
+            cartDescMap.put("Item Id",orderDetails.getOrderLineKey());
             if(orderDetails.getToppings() != null && !orderDetails.getToppings().equals(""))
                 cartDescMap.put("Toppings",orderDetails.getToppings());
             outputCartsMap.put(orderDetails.getProductKey().getProductName(),cartDescMap);
