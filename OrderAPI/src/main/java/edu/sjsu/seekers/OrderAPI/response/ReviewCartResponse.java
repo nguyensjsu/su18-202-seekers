@@ -42,19 +42,22 @@ public class ReviewCartResponse extends GenericResponse {
     public void setFinalMessage() {
 
 
-        Map<String,Object> outputCartsMap = new HashMap<>();
+        Map<Integer,Object> outputCartsMap = new HashMap<>();
         Map<String,Object> cartDescMap = new HashMap<>();
 
 
         for(OrderDetails orderDetails : cartList) {
             cartDescMap = new HashMap<>();
+            cartDescMap.put("Product Name",orderDetails.getProductKey().getProductName());
             cartDescMap.put("Product Description",orderDetails.getProductKey().getProductDescription());
             cartDescMap.put("Product ImageLink",orderDetails.getProductKey().getProductImageLink());
             cartDescMap.put("Quantity",orderDetails.getOrderQuantity());
             cartDescMap.put("Price",orderDetails.getNetPrice());
+            cartDescMap.put("Size",orderDetails.getSizeKey().getSizeName());
+            cartDescMap.put("Item Id",orderDetails.getOrderLineKey());
             if(orderDetails.getToppings() != null && !orderDetails.getToppings().equals(""))
                 cartDescMap.put("Toppings",orderDetails.getToppings());
-            outputCartsMap.put(orderDetails.getProductKey().getProductName(),cartDescMap);
+            outputCartsMap.put(orderDetails.getOrderLineKey(),cartDescMap);
         }
 
         setMessage(outputCartsMap);

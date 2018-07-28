@@ -44,10 +44,11 @@ public class CardDetailsServiceAPIImpl implements CardDetailServiceAPI {
     @Override
     public CardDetailsResponse getCardDetails(Integer userId) {
         CardDetailsResponse cardDetailsResponse = new CardDetailsResponse();
+
         List<CardDetailsResponse> cardDetails = new ArrayList<CardDetailsResponse>();
         System.out.println("getCardDetails");
-        if (userId != null  ) {
-            Optional<User> user = userdao.get(userId);
+        Optional<User> user = userdao.get(userId);
+        if (userId != null && user.get().getIsLoggedIn().equals("Y")   ) {
             List<PaymentCardDetails> cardDetail = paymentCardDetailsDAO.findPaymentCardDetailsByUserKey(user.get().getUserKey());
             System.out.println(cardDetail.toString());
             cardDetailsResponse.setCardDetails(cardDetail);
@@ -63,12 +64,13 @@ public class CardDetailsServiceAPIImpl implements CardDetailServiceAPI {
      */
 
     @Override
-    public SaveCardsResponse saveCardDetails(CardDetailsRequest request) {
-        SaveCardsResponse saveCardsResponse = new SaveCardsResponse();
+    public GenericResponse saveCardDetails(CardDetailsRequest request) {
+        GenericResponse saveCardsResponse = new GenericResponse();
         PaymentCardDetails cardDetails = new PaymentCardDetails();
         Address newAddress = new Address();
         Optional<User> user = userdao.findUserByUsername(request.getUserName());
-        if (request.getUserName() != null) {
+
+        if (request.getUserName() != null && user.get().getIsLoggedIn().equals("Y")) {
             newAddress.setAddressLine1(request.getAddressLine1());
             newAddress.setAddressLine2(request.getAddressLine2());
             newAddress.setCity(request.getCity());
@@ -96,6 +98,11 @@ public class CardDetailsServiceAPIImpl implements CardDetailServiceAPI {
 
     }
 
+    /****
+     * check if all detail already exists
+     * @param request
+     * @return
+     */
     @Override
     public GenericResponse UpdateCard(UpdateExistingCardRequest request) {
         GenericResponse updateCard = new GenericResponse();
@@ -105,7 +112,7 @@ public class CardDetailsServiceAPIImpl implements CardDetailServiceAPI {
         Optional<Address> existingUserAddress = addressDAO.get(user.get().getAddressKey().getAddressKey());
         System.out.println(existingUserAddress);
         System.out.println(existingUserAddress.get().getAddressKey());
-        if (cardDetails != null && existingUserAddress != null) {
+        if (cardDetails != null && existingUserAddress != null &&  user.get().getIsLoggedIn().equals("Y")) {
 
             if (request.getAddressLine1() != null)
                 existingUserAddress.get().setAddressLine1(request.getAddressLine1());
@@ -139,12 +146,18 @@ public class CardDetailsServiceAPIImpl implements CardDetailServiceAPI {
         return updateCard;
     }
 
+    /***
+     * soft delete from database
+     * @param request
+     * @return
+     */
     @Override
     public GenericResponse deleteCard(DeleteCardRequest request) {
         GenericResponse deleteCard = new GenericResponse();
+        Optional<User> user=userdao.findUserByUsername(request.getUserName());
         Optional<PaymentCardDetails> cardDetails = paymentCardDetailsDAO.getByCardNumber(request.getCardNumber());
 
-        if(request.getUserName()!=null && request.getCardNumber()!=null)
+        if(request.getUserName()!=null && request.getCardNumber()!=null && user.get().getIsLoggedIn().equals("Y"))
         {
             cardDetails.get().setIsActiverCard("N");
             paymentCardDetailsDAO.save(cardDetails.get());

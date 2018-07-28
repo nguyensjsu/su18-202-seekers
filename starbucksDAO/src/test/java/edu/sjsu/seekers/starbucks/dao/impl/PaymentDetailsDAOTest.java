@@ -1,6 +1,7 @@
 package edu.sjsu.seekers.starbucks.dao.impl;
 
 import edu.sjsu.seekers.starbucks.dao.*;
+import edu.sjsu.seekers.starbucks.dao.repository.ProductRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.SizeRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.StoresRepository;
 import edu.sjsu.seekers.starbucks.model.*;
@@ -9,21 +10,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles("unit-test")
-public class OrderDAOImplTest {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class PaymentDetailsDAOTest {
 
     @Autowired
     OrderDAO orderDAO;
@@ -46,18 +46,26 @@ public class OrderDAOImplTest {
     @Autowired
     PaymentCardDetailsDAO paymentCardDetailsDAO;
 
-    Orders order,order1;
+    @Autowired
+    OrderDetailsDAO orderDetailsDAO;
+
+    @Autowired
+    PaymentDetailsDAO paymentDetailsDAO;
+
+    @Autowired
+    ProductRepository productRepository;
+
+    Orders order, order1;
     User user;
     Address address;
     Stores stores;
     OrderDetails orderDetails;
-    Size sizeSmall,sizeMedium,sizeLarge;
+    Size sizeSmall, sizeMedium, sizeLarge;
     PaymentCardDetails paymentCardDetails;
-
-
+    PaymentDetails paymentDetailsResponse;
+    Products products;
     @Before
-    public void setup()
-    {
+    public void setup() {
         System.out.println("************running setup************");
         createTestSizes();
         createTestAddress();
@@ -65,7 +73,18 @@ public class OrderDAOImplTest {
         createTestPaymentCard();
         createTestStore();
         createTestOrder();
+        createTestProduct();
         createTestOrderDetails();
+    }
+
+    private void createTestProduct() {
+        products = new Products();
+        products.setActive(true);
+        products.setProductDescription("test description");
+        products.setProductImageLink("test link");
+        products.setProductName("test product");
+        products.setProductStatus(true);
+        productRepository.save(products);
     }
 
     private void createTestPaymentCard() {
@@ -115,15 +134,15 @@ public class OrderDAOImplTest {
     }
 
     private void createTestUser() {
-        user= new User();
+        user = new User();
         user.setUserName("testuser1");
         user.setDateOfBirth("1999-07-09");
         user.setEmailId("testuser1@testuser1.com");
         user.setFullName("test user");
         user.setDefaultStoreKey(1);
         user.setAddressKey(address);
-        user.setIdActiveCustomer("1");
-        user.setIsLoggedIn("1");
+        user.setIdActiveCustomer("Y");
+        user.setIsLoggedIn("Y");
         user.setPassword("testPassword");
         user.setPhoneNumber("1234567890");
         user.setRewardPoints(0.0);
@@ -137,16 +156,17 @@ public class OrderDAOImplTest {
         order.setStoreKey(stores);
         order.setOrderAmount(12.12);
         order.setOrderDate(new Date());
-        order.setOrderStatus("InProgress");
+        order.setOrderStatus("Complete");
         orderDAO.save(order);
 
-        order1 = new Orders();
-        order1.setUserKey(user);
-        order1.setStoreKey(stores);
-        order1.setOrderAmount(12.12);
-        order1.setOrderDate(new Date());
-        order1.setOrderStatus("InProgress");
-        orderDAO.save(order1);
+//        order1 = new Orders();
+//        order1.setUserKey(user);
+//        order1.setCardKey(paymentCardDetails);
+//        order1.setStoreKey(stores);
+//        order1.setOrderAmount(12.12);
+//        order1.setOrderDate(new Date());
+//        order1.setOrderStatus("Complete");
+//        orderDAO.save(order1);
     }
 
     private void createTestOrderDetails() {
@@ -156,63 +176,53 @@ public class OrderDAOImplTest {
         orderDetails.setNetPrice(2.55);
         orderDetails.setToppings("");
         orderDetails.setOrderKey(order);
+        orderDetails.setProductKey(products);
+        orderDetailsDAO.save(orderDetails);
     }
 
-    @Test
-    public void getOrder() throws SQLException {
-       System.out.println("************running getOrder test************");
-       Orders ordGet = orderDAO.findOrdersByUserKey(1).get(0);
-       assertNotNull(ordGet);
-       assertEquals("InProgress",ordGet.getOrderStatus());
-       assertEquals(java.util.Optional.of(12.12).get(),ordGet.getOrderAmount());
-       assertNotNull(ordGet.getUserKey());
-       assertNotNull(ordGet.getStoreKey());
+    private void createPaymentDetails() {
+        PaymentDetails paymentDetails = new PaymentDetails();
+        paymentDetails.setOrderKey(order);
+        paymentDetails.setPaymentStatus("SUCCESS");
+        paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
     }
 
+
     @Test
-    public void updateOrder() throws SQLException {
-        System.out.println("************running updateOrder test************");
+    public void paymentDetailsAddLine() {
+        System.out.println("************running paymentDetailsAddLine test************");
         Exception ex = null;
         try {
-            Orders ordUpdate = orderDAO.findOrdersByUserKey(1).get(0);
-            ordUpdate.setRewardsEarned(1.1);
-            orderDAO.save(ordUpdate);
-        }catch(Exception e)
-        {
-            System.out.println("************inside updateOrder catch************ " + e.getMessage());
+            PaymentDetails paymentDetails = new PaymentDetails();
+            paymentDetails.setOrderKey(order);
+            paymentDetails.setPaymentStatus("SUCCESS");
+            PaymentDetails paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
+
+            assert paymentDetailsResponse.getPaymentStatus().equals("SUCCESS");
+        } catch (Exception e) {
+            System.out.println("************inside paymentDetailsAddLine catch************ " + e.getMessage());
+            ex = e;
+        }
+        assertNull(ex);
+    }
+
+    @Test
+    public void paymentDetailsGetLine() {
+        System.out.println("************running paymentDetailsGetLine test************");
+        Exception ex = null;
+        try {
+            createPaymentDetails();
+            Optional<PaymentDetails> response = paymentDetailsDAO.get(paymentDetailsResponse.getPaymentId());
+
+
+            assert response.get().getPaymentStatus().equals("SUCCESS");
+            assert response.get().getOrderKey().getOrderKey().equals(paymentDetailsResponse.getOrderKey().getOrderKey());
+        } catch (Exception e) {
+            System.out.println("************inside paymentDetailsGetLine catch************ " + e.getMessage());
             ex = e;
         }
         assertNull(ex);
     }
 
 
-
-    @Test
-    public void findIncompleteOrdersByUserKey() {
-        System.out.println("************running findIncompleteOrdersByUserKey test************");
-        Exception ex = null;
-        try {
-            Orders ord= orderDAO.findIncompleteOrdersByUserKey(1).get();
-        }catch(Exception e)
-        {
-            System.out.println("************inside findIncompleteOrdersByUserKey catch************");
-            ex = e;
-        }
-        assertNull(ex);
-    }
-
-
-    @Test
-    public void findOrdersByUserKey() {
-        System.out.println("************running findOrdersByUserKey test************");
-        Exception ex = null;
-        try {
-            orderDAO.findOrdersByUserKey(1);
-        }catch(Exception e)
-        {
-            System.out.println("************inside findOrdersByUserKey catch************");
-            ex = e;
-        }
-        assertNull(ex);
-    }
 }

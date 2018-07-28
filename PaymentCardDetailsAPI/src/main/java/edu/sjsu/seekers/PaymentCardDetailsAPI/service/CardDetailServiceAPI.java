@@ -15,7 +15,7 @@ public interface CardDetailServiceAPI {
 
     CardDetailsResponse getCardDetails(Integer userId);
 
-    SaveCardsResponse saveCardDetails(CardDetailsRequest request);
+    GenericResponse saveCardDetails(CardDetailsRequest request);
 
     GenericResponse UpdateCard(UpdateExistingCardRequest request);
 

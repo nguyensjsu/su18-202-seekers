@@ -183,4 +183,31 @@ public class OrderController {
         }
         return responseEntity;
     }
+
+    @RequestMapping(value = "/editCart",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<GenericResponse> editCart(@RequestBody CartEditRequest request) {
+        System.out.println("edit cart request: "+ request);
+        ResponseEntity<GenericResponse> responseEntity = null;
+        Optional<User> inputUser = orderServiceAPI.findUserByUsername(request.getUserName());
+        if(inputUser.isPresent() && inputUser.get().getIdActiveCustomer() != null && inputUser.get().getIdActiveCustomer().equals("Y")) {
+            if(inputUser.get().getIsLoggedIn().equals("Y")) {
+                GenericResponse genericResponse = orderServiceAPI.editCart(request.getProductDetails(),inputUser.get());
+                responseEntity = new ResponseEntity<>(genericResponse, HttpStatus.OK);
+            }
+            else {
+                GenericResponse genericResponse = new GenericResponse();
+                genericResponse.setMessage("Invalid session, please authenticate first!");
+                genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+                responseEntity = new ResponseEntity<>(genericResponse, HttpStatus.OK);
+            }
+        }
+        else {
+            GenericResponse genericResponse = new GenericResponse();
+            genericResponse.setMessage("Invalid user, please signup first!");
+            genericResponse.setStatusCode(HttpStatus.EXPECTATION_FAILED.toString());
+            responseEntity = new ResponseEntity<>(genericResponse, HttpStatus.OK);
+        }
+        return responseEntity;
+    }
 }

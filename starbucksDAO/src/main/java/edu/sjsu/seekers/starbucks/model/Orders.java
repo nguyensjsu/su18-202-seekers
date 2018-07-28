@@ -14,7 +14,7 @@ public class Orders {
     private Integer orderKey;
 
     @ManyToOne
-    @JoinColumn(name = "Card_Key", nullable = false)
+    @JoinColumn(name = "Card_Key", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private PaymentCardDetails cardKey;
 

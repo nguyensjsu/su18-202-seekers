@@ -7,7 +7,6 @@ import edu.sjsu.seekers.PaymentAPI.Response.PaymentOptionsResponse;
 import edu.sjsu.seekers.PaymentAPI.Response.ReviewOrderDetailsResponse;
 import edu.sjsu.seekers.PaymentAPI.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,16 +20,13 @@ public class PaymentController {
     @ResponseBody
     public ResponseEntity<PaymentOptionsResponse> getPaymentOptions(@RequestParam(value = "userName")String userName)
     {
-        ResponseEntity<PaymentOptionsResponse> responseEntity;
-        PaymentOptionsResponse paymentOptionsResponse;
 
-        paymentOptionsResponse = paymentService.getPaymentOptions(userName);
-        paymentOptionsResponse.setStatusCode(HttpStatus.OK.toString());
-        responseEntity = new ResponseEntity<>(paymentOptionsResponse,HttpStatus.OK);
+        ResponseEntity<PaymentOptionsResponse> responseEntity = paymentService.getPaymentOptions(userName);
         return responseEntity;
     }
 
 
+    //Clear Cart API
     @RequestMapping(value = "/clearCart", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<GenericResponse> clearCart(@RequestParam(value = "userName")String userName)
@@ -39,6 +35,7 @@ public class PaymentController {
     }
 
 
+    //Review Order API
 	@RequestMapping(value = "/reviewOrder", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<ReviewOrderDetailsResponse> reviewOrder(@RequestBody ReviewOrderRequest reviewOrderRequest)
@@ -52,12 +49,8 @@ public class PaymentController {
     public ResponseEntity<ConfirmOrderResponse> doConfirmOrder(@RequestParam(value ="confirm")String confirm,
                                                                @RequestParam(value ="userName")String userName)
     {
-        ResponseEntity<ConfirmOrderResponse> responseEntity;
-        ConfirmOrderResponse confirmOrderResponse;
 
-        confirmOrderResponse = paymentService.doConfirmOrder(confirm,userName);
-        confirmOrderResponse.setStatusCode(HttpStatus.OK.toString());
-        responseEntity = new ResponseEntity<>(confirmOrderResponse,HttpStatus.OK);
+        ResponseEntity<ConfirmOrderResponse> responseEntity = paymentService.doConfirmOrder(confirm,userName);
         return responseEntity;
     }
 

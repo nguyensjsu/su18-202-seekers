@@ -1,5 +1,6 @@
 package edu.sjsu.seekers.starbucks.dao.impl;
 
+
 import edu.sjsu.seekers.starbucks.StarbucksApplication;
 import edu.sjsu.seekers.starbucks.dao.AddressDAO;
 import edu.sjsu.seekers.starbucks.dao.UserDAO;
@@ -150,5 +151,4 @@ public class UserDAOImplTest {
         addressRepository.delete(address);
 
     }
-
 }

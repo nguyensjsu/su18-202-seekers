@@ -3,7 +3,6 @@ package edu.sjsu.seekers.starbucks.dao.impl;
 import edu.sjsu.seekers.starbucks.dao.OrderDAO;
 import edu.sjsu.seekers.starbucks.dao.repository.OrderRepository;
 import edu.sjsu.seekers.starbucks.model.Orders;
-import edu.sjsu.seekers.starbucks.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
