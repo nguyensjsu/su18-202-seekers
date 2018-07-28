@@ -1,13 +1,31 @@
 # su18-202-seekers
 
-# Database Design - ER diagram
+# Design Decisions
 
-<img width="851" alt="data_model" src="https://user-images.githubusercontent.com/21271829/43332354-0c1163f4-917d-11e8-8ff1-5b690e9b26ec.png">
+1.	Implemented the following components:
+	* Sign In / Sign Up API
+    * Order Management API
+	* Card Management API
+    * Payment API
+2.	Designed persistence layer as a single jar plugin. Created a single Spring Boot project in which each team member contributed for the above components to create the Data access layer. 
+3.	Created four Java Spring projects as business logic components which uses Spring REST controllers for exposing the API endpoints.
+4.	Included Persistence layer as a plugin in each of the above project component.
+5.	Written unit test cases using JUnit for these components.
+6.	In order to follow Microservices architecture, all the APIs has been deployed to individual AWS cloud environments to have a proper decoupling between them.
+7.	Deployment:
+	* Deployed Order Management and Card Management API to AWS Docker Containers using ECS.
+	* Deployed Sign In / Sign Up and Payment API to AWS in an Auto Scaled EC2 Cluster with Load Balancer.
 
 
 # Architecture Diagram 
 
 ![Architecture Diagram](https://user-images.githubusercontent.com/31361314/43311542-9c81e6f4-913f-11e8-9258-5918507f583c.png)
+
+
+# Database Design - ER diagram
+
+<img width="851" alt="data_model" src="https://user-images.githubusercontent.com/21271829/43332354-0c1163f4-917d-11e8-8ff1-5b690e9b26ec.png">
+
 
 # Feature Set
 
