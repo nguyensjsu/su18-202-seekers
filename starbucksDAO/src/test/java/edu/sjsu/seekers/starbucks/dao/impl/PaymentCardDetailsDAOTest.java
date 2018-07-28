@@ -15,6 +15,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -82,7 +84,7 @@ public class PaymentCardDetailsDAOTest {
         user.setPassword("testPassword");
         user.setPhoneNumber("1234567890");
         user.setRewardPoints(0.0);
-        user.setVerificationCode("");
+        user.setIdAccountVerified("Y");
         userDAO.save(user);
     }
 
@@ -108,5 +110,68 @@ public class PaymentCardDetailsDAOTest {
         assertNull(ex);
 
     }
+
+    @Test
+    public void paymentCardDetailsget(){
+        System.out.println("************running paymentCardDetailsget test************");
+        Exception ex = null;
+        try {
+            createTestPaymentCard();
+            Optional<PaymentCardDetails> paycard = paymentCardDetailsDAO.get(paymentCardDetails.getCardKey());
+            assert paycard.isPresent();
+            assert paycard.get().getCardNumber().equals("123456789098765");
+            assert paycard.get().getCcvCode().equals("123");
+            assert paycard.get().getExpirationMonth().equals("12");
+            assert paycard.get().getExpirationYear().equals("2019");
+            assert paycard.get().getIsActiverCard().equals("Y");
+            assert paycard.get().getIsDefaultpaymentcardKey().equals("Y");
+            assert paycard.get().getUserKey().getUserKey().equals(user.getUserKey());
+
+
+        } catch (Exception e) {
+            System.out.println("************inside paymentCardDetailsget catch************ " + e.getMessage());
+            ex = e;
+        }
+        assertNull(ex);
+
+    }
+
+    @Test
+    public void paymentCardDetailsupdate(){
+        System.out.println("************running paymentCardDetailsupdate test************");
+        Exception ex = null;
+        try {
+            createTestPaymentCard();
+            paymentCardDetails.setCcvCode("000");
+
+            paymentCardDetailsDAO.save(paymentCardDetails);
+
+
+        } catch (Exception e) {
+            System.out.println("************inside paymentCardDetailsupdate catch************ " + e.getMessage());
+            ex = e;
+        }
+        assertNull(ex);
+
+    }
+
+    @Test
+    public void paymentCardDetailsdelete(){
+        System.out.println("************running paymentCardDetailsdelete test************");
+        Exception ex = null;
+        try {
+            createTestPaymentCard();
+
+            paymentCardDetailsDAO.delete(paymentCardDetails);
+
+
+        } catch (Exception e) {
+            System.out.println("************inside paymentCardDetailsdelete catch************ " + e.getMessage());
+            ex = e;
+        }
+        assertNull(ex);
+
+    }
+
 
 }
