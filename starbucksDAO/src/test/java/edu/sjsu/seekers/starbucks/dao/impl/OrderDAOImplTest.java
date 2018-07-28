@@ -60,7 +60,7 @@ public class OrderDAOImplTest {
     PaymentCardDetails paymentCardDetails;
 
 
-    @Before
+    @After
     public void endTest()
     {
         System.out.println("************running setup for OrderDAOImplTest************");
@@ -83,7 +83,7 @@ public class OrderDAOImplTest {
 
     }
 
-    @After
+    @Before
     public void setup() {
         System.out.println("************running endTest************");
         createTestSizes();
