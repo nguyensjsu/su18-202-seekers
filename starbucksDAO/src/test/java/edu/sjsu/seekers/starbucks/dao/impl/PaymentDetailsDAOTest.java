@@ -158,15 +158,6 @@ public class PaymentDetailsDAOTest {
         order.setOrderDate(new Date());
         order.setOrderStatus("Complete");
         orderDAO.save(order);
-
-//        order1 = new Orders();
-//        order1.setUserKey(user);
-//        order1.setCardKey(paymentCardDetails);
-//        order1.setStoreKey(stores);
-//        order1.setOrderAmount(12.12);
-//        order1.setOrderDate(new Date());
-//        order1.setOrderStatus("Complete");
-//        orderDAO.save(order1);
     }
 
     private void createTestOrderDetails() {

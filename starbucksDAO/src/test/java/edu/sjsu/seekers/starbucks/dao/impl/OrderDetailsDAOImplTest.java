@@ -160,8 +160,6 @@ public class OrderDetailsDAOImplTest {
         order.setOrderDate(new Date());
         order.setOrderStatus("InProgress");
         orderDAO.save(order);
-
-
     }
 
     private void createTestOrderDetails() {
