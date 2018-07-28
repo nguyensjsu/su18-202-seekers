@@ -22,4 +22,13 @@ public class DeleteCardRequest implements Serializable {
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
+
+
+    @Override
+    public String toString() {
+        return "DeleteCardRequest{" +
+                "userName='" + userName + '\'' +
+                ", cardNumber='" + cardNumber + '\'' +
+                '}';
+    }
 }
