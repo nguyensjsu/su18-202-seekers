@@ -108,8 +108,8 @@
     - Card Number is set to 9 digits and CVV is set to 3 digits. Application prompts to input correct credentials if details are violated.
     
 3.	Update card details
-    - Display card details. User can update the editable fields like card number, billing address, CVV and expiration month and year.
-    - Username is unique and cannot be edited.
+    - Display card details. User can update the editable fields like billing address, CVV and expiration month and year.
+    - Username and cardnumber is unique and cannot be edited.
     
 4.	Delete card Details
     - User can delete card details.
