@@ -418,6 +418,187 @@ public class UserProfileApiApplicationTests {
 		}
 	}
 
+	// update user details with proper/existing username- SindhuPatil
+
+	@Test
+	public void updateUserTest1()
+	{
+		GenericResponse updateUser = new GenericResponse();
+		UpdateExistingUserRequest request = new UpdateExistingUserRequest();
+		request.setUserName("Sindhupatil");
+		request.setAddressLine1("Kiely Blvd");
+		Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
+		updateUser = userProfileServiceAPI.updateExistingUser(request);
+
+		if(existingUser.isPresent())
+		{
+			Optional<Address> existingUserAddress = addressDAO.get(existingUser.get().getAddressKey().getAddressKey());
+			System.out.println(existingUser);
+
+			if(existingUser.get().getUserName().equals(request.getUserName()))
+			{
+				if (existingUser.get().getIdActiveCustomer().equals("Y"))
+				{
+					if(existingUser.get().getIsLoggedIn().equals("Y")) {
+
+						if (request.getFullName() != null)
+							existingUser.get().setFullName(request.getFullName());
+						if (request.getPhoneNumber() != null)
+							existingUser.get().setPhoneNumber(request.getPhoneNumber());
+						if (request.getDateOfBirth() != null)
+							existingUser.get().setDateOfBirth(request.getDateOfBirth());
+						if (request.getAddressLine1() != null)
+							existingUserAddress.get().setAddressLine1(request.getAddressLine1());
+						if (request.getAddressLine2() != null)
+							existingUserAddress.get().setAddressLine2(request.getAddressLine2());
+						if (request.getCity() != null)
+							existingUserAddress.get().setCity(request.getCity());
+						if (request.getState() != null)
+							existingUserAddress.get().setState(request.getState());
+						if (request.getCountry() != null)
+							existingUserAddress.get().setCountry(request.getCountry());
+						if (request.getZipCode() != null)
+							existingUserAddress.get().setZipCode(request.getZipCode());
+						addressDAO.save(existingUserAddress.get());
+						userDAO.save(existingUser.get());
+
+						assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+						assert(updateUser.getMessage().contains("User Details updated successfully for " + request.getUserName()));
+					}
+					else
+					{
+						assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+						assert(updateUser.getMessage().contains("User " + request.getUserName() + " not logged in"));
+					}
+				}
+				else
+				{
+					assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+					assert(updateUser.getMessage().contains("User " + request.getUserName() + " not active"));
+				}
+			}
+			else
+			{
+				assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+				assert(updateUser.getMessage().contains("User with " + request.getUserName()+ " Details doesnot exist."));
+			}
+		}
+		else
+		{
+			assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+			assert(updateUser.getMessage().contains("User with " + request.getUserName()+ " Details doesnot exist."));
+			// updateUser.setMessage("User Details Cannot be updated. Try again");
+		}
+	}
+
+	// Update user test case for not a valid username - SindhuPati (does not exist)
+
+	@Test
+	public void updateUserTest2()
+	{
+		GenericResponse updateUser = new GenericResponse();
+		UpdateExistingUserRequest request = new UpdateExistingUserRequest();
+		request.setUserName("Sindhupati");
+		request.setAddressLine1("Kiely Blvd");
+		Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
+		updateUser = userProfileServiceAPI.updateExistingUser(request);
+
+		if(existingUser.isPresent())
+		{
+			Optional<Address> existingUserAddress = addressDAO.get(existingUser.get().getAddressKey().getAddressKey());
+			System.out.println(existingUser);
+
+			if(existingUser.get().getUserName().equals(request.getUserName()))
+			{
+				if (existingUser.get().getIdActiveCustomer().equals("Y"))
+				{
+					if(existingUser.get().getIsLoggedIn().equals("Y")) {
+
+						if (request.getFullName() != null)
+							existingUser.get().setFullName(request.getFullName());
+						if (request.getPhoneNumber() != null)
+							existingUser.get().setPhoneNumber(request.getPhoneNumber());
+						if (request.getDateOfBirth() != null)
+							existingUser.get().setDateOfBirth(request.getDateOfBirth());
+						if (request.getAddressLine1() != null)
+							existingUserAddress.get().setAddressLine1(request.getAddressLine1());
+						if (request.getAddressLine2() != null)
+							existingUserAddress.get().setAddressLine2(request.getAddressLine2());
+						if (request.getCity() != null)
+							existingUserAddress.get().setCity(request.getCity());
+						if (request.getState() != null)
+							existingUserAddress.get().setState(request.getState());
+						if (request.getCountry() != null)
+							existingUserAddress.get().setCountry(request.getCountry());
+						if (request.getZipCode() != null)
+							existingUserAddress.get().setZipCode(request.getZipCode());
+						addressDAO.save(existingUserAddress.get());
+						userDAO.save(existingUser.get());
+
+						assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+						assert(updateUser.getMessage().contains("User Details updated successfully for " + request.getUserName()));
+					}
+					else
+					{
+						assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+						assert(updateUser.getMessage().contains("User " + request.getUserName() + " not logged in"));
+					}
+				}
+				else
+				{
+					assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+					assert(updateUser.getMessage().contains("User " + request.getUserName() + " not active"));
+				}
+			}
+			else
+			{
+				assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+				assert(updateUser.getMessage().contains("User with " + request.getUserName()+ " Details doesnot exist."));
+			}
+		}
+		else
+		{
+			assert HttpStatus.OK.toString().equals(updateUser.getStatusCode());
+			assert(updateUser.getMessage().contains("User with " + request.getUserName()+ " Details doesnot exist."));
+			// updateUser.setMessage("User Details Cannot be updated. Try again");
+		}
+	}
+
+
+	// Delete user test case
+
+	@Test
+	public void deleteUserTest1()
+	{
+		GenericResponse deleteUserAccount = new GenericResponse();
+		DeleteUserRequest request = new DeleteUserRequest();
+		request.setUserName("SindhuPatil");
+		request.setPassword("Alphabet333");
+		Optional<User> existingUser = userDAO.findUserByUsername(request.getUserName());
+		deleteUserAccount = userProfileServiceAPI.deleteUser(request);
+
+		if(existingUser.isPresent())
+		{
+
+			if (request.getUserName().equals(existingUser.get().getUserName()) && request.getPassword().equals(existingUser.get().getPassword())) {
+				existingUser.get().setIdActiveCustomer("N");
+				userDAO.save(existingUser.get());
+
+				assert HttpStatus.OK.toString().equals(deleteUserAccount.getStatusCode());
+				assert(deleteUserAccount.getMessage().contains("Account deleted for " + request.getUserName()));
+			}
+			else {
+				assert HttpStatus.OK.toString().equals(deleteUserAccount.getStatusCode());
+				assert(deleteUserAccount.getMessage().contains("Username: " + request.getUserName() + "does not exist"));
+			}
+		}
+		else
+		{
+			assert HttpStatus.OK.toString().equals(deleteUserAccount.getStatusCode());
+			assert(deleteUserAccount.getMessage().contains("Username: " + request.getUserName() + "does not exist"));
+		}
+
+	}
 }
 
 
