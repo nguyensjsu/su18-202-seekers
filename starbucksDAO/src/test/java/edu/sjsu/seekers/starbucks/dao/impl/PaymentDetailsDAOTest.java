@@ -14,25 +14,19 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles("unit-test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class OrderDetailsDAOImplTest {
-
+public class PaymentDetailsDAOTest {
 
     @Autowired
     OrderDAO orderDAO;
-
-    @Autowired
-    OrderDetailsDAO orderDetailsDAO;
 
     @Autowired
     StoresDAO storesDAO;
@@ -53,20 +47,25 @@ public class OrderDetailsDAOImplTest {
     PaymentCardDetailsDAO paymentCardDetailsDAO;
 
     @Autowired
+    OrderDetailsDAO orderDetailsDAO;
+
+    @Autowired
+    PaymentDetailsDAO paymentDetailsDAO;
+
+    @Autowired
     ProductRepository productRepository;
 
-    Orders order,order1;
+    Orders order, order1;
     User user;
     Address address;
     Stores stores;
     OrderDetails orderDetails;
-    Size sizeSmall,sizeMedium,sizeLarge;
+    Size sizeSmall, sizeMedium, sizeLarge;
     PaymentCardDetails paymentCardDetails;
+    PaymentDetails paymentDetailsResponse;
     Products products;
-
     @Before
-    public void setup()
-    {
+    public void setup() {
         System.out.println("************running setup************");
         createTestSizes();
         createTestAddress();
@@ -78,8 +77,7 @@ public class OrderDetailsDAOImplTest {
         createTestOrderDetails();
     }
 
-    private void createTestProduct()
-    {
+    private void createTestProduct() {
         products = new Products();
         products.setActive(true);
         products.setProductDescription("test description");
@@ -136,15 +134,15 @@ public class OrderDetailsDAOImplTest {
     }
 
     private void createTestUser() {
-        user= new User();
+        user = new User();
         user.setUserName("testuser1");
         user.setDateOfBirth("1999-07-09");
         user.setEmailId("testuser1@testuser1.com");
         user.setFullName("test user");
         user.setDefaultStoreKey(1);
         user.setAddressKey(address);
-        user.setIdActiveCustomer("1");
-        user.setIsLoggedIn("1");
+        user.setIdActiveCustomer("Y");
+        user.setIsLoggedIn("Y");
         user.setPassword("testPassword");
         user.setPhoneNumber("1234567890");
         user.setRewardPoints(0.0);
@@ -158,10 +156,17 @@ public class OrderDetailsDAOImplTest {
         order.setStoreKey(stores);
         order.setOrderAmount(12.12);
         order.setOrderDate(new Date());
-        order.setOrderStatus("InProgress");
+        order.setOrderStatus("Complete");
         orderDAO.save(order);
 
-
+//        order1 = new Orders();
+//        order1.setUserKey(user);
+//        order1.setCardKey(paymentCardDetails);
+//        order1.setStoreKey(stores);
+//        order1.setOrderAmount(12.12);
+//        order1.setOrderDate(new Date());
+//        order1.setOrderStatus("Complete");
+//        orderDAO.save(order1);
     }
 
     private void createTestOrderDetails() {
@@ -175,62 +180,49 @@ public class OrderDetailsDAOImplTest {
         orderDetailsDAO.save(orderDetails);
     }
 
+    private void createPaymentDetails() {
+        PaymentDetails paymentDetails = new PaymentDetails();
+        paymentDetails.setOrderKey(order);
+        paymentDetails.setPaymentStatus("SUCCESS");
+        paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
+    }
+
+
     @Test
-    public void listOrderDetails() throws SQLException {
-        System.out.println("************running listOrderDetails test************");
+    public void paymentDetailsAddLine() {
+        System.out.println("************running paymentDetailsAddLine test************");
         Exception ex = null;
         try {
-            int user_idx = userDAO.getUserKey("testuser1");
+            PaymentDetails paymentDetails = new PaymentDetails();
+            paymentDetails.setOrderKey(order);
+            paymentDetails.setPaymentStatus("SUCCESS");
+            PaymentDetails paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
 
-
-            Orders ordGet = orderDAO.findOrdersByUserKey(user_idx).get(0);
-            List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
-            assertNotNull(orderDetailsGetList);
-            assertEquals(1,orderDetailsGetList.size());
-            assertEquals(java.util.Optional.of(2.55).get(),orderDetailsGetList.get(0).getNetPrice());
-            assertEquals(java.util.Optional.of(1).get(),orderDetailsGetList.get(0).getOrderQuantity());
+            assert paymentDetailsResponse.getPaymentStatus().equals("SUCCESS");
         } catch (Exception e) {
-            System.out.println("************inside deleteOrderDetails catch************ " + e.getMessage());
-            ex = e;
-        }
-        assertNull(ex);
-
-    }
-
-
-
-    @Test
-    public void modifyOrderDetails() {
-        System.out.println("************running modifyOrderDetails test************");
-        Exception ex = null;
-        try {
-            int user_idx = userDAO.getUserKey("testuser1");
-            Orders ordGet = orderDAO.findOrdersByUserKey(user_idx).get(0);
-            if(orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey()).size() == 0)
-                createTestOrderDetails();
-            List<OrderDetails> orderDetailsGetList = orderDetailsDAO.getAllOrderDetailsByOrderId(ordGet.getOrderKey());
-            OrderDetails orderModify = orderDetailsGetList.get(0);
-            orderModify.setToppings("test toppings");
-            orderDetailsDAO.save(orderModify);
-        }catch(Exception e)
-        {
-            System.out.println("************inside modifyOrderDetails catch************");
+            System.out.println("************inside paymentDetailsAddLine catch************ " + e.getMessage());
             ex = e;
         }
         assertNull(ex);
     }
 
     @Test
-    public void deleteOrderDetails() throws SQLException {
-        System.out.println("************running deleteOrderDetails test************");
+    public void paymentDetailsGetLine() {
+        System.out.println("************running paymentDetailsGetLine test************");
         Exception ex = null;
         try {
-            orderDetailsDAO.delete(orderDetails);
+            createPaymentDetails();
+            Optional<PaymentDetails> response = paymentDetailsDAO.get(paymentDetailsResponse.getPaymentId());
+
+
+            assert response.get().getPaymentStatus().equals("SUCCESS");
+            assert response.get().getOrderKey().getOrderKey().equals(paymentDetailsResponse.getOrderKey().getOrderKey());
         } catch (Exception e) {
-            System.out.println("************inside deleteOrderDetails catch************ " + e.getMessage());
+            System.out.println("************inside paymentDetailsGetLine catch************ " + e.getMessage());
             ex = e;
         }
         assertNull(ex);
     }
+
 
 }
