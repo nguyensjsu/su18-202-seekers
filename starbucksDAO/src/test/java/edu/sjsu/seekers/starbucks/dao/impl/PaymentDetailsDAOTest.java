@@ -1,6 +1,7 @@
 package edu.sjsu.seekers.starbucks.dao.impl;
 
 import edu.sjsu.seekers.starbucks.dao.*;
+import edu.sjsu.seekers.starbucks.dao.repository.ProductRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.SizeRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.StoresRepository;
 import edu.sjsu.seekers.starbucks.model.*;
@@ -9,15 +10,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
+import java.util.Optional;
+
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles("unit-test")
-public class PaymentDetailsDAO {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class PaymentDetailsDAOTest {
 
     @Autowired
     OrderDAO orderDAO;
@@ -46,6 +52,9 @@ public class PaymentDetailsDAO {
     @Autowired
     PaymentDetailsDAO paymentDetailsDAO;
 
+    @Autowired
+    ProductRepository productRepository;
+
     Orders order, order1;
     User user;
     Address address;
@@ -53,17 +62,29 @@ public class PaymentDetailsDAO {
     OrderDetails orderDetails;
     Size sizeSmall, sizeMedium, sizeLarge;
     PaymentCardDetails paymentCardDetails;
-
+    PaymentDetails paymentDetailsResponse;
+    Products products;
     @Before
     public void setup() {
-        System.out.println("************running setup************ ");
+        System.out.println("************running setup************");
         createTestSizes();
         createTestAddress();
         createTestUser();
         createTestPaymentCard();
         createTestStore();
         createTestOrder();
+        createTestProduct();
         createTestOrderDetails();
+    }
+
+    private void createTestProduct() {
+        products = new Products();
+        products.setActive(true);
+        products.setProductDescription("test description");
+        products.setProductImageLink("test link");
+        products.setProductName("test product");
+        products.setProductStatus(true);
+        productRepository.save(products);
     }
 
     private void createTestPaymentCard() {
@@ -138,14 +159,14 @@ public class PaymentDetailsDAO {
         order.setOrderStatus("Complete");
         orderDAO.save(order);
 
-        order1 = new Orders();
-        order1.setUserKey(user);
-        order1.setCardKey(paymentCardDetails);
-        order1.setStoreKey(stores);
-        order1.setOrderAmount(12.12);
-        order1.setOrderDate(new Date());
-        order1.setOrderStatus("Complete");
-        orderDAO.save(order1);
+//        order1 = new Orders();
+//        order1.setUserKey(user);
+//        order1.setCardKey(paymentCardDetails);
+//        order1.setStoreKey(stores);
+//        order1.setOrderAmount(12.12);
+//        order1.setOrderDate(new Date());
+//        order1.setOrderStatus("Complete");
+//        orderDAO.save(order1);
     }
 
     private void createTestOrderDetails() {
@@ -155,19 +176,52 @@ public class PaymentDetailsDAO {
         orderDetails.setNetPrice(2.55);
         orderDetails.setToppings("");
         orderDetails.setOrderKey(order);
+        orderDetails.setProductKey(products);
         orderDetailsDAO.save(orderDetails);
+    }
+
+    private void createPaymentDetails() {
+        PaymentDetails paymentDetails = new PaymentDetails();
+        paymentDetails.setOrderKey(order);
+        paymentDetails.setPaymentStatus("SUCCESS");
+        paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
     }
 
 
     @Test
     public void paymentDetailsAddLine() {
-        PaymentDetails paymentDetails = new PaymentDetails();
-        paymentDetails.setOrderKey(order);
-        paymentDetails.setPaymentStatus("SUCCESS");
+        System.out.println("************running paymentDetailsAddLine test************");
+        Exception ex = null;
+        try {
+            PaymentDetails paymentDetails = new PaymentDetails();
+            paymentDetails.setOrderKey(order);
+            paymentDetails.setPaymentStatus("SUCCESS");
+            PaymentDetails paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
 
-//        paymentDetailsResponse = paymentDetailsDAO.save(paymentDetails);
+            assert paymentDetailsResponse.getPaymentStatus().equals("SUCCESS");
+        } catch (Exception e) {
+            System.out.println("************inside paymentDetailsAddLine catch************ " + e.getMessage());
+            ex = e;
+        }
+        assertNull(ex);
+    }
 
-        assert true;
+    @Test
+    public void paymentDetailsGetLine() {
+        System.out.println("************running paymentDetailsGetLine test************");
+        Exception ex = null;
+        try {
+            createPaymentDetails();
+            Optional<PaymentDetails> response = paymentDetailsDAO.get(paymentDetailsResponse.getPaymentId());
+
+
+            assert response.get().getPaymentStatus().equals("SUCCESS");
+            assert response.get().getOrderKey().getOrderKey().equals(paymentDetailsResponse.getOrderKey().getOrderKey());
+        } catch (Exception e) {
+            System.out.println("************inside paymentDetailsGetLine catch************ " + e.getMessage());
+            ex = e;
+        }
+        assertNull(ex);
     }
 
 
