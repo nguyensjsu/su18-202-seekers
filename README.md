@@ -2,20 +2,20 @@
 
 # Design Decisions
 
-1.	Implemented the following components:
-	* Sign In / Sign Up API
-    	* Order Management API
-	* Card Management API
-    	* Payment API
+1. Implemented the following components:
+    * User profile and authentication API
+    * Order Management API
+    * Card Management API
+    * Payment API
 	
-2.	Designed persistence layer as a single jar plugin. Created a single Spring Boot project in which each team member contributed for the above components to create the Data access layer.
-3.	Created four Java Spring projects as business logic components which uses Spring REST controllers for exposing the API endpoints.
-4.	Included Persistence layer as a plugin in each of the above project component.
-5.	Written unit test cases using JUnit for these components.
-6.	In order to follow Microservices architecture, all the APIs has been deployed to individual AWS cloud environments to have a proper decoupling between them.
-7.	Deployment:
-	* Deployed Order Management and Card Management API to AWS Docker Containers using ECS.
-	* Deployed Sign In / Sign Up and Payment API to AWS in an Auto Scaled EC2 Cluster with Load Balancer.
+2.  Designed persistence layer as a single jar plugin. Created a single Spring Boot project in which each team member contributed for the above components to create the Data access layer.
+3.  Created four Java Spring projects as business logic components which uses Spring REST controllers for exposing the API endpoints.
+4.  Included Persistence layer as a plugin in each of the above project component.
+5.  Written unit test cases using JUnit for these components.
+6.  In order to follow Microservices architecture, all the APIs has been deployed to individual AWS cloud environments to have a proper decoupling between them.
+7.  Deployment:
+     * Deployed Order Management and Card Management API to AWS Docker Containers using ECS.
+     * Deployed Sign In / Sign Up and Payment API to AWS in an Auto Scaled EC2 Cluster with Load Balancer.
 
 
 # Architecture Diagram 
