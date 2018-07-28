@@ -4,10 +4,11 @@
 
 1.	Implemented the following components:
 	* Sign In / Sign Up API
-    * Order Management API
+    	* Order Management API
 	* Card Management API
-    * Payment API
-2.	Designed persistence layer as a single jar plugin. Created a single Spring Boot project in which each team member contributed for the above components to create the Data access layer. 
+    	* Payment API
+	
+2.	Designed persistence layer as a single jar plugin. Created a single Spring Boot project in which each team member contributed for the above components to create the Data access layer.
 3.	Created four Java Spring projects as business logic components which uses Spring REST controllers for exposing the API endpoints.
 4.	Included Persistence layer as a plugin in each of the above project component.
 5.	Written unit test cases using JUnit for these components.
