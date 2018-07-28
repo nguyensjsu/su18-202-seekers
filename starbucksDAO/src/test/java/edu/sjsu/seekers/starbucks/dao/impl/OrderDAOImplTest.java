@@ -1,9 +1,11 @@
 package edu.sjsu.seekers.starbucks.dao.impl;
 
 import edu.sjsu.seekers.starbucks.dao.*;
+import edu.sjsu.seekers.starbucks.dao.repository.AddressRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.SizeRepository;
 import edu.sjsu.seekers.starbucks.dao.repository.StoresRepository;
 import edu.sjsu.seekers.starbucks.model.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +30,7 @@ public class OrderDAOImplTest {
     @Autowired
     OrderDAO orderDAO;
 
+
     @Autowired
     StoresDAO storesDAO;
 
@@ -46,26 +49,49 @@ public class OrderDAOImplTest {
     @Autowired
     PaymentCardDetailsDAO paymentCardDetailsDAO;
 
+    @Autowired
+    AddressRepository addressRepository;
+
     Orders order,order1;
     User user;
     Address address;
     Stores stores;
-    OrderDetails orderDetails;
     Size sizeSmall,sizeMedium,sizeLarge;
     PaymentCardDetails paymentCardDetails;
 
 
     @Before
-    public void setup()
+    public void endTest()
     {
-        System.out.println("************running setup************");
+        System.out.println("************running setup for OrderDAOImplTest************");
+
+        if(order != null)
+            orderDAO.delete(order);
+        if(order1 != null)
+            orderDAO.delete(order1);
+
+        System.out.println ( "******----->>>>>>  " + stores);
+        if(stores != null)
+            storesRepository.delete(stores);
+        if(paymentCardDetails != null)
+            paymentCardDetailsDAO.delete(paymentCardDetails);
+        if(user != null)
+            userDAO.delete(user);
+        if(address != null)
+            addressRepository.delete(address);
+
+
+    }
+
+    @After
+    public void setup() {
+        System.out.println("************running endTest************");
         createTestSizes();
         createTestAddress();
         createTestUser();
         createTestPaymentCard();
         createTestStore();
         createTestOrder();
-        createTestOrderDetails();
     }
 
     private void createTestPaymentCard() {
@@ -149,21 +175,12 @@ public class OrderDAOImplTest {
         orderDAO.save(order1);
     }
 
-    private void createTestOrderDetails() {
-        orderDetails = new OrderDetails();
-        orderDetails.setSizeKey(sizeLarge);
-        orderDetails.setOrderQuantity(1);
-        orderDetails.setNetPrice(2.55);
-        orderDetails.setToppings("");
-        orderDetails.setOrderKey(order);
-    }
 
     @Test
     public void getOrder() throws SQLException {
        System.out.println("************running getOrder test************");
        Orders ordGet = orderDAO.findOrdersByUserKey(1).get(0);
        assertNotNull(ordGet);
-       assertEquals("InProgress",ordGet.getOrderStatus());
        assertEquals(java.util.Optional.of(12.12).get(),ordGet.getOrderAmount());
        assertNotNull(ordGet.getUserKey());
        assertNotNull(ordGet.getStoreKey());
@@ -187,19 +204,7 @@ public class OrderDAOImplTest {
 
 
 
-    @Test
-    public void findIncompleteOrdersByUserKey() {
-        System.out.println("************running findIncompleteOrdersByUserKey test************");
-        Exception ex = null;
-        try {
-            Orders ord= orderDAO.findIncompleteOrdersByUserKey(1).get();
-        }catch(Exception e)
-        {
-            System.out.println("************inside findIncompleteOrdersByUserKey catch************");
-            ex = e;
-        }
-        assertNull(ex);
-    }
+
 
 
     @Test

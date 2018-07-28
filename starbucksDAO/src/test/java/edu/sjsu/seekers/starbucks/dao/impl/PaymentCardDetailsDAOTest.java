@@ -84,7 +84,7 @@ public class PaymentCardDetailsDAOTest {
         user.setPassword("testPassword");
         user.setPhoneNumber("1234567890");
         user.setRewardPoints(0.0);
-        user.setIdAccountVerified("Y");
+        user.setVerificationCode("1234");
         userDAO.save(user);
     }
 
