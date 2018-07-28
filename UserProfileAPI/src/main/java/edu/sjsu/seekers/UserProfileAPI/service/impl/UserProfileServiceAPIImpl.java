@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Random;
-import java.util.logging.Logger;
+
 
 @Service
 public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
@@ -232,7 +232,6 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         else
         {
             updateUser.setMessage("User with " + request.getUserName()+ " Details doesnot exist.");
-           // updateUser.setMessage("User Details Cannot be updated. Try again");
         }
 
         updateUser.setStatusCode(HttpStatus.OK.toString());
@@ -310,8 +309,7 @@ public class UserProfileServiceAPIImpl implements UserProfileServiceAPI {
         if(existingUser.isPresent()) {
 
             if (request.getEmailId().equals(existingUser.get().getEmailId())) {
-                //forgotUsername.setUserName(existingUser.get().getUserName());
-                //forgotUsername.toString();
+
                 try {
                     sendUsernameByEmail(existingUser.get().getEmailId(), existingUser.get().getUserName());
                 } catch (MailException e) {

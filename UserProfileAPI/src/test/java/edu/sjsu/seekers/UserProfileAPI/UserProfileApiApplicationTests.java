@@ -89,33 +89,31 @@ public class UserProfileApiApplicationTests {
 	}
 
 
-   // successful logout of the active user
+   //  invalid username
 
 	@Test
 	public void SignOutTestcase1()
 	{
 		UserSignOutRequest request = new UserSignOutRequest();
-		request.setUserName("SindhuPatil");
+		request.setUserName("SindhuPati");
 
 		Optional<User> userByUserName = userDAO.findUserByUsername(request.getUserName());
 		GenericResponse response = userProfileServiceAPI.signOutUser(request);
 
-		if(userByUserName.get().getIsLoggedIn().equals("Y"))
-		{
-			userByUserName.get().setIsLoggedIn("N");
-			userDAO.save(userByUserName.get());
+		if (userByUserName.isPresent()) {
+			if (userByUserName.get().getIsLoggedIn().equals("Y")) {
+				userByUserName.get().setIsLoggedIn("N");
+				userDAO.save(userByUserName.get());
 
-			assert HttpStatus.OK.toString().equals(response.getStatusCode());
-			assert (response.getMessage().contains("Successfully Logged out"));
+				assert HttpStatus.OK.toString().equals(response.getStatusCode());
+				assert (response.getMessage().contains("Successfully Logged out"));
+
+			} else {
+				assert HttpStatus.OK.toString().equals(response.getStatusCode());
+				assert (response.getMessage().contains("Cannot Logout"));
 
 			}
-        else
-		{
-			assert HttpStatus.OK.toString().equals(response.getStatusCode());
-			assert (response.getMessage().contains("Cannot Logout"));
-
 		}
-
 	}
 
    // Not a active user

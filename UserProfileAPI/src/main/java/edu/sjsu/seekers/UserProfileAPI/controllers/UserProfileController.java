@@ -73,7 +73,6 @@ public class UserProfileController {
 
             if(usernameExpression.matcher(createNewUserRequest.getUserName()).matches())
             {
-                //Pattern passwordExpression= Pattern.compile("[a-zA-Z0-9._^%$#!~@-]+");
 
                 if(createNewUserRequest.getPassword().length()>=6 && createNewUserRequest.getPassword().length()<=20)
                 {
