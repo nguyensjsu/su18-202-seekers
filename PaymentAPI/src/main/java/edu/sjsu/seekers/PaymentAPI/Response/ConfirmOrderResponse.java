@@ -1,7 +1,5 @@
 package edu.sjsu.seekers.PaymentAPI.Response;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 public class ConfirmOrderResponse extends GenericResponse {
     private Integer paymentId;
 

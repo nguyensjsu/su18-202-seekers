@@ -27,12 +27,6 @@ public class AddressDAOImpl implements AddressDAO {
         addressRepository.save(address);
     }
 
-
-    @Override
-    public void update(Address address) {
-
-    }
-
     @Override
     public Optional<Address> getLastInsertedRow() {
         return addressRepository.getLastRow();
